@@ -3,37 +3,31 @@
 
 #include <stdint.h>
 
-
-
-
-
 class HalAccelerometer {
     public:
-        HalAccelerometer();
+        HalAccelerometer( void );
     
-        bool  HalAccelerometerInit();
-        float HalAccelerometerGetRoll();
-        float HalAccelerometerGetPitch();
-        void  HalAccelerometerRun();
+        bool  HalAccelerometerInit( void );
+        float HalAccelerometerGetRoll( void );
+        float HalAccelerometerGetPitch( void );
+        void  HalAccelerometerRun( void );
 
     private:
-        int16_t GetXRawAcceleration();
-        int16_t GetYRawAcceleration();
-        int16_t GetZRawAcceleration();
-        void UpdatePitchAndRoll;
-        int16_t x_offset;
-        int16_t y_offset;
-        int16_t z_offset;
-        float scaling;
-        float pitch;
-        float roll;
-        float filter_x[5];
-        float filter_y[5];
-        float filter_z[5];
-        uint8_t filter_count;
+        int16_t GetXRawAcceleration( void );
+        int16_t GetYRawAcceleration( void );
+        int16_t GetZRawAcceleration( void );
+        void UpdatePitchAndRoll( void );
+        int16_t XOffset;
+        int16_t YOffset;
+        int16_t ZOffset;
+        float Scaling;
+        float FilterX[5];
+        float FilterY[5];
+        float FilterZ[5];
+        uint8_t FilterCount;
+        bool Update;
+        float Pitch;
+        float Roll;
 };
 
-
-
 #endif /* HAL_ACCELEROMETER_H */
-
