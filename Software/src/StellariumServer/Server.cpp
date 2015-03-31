@@ -1,108 +1,172 @@
 /*
-The stellarium telescope library helps building
-telescope server programs, that can communicate with stellarium
-by means of the stellarium TCP telescope protocol.
-It also contains smaple server classes (dummy, Meade LX200).
-
-Author and Copyright of this file and of the stellarium telescope library:
-Johannes Gajdosik, 2006
-
-This library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Lesser General Public
-License as published by the Free Software Foundation; either
-version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public
-License along with this library; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-*/
+ * The stellarium telescope library helps building
+ * telescope server programs, that can communicate with stellarium
+ * by means of the stellarium TCP telescope protocol.
+ * It also contains sample server classes (dummy, Meade LX200).
+ * 
+ * Author and Copyright of this file and of the stellarium telescope library:
+ * Johannes Gajdosik, 2006
+ * 
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
 
 #include "Server.hpp"
 #include "Socket.hpp"
 #include "Listener.hpp"
+ 
+/* Server 
+ * Constructor
+ */
+//Server::Server( void )
+//{
+//}
 
-void Server::SocketList::clear(void)
+/* Server
+ * Constructor
+ * @param Port 
+ */
+Server::Server( int16_t Port )
 {
-    for (const_iterator it(begin()); it != end(); it++)
-    {
-        delete (*it);
-    }
-    list<Socket*>::clear();
+    Socket* ListenerPtr = new Listener( *this, Port );
+    ListOfSockets.push_back( ListenerPtr );
 }
 
-Server::Server(int port)
+/* ~Server
+ * Destructor
+ */     
+Server::~Server( void )
 {
-    Socket *listener = new Listener(*this, port);
-    socket_list.push_back(listener);
 }
 
-void Server::sendPosition(unsigned int ra_int, int dec_int, int status)
+/* Step
+ * main run function
+ * @param TimeoutMicros
+ */
+void Server::Step( int64_t TimeoutMicros )
 {
-    for (SocketList::const_iterator it(socket_list.begin());
-         it != socket_list.end();
-         it++)
-    {
-        (*it)->sendPosition(ra_int, dec_int, status);
-    }
-}
-
-void Server::step(long long int timeout_micros)
-{
-    fd_set read_fds, write_fds;
-    FD_ZERO(&read_fds);
-    FD_ZERO(&write_fds);
-    int fd_max = -1;
+    fd_set ReadFds, WriteFds;
+    FD_ZERO(&ReadFds);
+    FD_ZERO(&WriteFds);
+    int16_t FdMax = -1;
     
-    for (SocketList::const_iterator it(socket_list.begin());
-         it != socket_list.end();
-         it++)
+    for (
+         SocketList::const_iterator It( ListOfSockets.begin() );
+         It != ListOfSockets.end();
+         It++ 
+         )
     {
-        (*it)->prepareSelectFds(read_fds, write_fds, fd_max);
+        (*It)->PrepareSelectFds( ReadFds, WriteFds, FdMax);
     }
     
-    struct timeval tv;
-    if (timeout_micros < 0)
-        timeout_micros = 0;
-    tv.tv_sec = timeout_micros / 1000000;
-    tv.tv_usec = timeout_micros % 1000000;
-    const int select_rc = select(fd_max+1, &read_fds, &write_fds, 0, &tv);
-    if (select_rc > 0)
+    struct timeval Tv;
+    if (TimeoutMicros < 0)
     {
-        SocketList::iterator it(socket_list.begin());
-        while (it != socket_list.end())
+        TimeoutMicros = 0;
+    }
+    Tv.tv_sec = TimeoutMicros / 1000000;
+    Tv.tv_usec = TimeoutMicros % 1000000;
+    const int16_t SelectRc = select( FdMax+1, &ReadFds, &WriteFds, 0, &Tv );
+    if (SelectRc > 0)
+    {
+        SocketList::iterator It( ListOfSockets.begin() );
+        while ( It != ListOfSockets.end() )
         {
-            (*it)->handleSelectFds(read_fds, write_fds);
-            if ((*it)->isClosed())
+            (*It)->HandleSelectFds( ReadFds, WriteFds );
+            if ( (*It)->IsClosed() )
             {
-                SocketList::iterator tmp(it);
-                it++;
-                delete (*tmp);
-                socket_list.erase(tmp);
+                SocketList::iterator Tmp( It );
+                It++;
+                delete ( *Tmp );
+                ListOfSockets.erase( Tmp );
             }
             else
             {
-                it++;
+                It++;
             }
         }
     }
 }
 
-void Server::closeAcceptedConnections(void)
+/* SendPosition
+ * Send the current position of the telescope to the client
+ * @param RAInt uint32_t format of the Right Ascension
+ * @param DecInt uint32_t format of the Declination
+ * @param Status uint32_t system status
+ */
+void Server::SendPosition( uint32_t RAInt, int32_t DecInt, int32_t Status )
 {
-    for (SocketList::iterator it(socket_list.begin());
-         it != socket_list.end();
-         it++)
+    for ( 
+         SocketList::const_iterator It( ListOfSockets.begin() );
+         It != ListOfSockets.end();
+         It++
+         )
     {
-        if ((*it)->isTcpConnection())
-        {
-            (*it)->hangup();
-        }
+        (*It)->SendPosition( RAInt, DecInt, Status );
+    }
+}
+
+/* AddConnection
+ * Adds this object to the list of connections maintained by this server.
+ * This method is called by Listener.
+ * @param SocketPtr can be anything that inherits Socket, including Listener,
+ * Connection or any custom class that implements a serial port
+ * connection (such as Lx200Connection and NexStarConnection).
+ */
+void Server::AddConnection( Socket* SocketPtr )
+{
+    if ( SocketPtr )
+    {
+        ListOfSockets.push_back( SocketPtr );
     }
 }
 
 
+/* CloseAcceptedConnections
+ * Close all connections in list
+ */
+void Server::CloseAcceptedConnections( void )
+{
+    for (
+         SocketList::iterator It( ListOfSockets.begin() );
+         It != ListOfSockets.end();
+         It++
+         )
+    {
+        if ( (*It)->IsTcpConnection() )
+        {
+            (*It)->HangUp();
+        }
+    }
+}
+
+/*  ~SocketList
+ * Destructor
+ */
+Server::SocketList::~SocketList ( void )
+{
+    Clear();
+}
+
+/* Clear
+ * Empty the list
+ */
+void Server::SocketList::Clear( void )
+{
+    for (const_iterator It(begin()); It != end(); It++)
+    {
+        delete (*It);
+    }
+    list<Socket*>::clear();
+}

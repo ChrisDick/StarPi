@@ -67,9 +67,9 @@ void ServerPi::step(long long int timeout_micros, float ra, float dec)
                                        0.5 +  ra*(((unsigned int)0x80000000)/M_PI));
         const int dec_int = (int)floor(0.5 + dec*(((unsigned int)0x80000000)/M_PI));
         const int status = 0;
-        sendPosition(ra_int,dec_int,status);
+        SendPosition(ra_int,dec_int,status);
     }
-    Server::step(timeout_micros);
+    Server::Step(timeout_micros);
 }
 
 /*
