@@ -50,8 +50,8 @@ DEVICE_OBJS := $(addprefix $(OBJ_DIR), \
 					LogFile.o \
 					Server.o \
 					Socket.o \
-					HalCompassManager.o \
-					HalAccelerometerManager.o \
+					HalCompass.o \
+					HalAccelerometer.o \
 					TTC_Sched.o \
 					Runnable.o \
 					ServerPi.o \
@@ -112,11 +112,11 @@ $(OBJ_DIR)TTC_Sched.o:		./Src/Scheduler/TTC_Sched.cpp
 $(OBJ_DIR)Runnable.o:		./Src/Scheduler/Runnable.cpp
 		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/Scheduler/Runnable.cpp
 		
-$(OBJ_DIR)HalAccelerometerManager.o:	./Src/Hal/HalAccelerometerManager.cpp
-		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/Hal/HalAccelerometerManager.cpp 
+$(OBJ_DIR)HalAccelerometer.o:	./Src/Hal/HalAccelerometer.cpp
+		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/Hal/HalAccelerometer.cpp 
 		
-$(OBJ_DIR)HalCompassManager.o:	./Src/Hal/HalCompassManager.cpp
-		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/Hal/HalCompassManager.cpp 
+$(OBJ_DIR)HalCompass.o:	./Src/Hal/HalCompass.cpp
+		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/Hal/HalCompass.cpp 
 		
 $(OBJ_DIR)HMC5883L_raw.o:		./Src/I2Cdevlib/Pi/HMC5883L/Examples/HMC5883L_raw/HMC5883L_raw.cpp
 		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/I2Cdevlib/Pi/HMC5883L/Examples/HMC5883L_raw/HMC5883L_raw.cpp 
