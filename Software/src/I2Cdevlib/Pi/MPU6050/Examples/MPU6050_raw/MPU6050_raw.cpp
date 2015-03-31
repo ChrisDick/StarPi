@@ -66,19 +66,20 @@ int main( int argsc, char** argsv) {
     accelgyro.setAccelXSelfTest(false);
     accelgyro.setAccelYSelfTest(false);
     accelgyro.setAccelZSelfTest(false);
-    
+#ifdef DEBUG_OUTPUT    
     // verify connection
     bool test = accelgyro.testConnection();
-#ifdef DEBUG_OUTPUT
     cout << test;
     cout << "\n\r";
 #endif
+   int16_t y_offset = (accelgyro.getYAccelOffset());
+ 
+#ifdef DEBUG_OUTPUT
     // use the code below to change accel/gyro offset values
     int16_t x_offset = (accelgyro.getXAccelOffset());
-    int16_t y_offset = (accelgyro.getYAccelOffset());
     int16_t z_offset = (accelgyro.getZAccelOffset());
     // -76	-2359	1688	0	0	0
-#ifdef DEBUG_OUTPUT
+
     cout << x_offset; // -76
     cout << "\n\r";
     cout << y_offset; // -2359
@@ -113,11 +114,10 @@ int main( int argsc, char** argsv) {
     // these methods (and a few others) are also available
     accelgyro.getAcceleration(&ax, &ay, &az);
     //accelgyro.getRotation(&gx, &gy, &gz);
-
-    float x_axis = (((float)(ax + x_offset) / 32767.0) * (2*9.81));
     float y_axis = (((float)(ay + y_offset) / 32767.0) * (2*9.81));
-    float z_axis = (((float)(az + z_offset) / 32767.0) * (2*9.81));
 #ifdef DEBUG_OUTPUT    
+    float x_axis = (((float)(ax + x_offset) / 32767.0) * (2*9.81));
+    float z_axis = (((float)(az + z_offset) / 32767.0) * (2*9.81));
     #ifdef OUTPUT_READABLE_ACCELGYRO
         //cout << count;
         cout << " Bytes read. \n\r";
