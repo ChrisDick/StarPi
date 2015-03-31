@@ -21,6 +21,7 @@ class HalAccelerometer {
         int16_t YOffset;
         int16_t ZOffset;
         float Scaling;
+        float GRange;
         float FilterX[5];
         float FilterY[5];
         float FilterZ[5];

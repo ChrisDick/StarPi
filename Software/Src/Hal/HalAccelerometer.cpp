@@ -118,7 +118,7 @@ void HalAccelerometer::UpdatePitchAndRoll( void )
     /*
         Update Pitch
     */
-    Pitch = atan ( FilterX / ( sqrt( (FilterY[4]*FilterY[4]) + ( FilterZ[4]*FilterZ[4]) ) ) );
+    Pitch = atan ( FilterX[4] / ( sqrt( (FilterY[4]*FilterY[4]) + ( FilterZ[4]*FilterZ[4]) ) ) );
             
     /*
         Update Roll
