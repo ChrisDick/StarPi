@@ -13,7 +13,8 @@
 
 class TTC_Sched
 {
-private:
+
+protected:
     Runnable * tasks[SCH_MAX_TASKS];
 
 public:

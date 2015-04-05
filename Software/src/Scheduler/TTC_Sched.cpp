@@ -39,6 +39,9 @@ uint8_t    TTC_Sched::add_task(Runnable * new_task)
     // If we're here, there is a space in the task array
     this->tasks[index] = new_task;
 
+    // make the task not runnable (reset runnable flag).
+    new_task->set_runnable(0);
+
     // return position of task (to allow later deletion)
     return index; 
 }
@@ -141,3 +144,6 @@ void TTC_Sched::update_tasks(void)
         }
     }
 }
+
+
+

@@ -29,7 +29,7 @@ void Runnable::set_period(uint32_t period)
 {
     this->period = period;
 }
-
+ 
 uint32_t Runnable::get_period(void)
 {
     return this->period;
@@ -51,5 +51,10 @@ void Runnable::decrease_run(void)
 
 uint8_t Runnable::is_runnable(void)
 {
-    return (this->runnable > 0);
+    if(this->runnable > 0)
+    {
+         return 1;
+    }
+
+    return 0;
 }
