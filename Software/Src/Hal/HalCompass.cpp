@@ -18,16 +18,16 @@ MPU9150 Compass;
 #error no magnetometer defined - please edit your config.h file.
 #endif
 
-/** HalCompass
+/* HalCompass
  *  Constructor
  */
 HalCompass::HalCompass( void )
 {
 }
 
-/** HalCompassInit
+/* HalCompassInit
  *  Initialise the Compass
- * @retrun bool Initialisation status  
+ * @return bool Initialisation status  
  */
 bool HalCompass::HalCompassInit( void )
 {
@@ -49,18 +49,18 @@ bool HalCompass::HalCompassInit( void )
 }
 
 
-/** HalCompassSetPitch
+/* HalCompassSetPitch
  *  Set the pitch of the Compass
- * @param float NewPitch 
+ * @param NewPitch float  
  */
 void HalCompass::HalCompassSetPitch( float NewPitch )
 {
     Pitch = NewPitch;
 }
 
-/** HalCompassSetRoll
+/* HalCompassSetRoll
  *  Set the roll of the Compass
- * @param float NewRoll 
+ * @param NewRoll float  
  */
 void HalCompass::HalCompassSetRoll( float NewRoll )
 {
@@ -68,7 +68,7 @@ void HalCompass::HalCompassSetRoll( float NewRoll )
 }
 
 
-/** HalCompassRun
+/* HalCompassRun
  *  Runs the filter
  */
 void HalCompass::HalCompassRun( void )
@@ -88,9 +88,9 @@ void HalCompass::HalCompassRun( void )
     }
 }
 
-/** HalCompassGetHeading
+/* HalCompassGetHeading
  *  Get the heading of the Compass
- * @retrun float heading 
+ * @return float heading 
  */
 float HalCompass::HalCompassGetHeading( void )
 {
@@ -103,10 +103,10 @@ float HalCompass::HalCompassGetHeading( void )
     return Result;
 }
 
-/** HalCompassGetHeading
+/* HalCompassGetHeading
  *  Get the tilt compensated heading of the Compass
  *   see http://ozzmaker.com/2014/12/17/Compass2/#more-3062
- * @retrun float heading 
+ * @return float heading 
  */
 float HalCompass::HalCompassGetTiltCompensatedHeading( void )
 {
@@ -122,9 +122,9 @@ float HalCompass::HalCompassGetTiltCompensatedHeading( void )
     return Result;
 }
 
-/** GetXRawHeading
+/* GetXRawHeading
  *  Get the raw X heading of the Compass
- * @retrun int16_t heading 
+ * @return int16_t heading 
  */
 int16_t HalCompass::GetXRawHeading( void )
 {
@@ -147,9 +147,9 @@ int16_t HalCompass::GetXRawHeading( void )
     return Result;
 }
 
-/** GetYRawHeading
+/* GetYRawHeading
  *  Get the raw Y heading of the Compass
- * @retrun int16_t heading 
+ * @return int16_t heading 
  */
 int16_t HalCompass::GetYRawHeading( void )
 {
@@ -172,9 +172,9 @@ int16_t HalCompass::GetYRawHeading( void )
     return Result;    
 }
 
-/** GetZRawHeading
+/* GetZRawHeading
  *  Get the raw Z heading of the Compass
- * @retrun int16_t heading 
+ * @return int16_t heading 
  */
 int16_t HalCompass::GetZRawHeading( void )
 {

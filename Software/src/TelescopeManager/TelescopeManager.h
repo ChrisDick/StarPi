@@ -3,7 +3,9 @@
 
 #include <stdint.h>
 
-
+/** TelescopeManager
+ * Class to manage the functionality of the telescope.
+ */
 class TelescopeManager {
 
     public:

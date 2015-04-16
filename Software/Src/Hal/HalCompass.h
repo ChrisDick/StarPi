@@ -3,6 +3,9 @@
 
 #include <stdint.h>
 
+/** HalCompass
+ * - Class to provide use to the magnetometer
+ */
 class HalCompass {
     public:
         HalCompass( void );

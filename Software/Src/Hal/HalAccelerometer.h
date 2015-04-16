@@ -3,6 +3,9 @@
 
 #include <stdint.h>
 
+/** HalAccelerometer
+ * - Class to provide use of the Accelerometer
+ */
 class HalAccelerometer {
     public:
         HalAccelerometer( void );

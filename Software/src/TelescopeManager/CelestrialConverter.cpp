@@ -3,189 +3,198 @@
 #include <stdint.h>
 #include <math.h>
 
+/* CelestrialConverter
+ * Constructor
+ */
 CelestrialConverter::CelestrialConverter()
 {
-
-}
-/*
-    calculate_local_sidereal_time
-    
-    /!Param gst grenwich standard time 
-    /!Param longitude_west 
-    /!Return float time in radians.
-    
-*/
-float CelestrialConverter::calculate_local_sidereal_time( CC_TIME_T gst, float longitude_west)
-{
-    float result = 0;
-    float gst_angle = convert_time_to_angle ( gst );
-    result = gst_angle - longitude_west;
-    return result;
 }
 
-
-void CelestrialConverter::equitorial_to_celestrial( CC_ANGLES_T* angles, CC_TIME_T grenwich_standard_time )
+/* CalculateLocalSiderealTime
+ * calculate the Local sidereal tiem from the current time and location
+ * @param GrenwichStandardTime current time 
+ * @param longitude_west 
+ * @return float time in radians.   
+ */
+float CelestrialConverter::CalculateLocalSiderealTime( CC_TIME_T GrenwichStandardTime, float LongitudeWest)
 {
-    angles->declination = asin( ( ( sin(angles->altitude)*sin(angles->latitude) ) + ( cos(angles->altitude)*cos(angles->latitude)*cos(angles->azimuth) ) ));
-    angles->hour_angle = (-1*sin(angles->azimuth)*cos(angles->altitude))/cos(angles->declination);
-    angles->right_ascension = calculate_local_sidereal_time( grenwich_standard_time, angles->longitude_west ) - angles->hour_angle;     
+    float Result = 0;
+    float GstAngle = ConvertTimeToAngle ( GrenwichStandardTime );
+    result = GstAngle - LongitudeWest;
+    return Result;
 }
 
+/* EquitorialToCelestrial
+ * convert equatorial coordinates to celestial coordinates 
+ * @param Angles structure containing all Angles
+ * @param GrenwichStandardTime current time
+ */
+void CelestrialConverter::EquitorialToCelestrial( CC_ANGLES_T* Angles, CC_TIME_T GrenwichStandardTime )
+{
+    Angles->Declination = asin( ( ( sin(Angles->Altitude)*sin(Angles->Latitude) ) + ( cos(Angles->Altitude)*cos(Angles->Latitude)*cos(Angles->Azimuth) ) ));
+    Angles->HourAngle = (-1*sin(Angles->Azimuth)*cos(Angles->Altitude))/cos(Angles->Declination);
+    Angles->RightAscension = CalculateLocalSiderealTime( GrenwichStandardTime, Angles->LongitudeWest ) - Angles->HourAngle;     
+}
 
-void CelestrialConverter::celestrial_to_equitorial( CC_ANGLES_T* angles, CC_TIME_T grenwich_standard_time )
+/* CelestrialToEquitorial
+ * convert celestial coordinates to equatorial coordinates 
+ * @param Angles structure containing all Angles
+ * @param GrenwichStandardTime current time
+ */
+void CelestrialConverter::EquitorialToCelestrial( CC_ANGLES_T* Angles, CC_TIME_T GrenwichStandardTime )
 {
     
     
 }
 
-/*
-    add_time
-    
-    description: time_a + time_b. result will wrap around 1 day.
-*/
-CC_TIME_T CelestrialConverter::add_time( CC_TIME_T time_a, CC_TIME_T time_b )
+/* AddTime   
+ *  Add two times together, will wrap around 1 day.
+ * @param TimeA
+ * @param TimeB
+ * @return the sum of the two times 
+ */
+CC_TIME_T CelestrialConverter::AddTime( CC_TIME_T TimeA, CC_TIME_T TimeB )
 {
-    CC_TIME_T result;
+    CC_TIME_T Result;
     /*
         add seconds, then check for completed minutes
     */
-    result.seconds = time_a.seconds + time_b.seconds;
-    if ( result.seconds >= 60 )
+    Result.Seconds = TimeA.Seconds + TimeB.Seconds;
+    if ( Result.Seconds >= 60 )
     {
-        result.seconds -= 60;
-        result.minutes++;
+        Result.Seconds -= 60;
+        Result.Minutes++;
     }
     /*
         add minutes, then check for completed hours.
     */
-    result.minutes += time_a.minutes + time_b.minutes;
-    if ( result.minutes >= 60 )
+    Result.Minutes += TimeA.Minutes + TimeB.Minutes;
+    if ( Result.Minutes >= 60 )
     {
-        result.minutes -= 60;
-        result.hours++;
+        Result.Minutes -= 60;
+        Result.Hours++;
     }
     /*
         add hours, then remove completed days.
     */
-    result.hours += time_a.hours + time_b.hours;
-    if ( result.hours >= 24 )
+    Result.Hours += TimeA.Hours + TimeB.Hours;
+    if ( Result.Hours >= 24 )
     {
-        result.hours -= 24;
+        Result.Hours -= 24;
     }
-    return result;
+    return Result;
 }
 
-/*
-    subtract_time
-    
-    description: time_a - time_b. result will wrap around 1 day.
-*/
-CC_TIME_T CelestrialConverter::subtract_time( CC_TIME_T time_a, CC_TIME_T time_b )
+/* SubtractTime
+ * subtract two times, result will wrap around 1 day.
+ * @param TimeA
+ * @param TimeB
+ * @return the subtraction of the two times 
+ */
+CC_TIME_T CelestrialConverter::SubtractTime( CC_TIME_T TimeA, CC_TIME_T TimeB )
 {
-    CC_TIME_T result;
+    CC_TIME_T Result;
     /*
         subtract seconds then check for wrap.
     */
-    result.seconds = time_a.seconds - time_b.seconds;
-    if ( result.seconds > 60 )
+    Result.Seconds = TimeA.Seconds - TimeB.Seconds;
+    if ( Result.Seconds > 60 )
     {
-        result.seconds += 60;
-        result.minutes--;
+        Result.Seconds += 60;
+        Result.Minutes--;
     }
     
     /*
         subtract minutes then check for wrap.
     */
-    result.minutes += time_a.minutes - time_b.minutes;
-    if ( result.minutes > 60 )
+    Result.Minutes += TimeA.Minutes - TimeB.Minutes;
+    if ( Result.Minutes > 60 )
     {
-        result.minutes += 60;
-        result.hours--;
+        Result.Minutes += 60;
+        Result.Hours--;
     }
     
     /*
         subtract hours then check for wrap.
     */
-    result.hours += time_a.hours - time_b.hours;
-    if ( result.hours > 24)
+    Result.Hours += TimeA.Hours - TimeB.Hours;
+    if ( Result.Hours > 24)
     {
-        result.hours += 24;
+        Result.Hours += 24;
     }
     
     return result;
 }
 
-
-/*
-    decimalise_time
-*/
-float CelestrialConverter::decimalise_time( CC_TIME_T time )
+/* DecimaliseTime
+ * convert hours minutes and seconds to hours
+ * @param time structure containing all the time info
+ * @return float hours
+ */
+float CelestrialConverter::DecimaliseTime( CC_TIME_T Time )
 {
-    float dec_time = 0.0;
-    dec_time  = time.hours + (time.minutes/60.0) + (time.seconds/3600.0); 
-    return dec_time;
+    float DecTime = 0.0;
+    DecTime  = Time.Hours + (Time.Minutes/60.0) + (Time.Seconds/3600.0); 
+    return DecTime;
 }
 
-/*
-    un_decimalise_time
+/* UnDecimaliseTime
+ * Convert hours to hours, minutes and seconds
+ * @param TimeDec hours
+ * @return Structure containing all the time info
 */
-CC_TIME_T CelestrialConverter::un_decimalise_time( float time_dec )
+CC_TIME_T CelestrialConverter::UnDecimaliseTime( float TimeDec )
 {
-    CC_TIME_T time;
+    CC_TIME_T Time;
     /*
         extract the hours.
     */
-    time.hours = (uint8_t)time_dec;
+    Time.hours = (uint8_t)TimeDec;
     /*
         extract the minutes
     */
-    time.minutes = (uint8_t)(( time_dec - time.hours ) * 60);
+    Time.minutes = (uint8_t)(( TimeDec - Time.hours ) * 60);
     /*
          extract the seconds
     */
-    time.seconds = (uint8_t)(((( time_dec - time.hours ) * 60) - time.minutes ) * 60 ); 
+    Time.seconds = (uint8_t)(((( TimeDec - Time.hours ) * 60) - Time.minutes ) * 60 ); 
     
-    return time;
+    return Time;
 }
 
-/*
-    time_to_seconds
-*/
-// do I need these?
-
-/*
-    seconds_to_time
-*/
-
-/*
-    convert_time_to_angle
-*/
-float CelestrialConverter::convert_time_to_angle( CC_TIME_T time )
+/* ConvertTimeToAngle
+ * Convert a time to an angle
+ * @param Time structure containing all the time info
+ * @return float Angle
+ */
+float CelestrialConverter::ConvertTimeToAngle( CC_TIME_T Time )
 {
-    float angle = 0;
-    float time_dec = 0;
+    float Angle = 0;
+    float TimeDec = 0;
     /*
         first convert time to a decimal.
     */
-    time_dec = decimalise_time( time );
+    TimeDec = DecimaliseTime( Time );
     
     /*
         then multiply by 15' and convert to radians
     */
-    angle = time_dec * (M_PI/12);
+    Angle = TimeDec * (M_PI/12);
     
-    return angle;
+    return Angle;
 }
 
-CC_TIME_T CelestrialConverter::convert_angle_to_time( float angle )
+/* ConvertAngleToTime
+ * Convert an angle to a time
+ * @param Angle 
+ * @return structure containing all the time info
+ */
+CC_TIME_T CelestrialConverter::ConvertAngleToTime( float Angle )
 {
-    CC_TIME_T time;
-    
-    
+    CC_TIME_T Time;
     
    // angle = (time.hours * 15) + ((time.minutes/60)*15) + ((time.seconds/3600)*15); 
     
-    return time;
+    return Time;
 }
-
 
