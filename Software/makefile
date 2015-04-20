@@ -1,23 +1,13 @@
-all:		MPU6050 HMC5883L_heading
+all:		MPU6050 HMC5883L_heading Sample_Main
 
 INCLUDE_PATHS := 	-I./Src/I2Cdevlib/Pi/I2Cdev/ \
 					-I./Src/I2Cdevlib/Pi/HMC5883L/ \
-					-I./Src/I2Cdevlib/Pi/ADS1115/ \
 					-I./Src/I2Cdevlib/Pi/ADXL345/ \
 					-I./Src/I2Cdevlib/Pi/AK8975/ \
 					-I./Src/I2Cdevlib/Pi/BMA150/ \
-					-I./Src/I2Cdevlib/Pi/BMP085/ \
 					-I./Src/I2Cdevlib/Pi/HMC5843/ \
-					-I./Src/I2Cdevlib/Pi/ITG3200/ \
-					-I./Src/I2Cdevlib/Pi/L3G4200D/ \
-					-I./Src/I2Cdevlib/Pi/LM73/ \
-					-I./Src/I2Cdevlib/Pi/MPR121/ \
 					-I./Src/I2Cdevlib/Pi/MPU6050/ \
-					-I./Src/I2Cdevlib/Pi/TCA6424A/ \
-					-I./Src/I2Cdevlib/Pi/DS1307/ \
-					-I./Src/I2Cdevlib/Pi/SSD1308/ \
-					-I./Src/I2Cdevlib/Pi/IAQ2000/ \
-					-I./Src/I2Cdevlib/Pi/AD7746/ \
+					-I./Src/I2Cdevlib/Pi/MPU9150/ \
 					-I./Src/Hal/ \
 					-I./Src/TelescopeManager/ \
 					-I./Src/Scheduler/ \
@@ -27,27 +17,16 @@ INCLUDE_PATHS := 	-I./Src/I2Cdevlib/Pi/I2Cdev/ \
 OBJ_DIR = ./Obj/
 
 DEVICE_OBJS := $(addprefix $(OBJ_DIR), \
-					AD7746.o \
-					ADS1115.o \
 					ADXL345.o \
 					AK8975.o \
 					BMA150.o \
-					BMP085.o \
 					HMC5843.o \
 					HMC5883L.o \
-					ITG3200.o \
-					L3G4200D.o \
-					LM73.o \
-					MPR121.o \
 					MPU6050.o \
-					TCA6424A.o \
-					DS1307.o \
-					SSD1308.o \
-					IAQ2000.o \
+					MPU9150.o \
 					I2Cdev.o \
 					Connection.o \
 					Listener.o \
-					LogFile.o \
 					Server.o \
 					Socket.o \
 					HalCompass.o \
@@ -57,7 +36,8 @@ DEVICE_OBJS := $(addprefix $(OBJ_DIR), \
 					ServerPi.o \
 					TelescopeManager.o \
 					CelestrialConverter.o \
-				)
+					TTC_Sched_Pi_Impl.o \
+					)
 
 PI_DIR = ../Src/I2Cdevlib/Pi/
 CFLAGS =  -c -Wall -lwiringPi 
@@ -70,6 +50,10 @@ MPU6050:	$(OBJ_DIR)MPU6050_raw.o $(OBJ_DIR)MPU6050.o  $(OBJ_DIR)I2Cdev.o | $(DEV
 HMC5883L_heading:	$(OBJ_DIR)HMC5883L_raw.o $(DEVICE_OBJS)
 		$(CC) -Wall -lwiringPi $(OUTPUT) $(OBJ_DIR)HMC5883L_raw.o $(DEVICE_OBJS)
 		
+Sample_Main:	$(OBJ_DIR)Sample_Main.o $(OBJ_DIR)TTC_Sched.o  $(OBJ_DIR)Runnable.o $(OBJ_DIR)TTC_Sched_Pi_Impl.o
+		$(CC) -Wall -lwiringPi $(OUTPUT) $(OBJ_DIR)Sample_Main.o $(DEVICE_OBJS)
+
+
 #todo create obj dir if it doesn't exist
 #$(DEVICE_OBJS): | $(OBJDIR)
     
@@ -106,9 +90,15 @@ $(OBJ_DIR)Socket.o:		./Src/StellariumServer/Socket.cpp
 $(OBJ_DIR)CelestrialConverter.o:		./Src/TelescopeManager/CelestrialConverter.cpp
 		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/TelescopeManager/CelestrialConverter.cpp
 		
+$(OBJ_DIR)Sample_Main.o:		./Src/Scheduler/Sample_Main.cpp
+		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/Scheduler/Sample_Main.cpp
+
 $(OBJ_DIR)TTC_Sched.o:		./Src/Scheduler/TTC_Sched.cpp
 		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/Scheduler/TTC_Sched.cpp
 		
+$(OBJ_DIR)TTC_Sched_Pi_Impl.o:	./Src/Scheduler/TTC_Sched_Pi_Impl.cpp
+		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/Scheduler/TTC_Sched_Pi_Impl.cpp
+
 $(OBJ_DIR)Runnable.o:		./Src/Scheduler/Runnable.cpp
 		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/Scheduler/Runnable.cpp
 		
@@ -165,6 +155,9 @@ $(OBJ_DIR)MPR121.o:	./Src/I2Cdevlib/Pi/MPR121/MPR121.cpp
 
 $(OBJ_DIR)MPU6050.o:	./Src/I2Cdevlib/Pi/MPU6050/MPU6050.cpp
 		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/I2Cdevlib/Pi/MPU6050/MPU6050.cpp 
+		
+$(OBJ_DIR)MPU9150.o:	./Src/I2Cdevlib/Pi/MPU9150/MPU9150.cpp
+		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/I2Cdevlib/Pi/MPU9150/MPU9150.cpp 
 		
 $(OBJ_DIR)TCA6424A.o:	./Src/I2Cdevlib/Pi/TCA6424A/TCA6424A.cpp
 		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/I2Cdevlib/Pi/TCA6424A/TCA6424A.cpp
