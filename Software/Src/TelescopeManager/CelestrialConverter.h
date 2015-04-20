@@ -24,69 +24,58 @@ typedef struct {
     float Declination;      /**< Declination of the position on star map in view of the telescope.     */
 } CC_ANGLES_T;
 
-/** CelestrialConverter
- * - Class to convert between different coordinate systems.
+/** Class to convert between different coordinate systems.
  */
 class CelestrialConverter {
 
     public:
-        /** CelestrialConverter
-         * Constructor.
+        /** Constructor.
          */
             CelestrialConverter();
-        /** CalculateLocalSiderealTime
-         * - Calculate the Local sidereal tiem from the current time and location.
+        /** Calculate the Local sidereal tiem from the current time and location.
          * @param GrenwichStandardTime - CC_TIME_T - Current time.
          * @param LongitudeWest - float - Logitude of current position.
          * @return float - Local Sidereal Time in Radians.   
          */
             float CalculateLocalSiderealTime( CC_TIME_T GrenwichStandardTime, float LongitudeWest);
-        /** EquitorialToCelestrial
-        * - Convert equatorial coordinates to celestial coordinates. 
+        /** Convert equatorial coordinates to celestial coordinates. 
         * @param Angles - CC_ANGLES_T* - structure containing all Angles.
         * @param GrenwichStandardTime - CC_TIME_T - Current time.
         */
             void EquitorialToCelestrial( CC_ANGLES_T* Angles, CC_TIME_T GrenwichStandardTime );
-        /** CelestrialToEquitorial
-        * - Convert celestial coordinates to equatorial coordinates. 
+        /** Convert celestial coordinates to equatorial coordinates. 
         * @param Angles - CC_ANGLES_T* - structure containing all Angles.
         * @param GrenwichStandardTime - CC_TIME_T - Current time.
         */
             void CelestrialToEquitorial( CC_ANGLES_T* Angles, CC_TIME_T GrenwichStandardTime );
-        /** AddTime   
-        *  - Add two times together, will wrap around 1 day.
+        /** Add two times together, will wrap around 1 day.
         * @param TimeA - CC_TIME_T - Time to add. 
         * @param TimeB - CC_TIME_T - Time to add.
         * @return CC_TIME_T - The sum of the two times. 
         */
             CC_TIME_T AddTime( CC_TIME_T TimeA, CC_TIME_T TimeB );
-        /** SubtractTime
-         * - Subtract two times, result will wrap around 1 day.
+        /** Subtract two times, result will wrap around 1 day.
          * @param TimeA - CC_TIME_T - Time to subtract from.
          * @param TimeB - CC_TIME_T - Time to subtract.
          * @return CC_TIME_T - The subtraction of the two times.
          */
             CC_TIME_T SubtractTime( CC_TIME_T TimeA, CC_TIME_T TimeB );
-        /** DecimaliseTime
-         * - Convert hours minutes and seconds to hours.
+        /** Convert hours minutes and seconds to hours.
          * @param Time - CC_TIME_T - structure containing all the time info.
          * @return float - Hours in decimal format.
          */
             float DecimaliseTime( CC_TIME_T Time );
-        /** UnDecimaliseTime
-         * - Convert hours to hours, minutes and seconds.
+        /** Convert hours to hours, minutes and seconds.
          * @param TimeDec - float - hours in decimal format.
          * @return CC_TIME_T - Structure containing all the time info.
          */
             CC_TIME_T UnDecimaliseTime( float TimeDec );
-        /** ConvertTimeToAngle
-         * - Convert a time to an angle.
+        /** Convert a time to an angle.
          * @param Time - CC_TIME_T - Structure containing all the time info.
          * @return float - Angle.
          */
             float ConvertTimeToAngle( CC_TIME_T Time );
-        /** ConvertAngleToTime
-         * Convert an angle to a time
+        /** Convert an angle to a time
          * @param Angle - float - Angle  
          * @return CC_TIME_T - Structure containing all the time info
          */

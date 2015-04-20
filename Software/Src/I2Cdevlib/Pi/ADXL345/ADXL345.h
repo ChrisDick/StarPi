@@ -576,7 +576,7 @@ class ADXL345 {
  */
         uint8_t getFreefallTime();
 /** Set freefall time value.
- * @param threshold Freefall time value (scaled at 5 ms/LSB)
+ * @param time Freefall time value (scaled at 5 ms/LSB)
  * @see getFreefallTime()
  * @see ADXL345_RA_TIME_FF
  */
@@ -860,7 +860,7 @@ class ADXL345 {
  */
         bool getSleepEnabled();
 /** Set sleep mode enabled status.
- * @param Sleep mode enabled status
+ * @param enabled Sleep mode enabled status
  * @see getSleepEnabled()
  * @see ADXL345_RA_POWER_CTL
  * @see ADXL345_PCTL_SLEEP_BIT
@@ -901,8 +901,7 @@ class ADXL345 {
  * @see ADXL345_INT_DATA_READY_BIT
  */
         void setIntDataReadyEnabled(bool enabled);
-/** Set SINGLE_TAP interrupt enabled status.
- * @param enabled New interrupt enabled status
+/** Get SINGLE_TAP interrupt enabled status.
  * @see getIntDataReadyEnabled()
  * @see ADXL345_RA_INT_ENABLE
  * @see ADXL345_INT_SINGLE_TAP_BIT

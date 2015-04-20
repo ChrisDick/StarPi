@@ -44,39 +44,81 @@
 int64_t GetNow(void);
 
 class Server;
-
+/** Class handler for the sockets
+ */
 class Socket
 {
     public:
+/** Destructor
+ */
         virtual ~Socket( void ) { HangUp(); }
+/** Close connection
+ */
         void HangUp( void );
+    /** PrepareSelectFds
+     * Performs TCP/IP communication and handles new connections.
+     * If a new connection is established, creates a new Connection object
+     * and passes it to the parent Server with Server::addConnection().
+     * @param ReadFds reference
+     * @param WriteFds reference
+     * @param FdMax reference
+     */
         virtual void PrepareSelectFds(fd_set &ReadFds, fd_set &WriteFds, int16_t &FdMax) = 0;
+    /** HandleSelectFds
+     * handle the selected rw files
+     * @param ReadFds reference to the read file
+     * @param WriteFds reference to the write file
+     */
         virtual void HandleSelectFds(const fd_set &ReadFds, const fd_set &WriteFds) = 0;
+    /** Check status of socket
+     */
         virtual bool IsClosed( void )
         {
             return IS_INVALID_SOCKET(Fd);
         }
+    /** Check to see if the connection is a TCP socket.
+     */    
         virtual bool IsTcpConnection(void) const { return false; }
+    /** SendPosition
+     * Composes a "MessageCurrentPosition" in the write buffer.
+     * This is a Stellarium telescope control protocol message containing
+     * the current right ascension, declination and status of the telescope mount.
+     * @param RAInt uint32_T version of the Right Ascension
+     * @param DecInt int32_t version of the Declination
+     * @param Status int32_t version of the 
+     */
         virtual void SendPosition( uint16_t RAInt, int32_t DecInt, int32_t Status) {}
         
     protected:
+    /** Constructor
+     * @param server object for the server class
+     * @param Fd file id for the socket
+     */
         Socket(Server &server, SOCKET Fd) : server(server), Fd(Fd) {}
-        Server & server;
+        Server & server; /**< reference tot he server */
         
+    /** perform a non blocking read of the socket.
+     * @param buf pointer tot he data buffer
+     * @param count length of read.
+     */
         int readNonblocking(void *buf, int count)
         {
             return read(Fd, buf, count);
         }
+    /** Perform a non blocking write.
+     * @param buf pointer tot he data buffer
+     * @param count length of read.
+     */
         int writeNonblocking(const void *buf, int count) {
             return write(Fd, buf, count);
         }
     
     protected:
-        SOCKET Fd;
+        SOCKET Fd; /**< instance of the socket */
         
     private:
         // no copying
-        Socket(const Socket&);
+        Socket(const Socket&); 
         const Socket &operator=(const Socket&);
 };
 

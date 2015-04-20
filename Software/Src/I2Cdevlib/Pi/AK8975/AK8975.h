@@ -78,58 +78,133 @@ THE SOFTWARE.
 
 #define AK8975_I2CDIS_BIT         0
 
+/** Class Driver for Magnetometer
+ */
 class AK8975 {
     public:
+/** Default constructor, uses default I2C address.
+ * @see AK8975_DEFAULT_ADDRESS
+ */
         AK8975();
+/** Specific address constructor.
+ * @param address I2C address
+ * @see AK8975_DEFAULT_ADDRESS
+ * @see AK8975_ADDRESS_00
+ */
         AK8975(uint8_t address);
         
+/** Power on and prepare for general usage.
+ * No specific pre-configuration is necessary for this device.
+ */
         void initialize();
+/** Verify the I2C connection.
+ * Make sure the device is connected and responds as expected.
+ * @return True if connection is valid, false otherwise
+ */
         bool testConnection();
 
         // WIA register
+/** Documentation ToDo
+ */ 
         uint8_t getDeviceID();
         
         // INFO register
+/** Documentation ToDo
+ */ 
         uint8_t getInfo();
         
         // ST1 register
+/** Documentation ToDo
+ */ 
         bool getDataReady();
         
         // H* registers
+/** Documentation ToDo
+ * @param x
+ * @param y
+ * @param z
+ */ 
         void getHeading(int16_t *x, int16_t *y, int16_t *z);
+/** Documentation ToDo
+ */ 
         int16_t getHeadingX();
+/** Documentation ToDo
+ */ 
         int16_t getHeadingY();
+/** Documentation ToDo
+ */ 
         int16_t getHeadingZ();
         
         // ST2 register
+/** Documentation ToDo
+ */ 
         bool getOverflowStatus();
+/** Documentation ToDo
+ */ 
         bool getDataError();
 
         // CNTL register
+/** Documentation ToDo
+ */ 
         uint8_t getMode();
+/** Documentation ToDo
+ * @param mode
+ */ 
         void setMode(uint8_t mode);
+/** Documentation ToDo
+ */ 
         void reset();
         
         // ASTC register
+/** Documentation ToDo
+ * @param enabled
+ */ 
         void setSelfTest(bool enabled);
         
         // I2CDIS
+/** Documentation ToDo
+ */ 
         void disableI2C(); // um, why...?
         
         // ASA* registers
+/** Documentation ToDo
+ * @param x
+ * @param y 
+ * @param z
+ */ 
         void getAdjustment(int8_t *x, int8_t *y, int8_t *z);
+/** Documentation ToDo
+ * @param x
+ * @param y
+ * @param z
+ */ 
         void setAdjustment(int8_t x, int8_t y, int8_t z);
+/** Documentation ToDo
+ */ 
         uint8_t getAdjustmentX();
+/** Documentation ToDo
+ * @param x
+ */ 
         void setAdjustmentX(uint8_t x);
+/** Documentation ToDo
+ */ 
         uint8_t getAdjustmentY();
+/** Documentation ToDo
+ * @param y
+ */ 
         void setAdjustmentY(uint8_t y);
+/** Documentation ToDo
+ */ 
         uint8_t getAdjustmentZ();
+/** Documentation ToDo
+ * @param z
+ */ 
         void setAdjustmentZ(uint8_t z);
 
     private:
-        uint8_t devAddr;
-        uint8_t buffer[6];
-        uint8_t mode;
+        uint8_t devAddr;   /**< Address of the device */
+        uint8_t buffer[6]; /**< Data buffer */
+        uint8_t mode;      /**< device mode */
 };
 
 #endif /* _AK8975_H_ */

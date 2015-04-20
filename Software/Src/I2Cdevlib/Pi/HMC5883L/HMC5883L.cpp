@@ -34,14 +34,14 @@ THE SOFTWARE.
 
 #include "HMC5883L.h"
 
-/** Default constructor, uses default I2C address.
+/* Default constructor, uses default I2C address.
  * @see HMC5883L_DEFAULT_ADDRESS
  */
 HMC5883L::HMC5883L() {
     devAddr = HMC5883L_DEFAULT_ADDRESS;
 }
 
-/** Specific address constructor.
+/* Specific address constructor.
  * @param address I2C address
  * @see HMC5883L_DEFAULT_ADDRESS
  * @see HMC5883L_ADDRESS
@@ -50,7 +50,7 @@ HMC5883L::HMC5883L(uint8_t address) {
     devAddr = address;
 }
 
-/** Power on and prepare for general usage.
+/* Power on and prepare for general usage.
  * This will prepare the magnetometer with default settings, ready for single-
  * use mode (very low power requirements). Default settings include 8-sample
  * averaging, 15 Hz data output rate, normal measurement bias, a,d 1090 gain (in
@@ -72,7 +72,7 @@ void HMC5883L::initialize() {
     setMode(HMC5883L_MODE_SINGLE);
 }
 
-/** Verify the I2C connection.
+/* Verify the I2C connection.
  * Make sure the device is connected and responds as expected.
  * @return True if connection is valid, false otherwise
  */
@@ -85,7 +85,7 @@ bool HMC5883L::testConnection() {
 
 // CONFIG_A register
 
-/** Get number of samples averaged per measurement.
+/* Get number of samples averaged per measurement.
  * @return Current samples averaged per measurement (0-3 for 1/2/4/8 respectively)
  * @see HMC5883L_AVERAGING_8
  * @see HMC5883L_RA_CONFIG_A
@@ -96,7 +96,7 @@ uint8_t HMC5883L::getSampleAveraging() {
     I2Cdev::readBits(devAddr, HMC5883L_RA_CONFIG_A, HMC5883L_CRA_AVERAGE_BIT, HMC5883L_CRA_AVERAGE_LENGTH, buffer);
     return buffer[0];
 }
-/** Set number of samples averaged per measurement.
+/* Set number of samples averaged per measurement.
  * @param averaging New samples averaged per measurement setting(0-3 for 1/2/4/8 respectively)
  * @see HMC5883L_RA_CONFIG_A
  * @see HMC5883L_CRA_AVERAGE_BIT
@@ -105,7 +105,7 @@ uint8_t HMC5883L::getSampleAveraging() {
 void HMC5883L::setSampleAveraging(uint8_t averaging) {
     I2Cdev::writeBits(devAddr, HMC5883L_RA_CONFIG_A, HMC5883L_CRA_AVERAGE_BIT, HMC5883L_CRA_AVERAGE_LENGTH, averaging);
 }
-/** Get data output rate value.
+/* Get data output rate value.
  * The Table below shows all selectable output rates in continuous measurement
  * mode. All three channels shall be measured within a given output rate. Other
  * output rates with maximum rate of 160 Hz can be achieved by monitoring DRDY
@@ -132,7 +132,7 @@ uint8_t HMC5883L::getDataRate() {
     I2Cdev::readBits(devAddr, HMC5883L_RA_CONFIG_A, HMC5883L_CRA_RATE_BIT, HMC5883L_CRA_RATE_LENGTH, buffer);
     return buffer[0];
 }
-/** Set data output rate value.
+/* Set data output rate value.
  * @param rate Rate of data output to registers
  * @see getDataRate()
  * @see HMC5883L_RATE_15
@@ -143,7 +143,7 @@ uint8_t HMC5883L::getDataRate() {
 void HMC5883L::setDataRate(uint8_t rate) {
     I2Cdev::writeBits(devAddr, HMC5883L_RA_CONFIG_A, HMC5883L_CRA_RATE_BIT, HMC5883L_CRA_RATE_LENGTH, rate);
 }
-/** Get measurement bias value.
+/* Get measurement bias value.
  * @return Current bias value (0-2 for normal/positive/negative respectively)
  * @see HMC5883L_BIAS_NORMAL
  * @see HMC5883L_RA_CONFIG_A
@@ -154,7 +154,7 @@ uint8_t HMC5883L::getMeasurementBias() {
     I2Cdev::readBits(devAddr, HMC5883L_RA_CONFIG_A, HMC5883L_CRA_BIAS_BIT, HMC5883L_CRA_BIAS_LENGTH, buffer);
     return buffer[0];
 }
-/** Set measurement bias value.
+/* Set measurement bias value.
  * @param bias New bias value (0-2 for normal/positive/negative respectively)
  * @see HMC5883L_BIAS_NORMAL
  * @see HMC5883L_RA_CONFIG_A
@@ -167,7 +167,7 @@ void HMC5883L::setMeasurementBias(uint8_t bias) {
 
 // CONFIG_B register
 
-/** Get magnetic field gain value.
+/* Get magnetic field gain value.
  * The table below shows nominal gain settings. Use the "Gain" column to convert
  * counts to Gauss. Choose a lower gain value (higher GN#) when total field
  * strength causes overflow in one of the data output registers (saturation).
@@ -194,7 +194,7 @@ uint8_t HMC5883L::getGain() {
     I2Cdev::readBits(devAddr, HMC5883L_RA_CONFIG_B, HMC5883L_CRB_GAIN_BIT, HMC5883L_CRB_GAIN_LENGTH, buffer);
     return buffer[0];
 }
-/** Set magnetic field gain value.
+/* Set magnetic field gain value.
  * @param gain New magnetic field gain value
  * @see getGain()
  * @see HMC5883L_RA_CONFIG_B
@@ -210,7 +210,7 @@ void HMC5883L::setGain(uint8_t gain) {
 
 // MODE register
 
-/** Get measurement mode.
+/* Get measurement mode.
  * In continuous-measurement mode, the device continuously performs measurements
  * and places the result in the data register. RDY goes high when new data is
  * placed in all three registers. After a power-on or a write to the mode or
@@ -236,7 +236,7 @@ uint8_t HMC5883L::getMode() {
     I2Cdev::readBits(devAddr, HMC5883L_RA_MODE, HMC5883L_MODEREG_BIT, HMC5883L_MODEREG_LENGTH, buffer);
     return buffer[0];
 }
-/** Set measurement mode.
+/* Set measurement mode.
  * @param newMode New measurement mode
  * @see getMode()
  * @see HMC5883L_MODE_CONTINUOUS
@@ -256,7 +256,7 @@ void HMC5883L::setMode(uint8_t newMode) {
 
 // DATA* registers
 
-/** Get 3-axis heading measurements.
+/* Get 3-axis heading measurements.
  * In the event the ADC reading overflows or underflows for the given channel,
  * or if there is a math overflow during the bias measurement, this data
  * register will contain the value -4096. This register value will clear when
@@ -274,7 +274,7 @@ void HMC5883L::getHeading(int16_t *x, int16_t *y, int16_t *z) {
     *y = (((int16_t)buffer[4]) << 8) | buffer[5];
     *z = (((int16_t)buffer[2]) << 8) | buffer[3];
 }
-/** Get X-axis heading measurement.
+/* Get X-axis heading measurement.
  * @return 16-bit signed integer with X-axis heading
  * @see HMC5883L_RA_DATAX_H
  */
@@ -285,7 +285,7 @@ int16_t HMC5883L::getHeadingX() {
     if (mode == HMC5883L_MODE_SINGLE) I2Cdev::writeByte(devAddr, HMC5883L_RA_MODE, HMC5883L_MODE_SINGLE << (HMC5883L_MODEREG_BIT - HMC5883L_MODEREG_LENGTH + 1));
     return (((int16_t)buffer[0]) << 8) | buffer[1];
 }
-/** Get Y-axis heading measurement.
+/* Get Y-axis heading measurement.
  * @return 16-bit signed integer with Y-axis heading
  * @see HMC5883L_RA_DATAY_H
  */
@@ -296,7 +296,7 @@ int16_t HMC5883L::getHeadingY() {
     if (mode == HMC5883L_MODE_SINGLE) I2Cdev::writeByte(devAddr, HMC5883L_RA_MODE, HMC5883L_MODE_SINGLE << (HMC5883L_MODEREG_BIT - HMC5883L_MODEREG_LENGTH + 1));
     return (((int16_t)buffer[4]) << 8) | buffer[5];
 }
-/** Get Z-axis heading measurement.
+/* Get Z-axis heading measurement.
  * @return 16-bit signed integer with Z-axis heading
  * @see HMC5883L_RA_DATAZ_H
  */
@@ -310,7 +310,7 @@ int16_t HMC5883L::getHeadingZ() {
 
 // STATUS register
 
-/** Get data output register lock status.
+/* Get data output register lock status.
  * This bit is set when this some but not all for of the six data output
  * registers have been read. When this bit is set, the six data output registers
  * are locked and any new data will not be placed in these register until one of
@@ -325,7 +325,7 @@ bool HMC5883L::getLockStatus() {
     I2Cdev::readBit(devAddr, HMC5883L_RA_STATUS, HMC5883L_STATUS_LOCK_BIT, buffer);
     return buffer[0];
 }
-/** Get data ready status.
+/* Get data ready status.
  * This bit is set when data is written to all six data registers, and cleared
  * when the device initiates a write to the data output registers and after one
  * or more of the data output registers are written to. When RDY bit is clear it
@@ -342,21 +342,21 @@ bool HMC5883L::getReadyStatus() {
 
 // ID_* registers
 
-/** Get identification byte A
+/* Get identification byte A
  * @return ID_A byte (should be 01001000, ASCII value 'H')
  */
 uint8_t HMC5883L::getIDA() {
     I2Cdev::readByte(devAddr, HMC5883L_RA_ID_A, buffer);
     return buffer[0];
 }
-/** Get identification byte B
+/* Get identification byte B
  * @return ID_A byte (should be 00110100, ASCII value '4')
  */
 uint8_t HMC5883L::getIDB() {
     I2Cdev::readByte(devAddr, HMC5883L_RA_ID_B, buffer);
     return buffer[0];
 }
-/** Get identification byte C
+/* Get identification byte C
  * @return ID_A byte (should be 00110011, ASCII value '3')
  */
 uint8_t HMC5883L::getIDC() {

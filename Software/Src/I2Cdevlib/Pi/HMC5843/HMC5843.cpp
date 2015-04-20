@@ -32,14 +32,14 @@ THE SOFTWARE.
 
 #include "HMC5843.h"
 
-/** Default constructor, uses default I2C address.
+/* Default constructor, uses default I2C address.
  * @see HMC5843_DEFAULT_ADDRESS
  */
 HMC5843::HMC5843() {
     devAddr = HMC5843_DEFAULT_ADDRESS;
 }
 
-/** Specific address constructor.
+/* Specific address constructor.
  * @param address I2C address
  * @see HMC5843_DEFAULT_ADDRESS
  * @see HMC5843_ADDRESS
@@ -48,7 +48,7 @@ HMC5843::HMC5843(uint8_t address) {
     devAddr = address;
 }
 
-/** Power on and prepare for general usage.
+/* Power on and prepare for general usage.
  * This will prepare the magnetometer with default settings, ready for single-
  * use mode (very low power requirements). Default settings include 8-sample
  * averaging, 15 Hz data output rate, normal measurement bias, a,d 1090 gain (in
@@ -69,7 +69,7 @@ void HMC5843::initialize() {
     setMode(HMC5843_MODE_SINGLE);
 }
 
-/** Verify the I2C connection.
+/* Verify the I2C connection.
  * Make sure the device is connected and responds as expected.
  * @return True if connection is valid, false otherwise
  */
@@ -82,7 +82,7 @@ bool HMC5843::testConnection() {
 
 // CONFIG_A register
 
-/** Get data output rate value.
+/* Get data output rate value.
  * The Table below shows all selectable output rates in continuous measurement
  * mode. All three channels shall be measured within a given output rate.
  *
@@ -107,7 +107,7 @@ uint8_t HMC5843::getDataRate() {
     I2Cdev::readBits(devAddr, HMC5843_RA_CONFIG_A, HMC5843_CRA_RATE_BIT, HMC5843_CRA_RATE_LENGTH, buffer);
     return buffer[0];
 }
-/** Set data output rate value.
+/* Set data output rate value.
  * @param rate Rate of data output to registers
  * @see getDataRate()
  * @see HMC5843_RATE_10
@@ -118,7 +118,7 @@ uint8_t HMC5843::getDataRate() {
 void HMC5843::setDataRate(uint8_t rate) {
     I2Cdev::writeBits(devAddr, HMC5843_RA_CONFIG_A, HMC5843_CRA_RATE_BIT, HMC5843_CRA_RATE_LENGTH, rate);
 }
-/** Get measurement bias value.
+/* Get measurement bias value.
  * @return Current bias value (0-2 for normal/positive/negative respectively)
  * @see HMC5843_BIAS_NORMAL
  * @see HMC5843_RA_CONFIG_A
@@ -129,7 +129,7 @@ uint8_t HMC5843::getMeasurementBias() {
     I2Cdev::readBits(devAddr, HMC5843_RA_CONFIG_A, HMC5843_CRA_BIAS_BIT, HMC5843_CRA_BIAS_LENGTH, buffer);
     return buffer[0];
 }
-/** Set measurement bias value.
+/* Set measurement bias value.
  * @param bias New bias value (0-2 for normal/positive/negative respectively)
  * @see HMC5843_BIAS_NORMAL
  * @see HMC5843_RA_CONFIG_A
@@ -142,7 +142,7 @@ void HMC5843::setMeasurementBias(uint8_t bias) {
 
 // CONFIG_B register
 
-/** Get magnetic field gain value.
+/* Get magnetic field gain value.
  * The table below shows nominal gain settings. Use the Gain column to convert
  * counts to Gauss. Choose a lower gain value (higher GN#) when total field
  * strength causes overflow in one of the data output registers (saturation).
@@ -169,7 +169,7 @@ uint8_t HMC5843::getGain() {
     I2Cdev::readBits(devAddr, HMC5843_RA_CONFIG_B, HMC5843_CRB_GAIN_BIT, HMC5843_CRB_GAIN_LENGTH, buffer);
     return buffer[0];
 }
-/** Set magnetic field gain value.
+/* Set magnetic field gain value.
  * @param gain New magnetic field gain value
  * @see getGain()
  * @see HMC5843_RA_CONFIG_B
@@ -185,7 +185,7 @@ void HMC5843::setGain(uint8_t gain) {
 
 // MODE register
 
-/** Get measurement mode.
+/* Get measurement mode.
  * In continuous-measurement mode, the device continuously performs measurements
  * and places the result in the data register. RDY goes high when new data is
  * placed in all three registers. After a power-on or a write to the mode or
@@ -212,7 +212,7 @@ uint8_t HMC5843::getMode() {
     I2Cdev::readBits(devAddr, HMC5843_RA_MODE, HMC5843_MODEREG_BIT, HMC5843_MODEREG_LENGTH, buffer);
     return buffer[0];
 }
-/** Set measurement mode.
+/* Set measurement mode.
  * @param newMode New measurement mode
  * @see getMode()
  * @see HMC5843_MODE_CONTINUOUS
@@ -233,7 +233,7 @@ void HMC5843::setMode(uint8_t newMode) {
 
 // DATA* registers
 
-/** Get 3-axis heading measurements.
+/* Get 3-axis heading measurements.
  * In the event the ADC reading overflows or underflows for the given channel,
  * or if there is a math overflow during the bias measurement, this data
  * register will contain the value -4096. This register value will clear when
@@ -251,7 +251,7 @@ void HMC5843::getHeading(int16_t *x, int16_t *y, int16_t *z) {
     *y = (((int16_t)buffer[2]) << 8) | buffer[3];
     *z = (((int16_t)buffer[4]) << 8) | buffer[5];
 }
-/** Get X-axis heading measurement.
+/* Get X-axis heading measurement.
  * @return 16-bit signed integer with X-axis heading
  * @see HMC5843_RA_DATAX_H
  */
@@ -262,7 +262,7 @@ int16_t HMC5843::getHeadingX() {
     if (mode == HMC5843_MODE_SINGLE) I2Cdev::writeByte(devAddr, HMC5843_RA_MODE, HMC5843_MODE_SINGLE << (HMC5843_MODEREG_BIT - HMC5843_MODEREG_LENGTH + 1));
     return (((int16_t)buffer[0]) << 8) | buffer[1];
 }
-/** Get Y-axis heading measurement.
+/* Get Y-axis heading measurement.
  * @return 16-bit signed integer with Y-axis heading
  * @see HMC5843_RA_DATAY_H
  */
@@ -273,7 +273,7 @@ int16_t HMC5843::getHeadingY() {
     if (mode == HMC5843_MODE_SINGLE) I2Cdev::writeByte(devAddr, HMC5843_RA_MODE, HMC5843_MODE_SINGLE << (HMC5843_MODEREG_BIT - HMC5843_MODEREG_LENGTH + 1));
     return (((int16_t)buffer[2]) << 8) | buffer[3];
 }
-/** Get Z-axis heading measurement.
+/* Get Z-axis heading measurement.
  * @return 16-bit signed integer with Z-axis heading
  * @see HMC5843_RA_DATAZ_H
  */
@@ -287,7 +287,7 @@ int16_t HMC5843::getHeadingZ() {
 
 // STATUS register
 
-/** Get regulator enabled status.
+/* Get regulator enabled status.
  * This bit is set when the internal voltage regulator is enabled. This bit is
  * cleared when the internal regulator is disabled.
  * @return Regulator enabled status
@@ -298,7 +298,7 @@ bool HMC5843::getRegulatorEnabledStatus() {
     I2Cdev::readBit(devAddr, HMC5843_RA_STATUS, HMC5843_STATUS_REN_BIT, buffer);
     return buffer[0];
 }
-/** Get data output register lock status.
+/* Get data output register lock status.
  * This bit is set when this some but not all for of the six data output
  * registers have been read. When this bit is set, the six data output registers
  * are locked and any new data will not be placed in these register until one of
@@ -313,7 +313,7 @@ bool HMC5843::getLockStatus() {
     I2Cdev::readBit(devAddr, HMC5843_RA_STATUS, HMC5843_STATUS_LOCK_BIT, buffer);
     return buffer[0];
 }
-/** Get data ready status.
+/* Get data ready status.
  * This bit is set when data is written to all six data registers, and cleared
  * when the device initiates a write to the data output registers and after one
  * or more of the data output registers are written to. When RDY bit is clear it
@@ -330,21 +330,21 @@ bool HMC5843::getReadyStatus() {
 
 // ID_* registers
 
-/** Get identification byte A
+/* Get identification byte A
  * @return ID_A byte (should be 01001000, ASCII value 'H')
  */
 uint8_t HMC5843::getIDA() {
     I2Cdev::readByte(devAddr, HMC5843_RA_ID_A, buffer);
     return buffer[0];
 }
-/** Get identification byte B
+/* Get identification byte B
  * @return ID_A byte (should be 00110100, ASCII value '4')
  */
 uint8_t HMC5843::getIDB() {
     I2Cdev::readByte(devAddr, HMC5843_RA_ID_B, buffer);
     return buffer[0];
 }
-/** Get identification byte C
+/* Get identification byte C
  * @return ID_A byte (should be 00110011, ASCII value '3')
  */
 uint8_t HMC5843::getIDC() {

@@ -29,7 +29,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "Socket.hpp" // GetNow
 #include "TelescopeManager.h"
 #include <math.h>
-
+/* Constructor
+*/
 ServerPi::ServerPi(int port)
             :Server(port)
 {

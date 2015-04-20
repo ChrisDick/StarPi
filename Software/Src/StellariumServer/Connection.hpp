@@ -34,52 +34,43 @@
 class Connection : public Socket
 {
     public:
-    /** Connection
-     * Constructor
+    /** Constructor
      */
         Connection( Server &server, SOCKET Fd );
-    /** GetServerMinusClientTime
-     * A get function for the difference in server times
+    /** A get function for the difference in server times
      * @return int64_t the difference in times
      */
         int64_t const GetServerMinusClientTime( void );
      
     protected:
-    /** PerformReading
-     * Receives data from a TCP/IP connection and stores it in the read buffer.
+    /** Receives data from a TCP/IP connection and stores it in the read buffer.
      */
         void PerformReading( void );
-    /** PerformWriting
-     * Sends the contents of the write buffer over a TCP/IP connection.
+    /** Sends the contents of the write buffer over a TCP/IP connection.
      */
         void PerformWriting( void );
-    /** PrepareSelectFds
-     * Performs TCP/IP communication and handles new connections.
+    /** Performs TCP/IP communication and handles new connections.
      * If a new connection is established, creates a new Connection object
      * and passes it to the parent Server with Server::addConnection().
      * @param ReadFds reference
      * @param WriteFds reference
      * @param FdMax reference
      */
-        void PrepareSelectFds( fd_set &ReadFds, fd_set &WriteFds, int16_t &Fd_max );
+        void PrepareSelectFds( fd_set &ReadFds, fd_set &WriteFds, int16_t &FdMax );
     
     private:
-    /** isTcpConnection
-     * Returns true, as by default Connection implements a TCP/IP connection.
+    /** Returns true, as by default Connection implements a TCP/IP connection.
      */
         virtual bool IsTcpConnection( void ) { return true; }
-    /** isAsciiConnection
-     * Returns false, as by default Connection implements a TCP/IP connection.
+    /** Returns false, as by default Connection implements a TCP/IP connection.
      */
         virtual bool IsAsciiConnection( void ){ return false; }
-    /** HandleSelectFds
-     * handle the selected rw files
+    /** Handle the selected rw files
      * @param ReadFds reference to the read file
      * @param WriteFds reference to the write file
      */
         void HandleSelectFds( const fd_set &ReadFds, const fd_set &WriteFds );
-    /** DataReceived
-     * Parses the read buffer and handles any messages contained within it.
+    /** Parses the read buffer and handles any messages contained within it.
      * If the data contains a Stellarium telescope control command,
      * dataReceived() calls the appropriate method of Server.
      * For example, "MessageGoto" (type 0) causes a call to Server::gotoReceived().
@@ -87,8 +78,7 @@ class Connection : public Socket
      * @param ReadBuffEnd pointer to the end of the buffer
      */
         virtual void DataReceived( const uint8_t* &BufferPtr, const uint8_t *ReadBuffEnd );
-    /** SendPosition
-     * Composes a "MessageCurrentPosition" in the write buffer.
+    /** Composes a "MessageCurrentPosition" in the write buffer.
      * This is a Stellarium telescope control protocol message containing
      * the current right ascension, declination and status of the telescope mount.
      * @param RAInt uint32_T version of the Right Ascension
@@ -98,10 +88,10 @@ class Connection : public Socket
         void SendPosition( uint32_t RAInt, int32_t DecInt, int32_t Status );
     
     protected:
-        uint8_t ReadBuff[120];             /** Read buffer */
-        uint8_t *ReadBuffEnd;              /** End of read buffer */
-        uint8_t WriteBuff[120];            /** Write buffer */
-        uint8_t *WriteBuffEnd;             /** end of write buffer */
+        uint8_t ReadBuff[120];             /**< Read buffer */
+        uint8_t *ReadBuffEnd;              /**< End of read buffer */
+        uint8_t WriteBuff[120];            /**< Write buffer */
+        uint8_t *WriteBuffEnd;             /**< end of write buffer */
     
     private:
         int64_t ServerMinusClientTime;  /** difference in the client and server times */

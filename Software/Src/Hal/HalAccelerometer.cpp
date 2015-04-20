@@ -21,15 +21,13 @@ MPU9150 Accel;
 #error no Accelerometer defined - please edit your config.h file.
 #endif
 
-/** HalAccelerometer
- *  Constructor
+/** Constructor
  */
 HalAccelerometer::HalAccelerometer( void )
 {
 }
 
-/** HalAccelerometerInit
- *  Initialise the Accelerometer
+/* Initialise the Accelerometer
  * @return Status initialisation (true = success)
  */
 bool HalAccelerometer::HalAccelerometerInit( void )
@@ -61,8 +59,7 @@ bool HalAccelerometer::HalAccelerometerInit( void )
     return Result;
 }
 
-/** HalAccelerometerGetPitch
- * Get the Pitch of the Accelerometer
+/* Get the Pitch of the Accelerometer
  * @return float The Pitch
  */
 float HalAccelerometer::HalAccelerometerGetPitch( void )
@@ -75,8 +72,7 @@ float HalAccelerometer::HalAccelerometerGetPitch( void )
 }
 
 
-/** HalAccelerometerGetRoll
- *  Get the Roll of the Accelerometer
+/* Get the Roll of the Accelerometer
  * @return float The Roll
  */
 float HalAccelerometer::HalAccelerometerGetRoll( void )
@@ -88,8 +84,7 @@ float HalAccelerometer::HalAccelerometerGetRoll( void )
     return Roll;
 }
 
-/** HalAccelerometerRun
- *  runs the filter and updates the Roll and Pitch
+/* runs the filter and updates the Roll and Pitch
  */
 void HalAccelerometer::HalAccelerometerRun( void )
 {    
@@ -109,8 +104,7 @@ void HalAccelerometer::HalAccelerometerRun( void )
     }
 }
 
-/** UpdatePitchAndRoll
- *  calculates the Roll and Pitch
+/* Calculates the Roll and Pitch
  * see http://www.st.com/web/en/resource/technical/document/application_note/CD00268887.pdf
  */
 void HalAccelerometer::UpdatePitchAndRoll( void )
@@ -127,8 +121,7 @@ void HalAccelerometer::UpdatePitchAndRoll( void )
 }
 
 
-/** GetXRawAcceleration
- *  Get the X axis raw value of the Accelerometer
+/* Get the X axis raw value of the Accelerometer
  * @return int16_t X axis value
  */
 int16_t HalAccelerometer::GetXRawAcceleration( void )
@@ -152,8 +145,7 @@ int16_t HalAccelerometer::GetXRawAcceleration( void )
     return Result;
 }
 
-/** GetYRawAcceleration
- *  Get the Y axis raw value of the Accelerometer
+/* Get the Y axis raw value of the Accelerometer
  * @return int16_t Y axis value
  */
 int16_t HalAccelerometer::GetYRawAcceleration( void )
@@ -177,8 +169,7 @@ int16_t HalAccelerometer::GetYRawAcceleration( void )
     return Result;    
 }
 
-/** GetZRawAcceleration
- *  Get the Z axis raw value of the Accelerometer
+/* Get the Z axis raw value of the Accelerometer
  * @return int16_t Z axis value
  */
 int16_t HalAccelerometer::GetZRawAcceleration( void )

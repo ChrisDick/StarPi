@@ -146,125 +146,402 @@ THE SOFTWARE.
 /* mode settings */
 #define BMA150_MODE_NORMAL             0
 #define BMA150_MODE_SLEEP              1
-
+/** Class Dirver for the Accelerometer
+ */
 class BMA150 {
     public:
+/** Default constructor, uses default I2C address.
+ * @see BMA150_DEFAULT_ADDRESS
+ */
         BMA150();
+/** Specific address constructor.
+ * @param address I2C address
+ * @see BMA150_DEFAULT_ADDRESS
+ * @see BMA150_ADDRESS_00
+ */
         BMA150(uint8_t address);
         
+/** Power on and prepare for general usage. This sets the full scale range of 
+ * the sensor, as well as the bandwidth
+ */
         void initialize();
+/** Verify the I2C connection.
+ * Make sure the device is connected and responds as expected.
+ * @return True if connection is valid, false otherwise
+ */
         bool testConnection();
 
         // CHIP_ID register
+/** Get Device ID.
+ * This register is used to verify the identity of the device (0b010).
+ * @return Device ID (should be 2 dec)
+ * @see BMA150_RA_CHIP_ID
+ */
         uint8_t getDeviceID();
         
         // VERSION register
+/** Get Chip Revision number
+ * @return Chip Revision
+ * @see BMA150_RA_VERSION
+ */
         uint8_t getChipRevision();
         
         // AXIS registers
+/** Get 3-axis accelerometer readings.
+ * @param x 16-bit signed integer container for X-axis acceleration
+ * @param y 16-bit signed integer container for Y-axis acceleration
+ * @param z 16-bit signed integer container for Z-axis acceleration
+ * @see BMA150_RA_Y_AXIS_LSB
+ */
         void getAcceleration(int16_t* x, int16_t* y, int16_t* z);
+/** Get X-axis accelerometer reading.
+ * @return X-axis acceleration measurement in 16-bit 2's complement format
+ * @see BMA150_RA_X_AXIS_LSB
+ */
         int16_t getAccelerationX();
+/** Get Y-axis accelerometer reading.
+ * @return Y-axis acceleration measurement in 16-bit 2's complement format
+ * @see BMA150_RA_Y_AXIS_LSB
+ */
         int16_t getAccelerationY();
+/** Get Z-axis accelerometer reading.
+ * @return Z-axis acceleration measurement in 16-bit 2's complement format
+ * @see BMA150_RA_Z_AXIS_LSB
+ */
         int16_t getAccelerationZ();
+/** Check for new X axis acceleration data.
+ * @return New X-Axis Data Status
+ * @see BMA150_RA_X_AXIS_LSB
+ */
         bool newDataX();
+/** Check for new Y axis acceleration data.
+ * @return New Y-Axis Data Status
+ * @see BMA150_RA_Y_AXIS_LSB
+ */
         bool newDataY();
+/** Check for new Z axis acceleration data.
+ * @return New Z-Axis Data Status
+ * @see BMA150_RA_Z_AXIS_LSB
+ */
         bool newDataZ();
                 
         // TEMP register
+/** Check for current temperature
+ * @return Current Temperature in 0.5C increments from -30C at 00h
+ * @see BMA150_RA_TEMP_RD
+ */
         int8_t getTemperature();
         
         // SMB150 registers
+/** Documentation ToDo
+ */ 
         bool getStatusHG();
+/** Documentation ToDo
+ */ 
         bool getStatusLG();
+/** Documentation ToDo
+ */ 
         bool getHGLatched();
+/** Documentation ToDo
+ */ 
         bool getLGLatched();
+/** Documentation ToDo
+ */ 
         bool getAlertPhase();
+/** Documentation ToDo
+ */ 
         bool getSTResult();
+/** Documentation ToDo
+ * @param status_hg
+ */ 
         void setStatusHG(bool status_hg);
+/** Documentation ToDo
+ * @param status_lg
+ */ 
         void setStatusLG(bool status_lg);
+/** Documentation ToDo
+ * @param hg_latched
+ */ 
         void setHGLatched(bool hg_latched);
+/** Documentation ToDo
+ * @param lg_latched
+ */ 
         void setLGLatched(bool lg_latched);
+/** Documentation ToDo
+ * @param alert_phase
+ */ 
         void setAlertPhase(bool alert_phase);
+/** Documentation ToDo
+ * @param st_result
+ */ 
         void setSTResult(bool st_result);
         
+/** Documentation ToDo
+ */ 
         bool getSleep();
+/** Documentation ToDo
+ */ 
         bool getSoftReset();
+/** Documentation ToDo
+ */ 
         bool getSelfTest0();
+/** Documentation ToDo
+ */ 
         bool getSelfTest1();
+/** Documentation ToDo
+ */ 
         bool getEEW();
+/** Documentation ToDo
+ */ 
         bool getUpdateImage();
+/** Documentation ToDo
+ */ 
         bool getResetINT();
+/** Documentation ToDo
+ * @param sleep
+ */ 
         void setSleep(bool sleep);
+/** Documentation ToDo
+ * @param soft_reset
+ */ 
         void setSoftReset(bool soft_reset);
+/** Documentation ToDo
+ * @param st0
+ */ 
         void setSelfTest0(bool st0);
+/** Documentation ToDo
+ * @param st1
+ */ 
         void setSelfTest1(bool st1);
+/** Documentation ToDo
+ * @param eew
+ */ 
         void setEEW(bool eew);
+/** Documentation ToDo
+ * @param update_image
+ */ 
         void setUpdateImage(bool update_image);
+/** Documentation ToDo
+ * @param reset_int
+ */ 
         void setResetINT(bool reset_int);
         
+/** Documentation ToDo
+ */ 
         bool getEnableLG();
+/** Documentation ToDo
+ */ 
         bool getEnableHG();
+/** Documentation ToDo
+ */ 
         int8_t getCounterLG();
+/** Documentation ToDo
+ */ 
         int8_t getCounterHG();
+/** Documentation ToDo
+ */ 
         bool getAnyMotion();
+/** Documentation ToDo
+ */ 
         bool getAlert();
+/** Documentation ToDo
+ * @param enable_lg
+ */ 
         void setEnableLG(bool enable_lg);
+/** Documentation ToDo
+ * @param enable_hg
+ */ 
         void setEnableHG(bool enable_hg);
+/** Documentation ToDo
+ * @param counter_lg
+ */ 
         void setCounterLG(int8_t counter_lg);
+/** Documentation ToDo
+ * @param counter_hg
+ */ 
         void setCounterHG(int8_t counter_hg);
+/** Documentation ToDo
+ * @param any_motion
+ */ 
         void setAnyMotion(bool any_motion);
+/** Documentation ToDo
+ * @param alert
+ */ 
         void setAlert(bool alert);
         
+/** Documentation ToDo
+ */ 
         bool getWakeUp();
+/** Documentation ToDo
+ */ 
         int8_t getWakeUpPause();
+/** Documentation ToDo
+ */ 
         bool getShadowDis();
+/** Documentation ToDo
+ */ 
         bool getLatchInt();
+/** Documentation ToDo
+ */ 
         bool getNewDataInt();
+/** Documentation ToDo
+ */ 
         bool getEnableAdvInt();
+/** Documentation ToDo
+ */ 
         bool getSPI4();
+/** Documentation ToDo
+ * @param wake_up
+ */ 
         void setWakeUp(bool wake_up);
+/** Documentation ToDo
+ * @param wake_up_pause
+ */ 
         void setWakeUpPause(int8_t wake_up_pause);
+/** Documentation ToDo
+ * @param shadow_dis
+ */ 
         void setShadowDis(bool shadow_dis);
+/** Documentation ToDo
+ * @param latch_int
+ */ 
         void setLatchInt(bool latch_int);
+/** Documentation ToDo
+ * @param new_data_int
+ */ 
         void setNewDataInt(bool new_data_int);
+/** Documentation ToDo
+ * @param enable_adv_int
+ */ 
         void setEnableAdvInt(bool enable_adv_int);
+/** Documentation ToDo
+ * @param spi4
+ */ 
         void setSPI4(bool spi4);    
         
         // LG / HG registers
+/** Documentation ToDo
+ */ 
         uint8_t getLGThreshold();
+/** Documentation ToDo
+ * @param lgthres
+ */ 
         void  setLGThreshold(uint8_t lgthres);
 
+/** Documentation ToDo
+ */ 
         uint8_t getLGDuration();
+/** Documentation ToDo
+ * @param lgdur
+ */ 
         void  setLGDuration(uint8_t lgdur);
 
+/** Documentation ToDo
+ */ 
         uint8_t getHGThreshold();
+/** Documentation ToDo
+ * @param hgthres
+ */ 
         void  setHGThreshold(uint8_t hgthres);
 
+/** Documentation ToDo
+ */ 
         uint8_t getHGDuration();
+/** Documentation ToDo
+ * @param hgdur
+ */ 
         void  setHGDuration(uint8_t hgdur);
 
         // MOTION_THRS register
+/** Documentation ToDo
+ */ 
         uint8_t getMotionThreshold();
+/** Documentation ToDo
+ * @param mot_thres
+ */ 
         void  setMotionThreshold(uint8_t mot_thres);
         
         // HYSTERESIS register
+/** Documentation ToDo
+ */ 
         uint8_t getLGHysteresis();
+/** Documentation ToDo
+ * @param lg_hys
+ */ 
         void  setLGHysteresis(uint8_t lg_hys);
+/** Documentation ToDo
+ */ 
         uint8_t getHGHysteresis();
+/** Documentation ToDo
+ * @param hg_hys
+ */ 
         void  setHGHysteresis(uint8_t hg_hys);
+/** Documentation ToDo
+ */ 
         uint8_t getMotionDuration();
+/** Documentation ToDo
+ * @param mot_dur
+ */ 
         void  setMotionDuration(uint8_t mot_dur);
         
         // CUSTOMER registers
+/** Documentation ToDo
+ */ 
         uint8_t getCustom1();
+/** Documentation ToDo 
+ * @param custom1
+ */ 
         void setCustom1(uint8_t custom1);
+/** Documentation ToDo
+ */ 
         uint8_t getCustom2();
+/** Documentation ToDo
+ * @param custom2
+ */ 
         void setCustom2(uint8_t custom2);
         
         // RANGE / BANDWIDTH registers
+/** Get Sensor Full Range
+ * @return Current Sensor Full Scale Range
+ * 0 = +/- 2G
+ * 1 = +/- 4G
+ * 2 = +/- 8G
+ * @see BMA150_RA_RANGE_BWIDTH
+ * @see BMA150_RANGE_BIT
+ * @see BMA150_RANGE_LENGTH
+ */
         uint8_t getRange();
+/** Set Sensor Full Range
+ * @param range New full-scale range value
+ * @see getRange()
+ * @see BMA150_RA_RANGE_BWIDTH
+ * @see BMA150_RANGE_BIT
+ * @see BMA150_RANGE_LENGTH
+ */
         void setRange(uint8_t range);
+/** Get digital filter bandwidth.
+ * The bandwidth parameter is used to setup the digital filtering of ADC output data to obtain
+ * the desired bandwidth.
+ * @return Current Sensor Bandwidth
+ * 0 = 25Hz
+ * 1 = 50Hz
+ * 2 = 100Hz
+ * 3 = 190Hz
+ * 4 = 375Hz
+ * 5 = 750Hz
+ * 6 = 1500Hz
+ * @see BMA150_RA_RANGE_BWIDTH
+ * @see BMA150_RANGE_BIT
+ * @see BMA150_RANGE_LENGTH
+ */
         uint8_t getBandwidth();
+/** Set Sensor Full Range
+ * @param bandwidth New bandwidth value
+ * @see getBandwidth()
+ * @see BMA150_RA_RANGE_BWIDTH
+ * @see BMA150_RANGE_BIT
+ * @see BMA150_RANGE_LENGTH
+ */
         void setBandwidth(uint8_t bandwidth);
         
         // OFFS_GAIN registers
@@ -272,9 +549,9 @@ class BMA150 {
         // OFFSET registers
         
         private:
-        uint8_t devAddr;
-        uint8_t buffer[6];
-        uint8_t mode;
+        uint8_t devAddr;   /**< Address of teh device */
+        uint8_t buffer[6]; /**< data buffer*/
+        uint8_t mode;      /**< mode of the device */
 };
 
 #endif /* _BMA150_H_ */

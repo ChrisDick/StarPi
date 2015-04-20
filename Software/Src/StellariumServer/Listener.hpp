@@ -38,9 +38,8 @@
 class Listener : public Socket
 {
     public:
-    /** Listener
-     * Constructor
-     * @param Server reference to the server
+    /** Constructor
+     * @param server reference to the server
      * @param Port TCP/IP port number
      */
         Listener( Server &server, int16_t Port );
@@ -51,16 +50,14 @@ class Listener : public Socket
      * it causes the program to exit with code 127.
      */
         bool IsClosed( void );
-    /** PrepareSelectFds
-     *  Prepares TCP/IP communication and tries to start listening.
+    /** Prepares TCP/IP communication and tries to start listening.
      *  If it can't listen, it causes the program to exit with code 127.
      * @param ReadFds reference
      * @param WriteFds reference
      * @param FdMax reference
      */
         void PrepareSelectFds( fd_set &ReadFds, fd_set &WriteFds, int16_t &FdMax );
-    /** HandleSelectFds
-     * Performs TCP/IP communication and handles new connections.
+    /** Performs TCP/IP communication and handles new connections.
      * If a new connection is established, creates a new Connection object
      * and passes it to the parent Server with Server::addConnection().
      * @param ReadFds reference

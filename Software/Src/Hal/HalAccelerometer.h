@@ -8,30 +8,54 @@
  */
 class HalAccelerometer {
     public:
-        HalAccelerometer( void );
-    
-        bool  HalAccelerometerInit( void );
-        float HalAccelerometerGetRoll( void );
-        float HalAccelerometerGetPitch( void );
+        /** Constructor
+        */
+            HalAccelerometer( void );
+        /** Initialise the Accelerometer
+         * @return Status initialisation (true = success)
+         */    
+            bool  HalAccelerometerInit( void );
+        /** Get the Pitch of the Accelerometer
+        * @return float The Pitch
+        */
+            float HalAccelerometerGetPitch( void );
+        /** Get the Roll of the Accelerometer
+         * @return float The Roll
+         */
+           float HalAccelerometerGetRoll( void );
+        /** runs the filter and updates the Roll and Pitch
+         */
         void  HalAccelerometerRun( void );
 
     private:
-        int16_t GetXRawAcceleration( void );
-        int16_t GetYRawAcceleration( void );
+        /** Calculates the Roll and Pitch
+         * see http://www.st.com/web/en/resource/technical/document/application_note/CD00268887.pdf
+         */
+            void UpdatePitchAndRoll( void );
+        /** Get the X axis raw value of the Accelerometer
+         * @return int16_t X axis value
+         */
+            int16_t GetXRawAcceleration( void );
+        /** Get the Y axis raw value of the Accelerometer
+         * @return int16_t Y axis value
+         */
+            int16_t GetYRawAcceleration( void );
+        /** Get the Z axis raw value of the Accelerometer
+         * @return int16_t Z axis value
+         */
         int16_t GetZRawAcceleration( void );
-        void UpdatePitchAndRoll( void );
-        int16_t XOffset;
-        int16_t YOffset;
-        int16_t ZOffset;
-        float Scaling;
-        float GRange;
-        float FilterX[5];
-        float FilterY[5];
-        float FilterZ[5];
-        uint8_t FilterCount;
-        bool Update;
-        float Pitch;
-        float Roll;
+        int16_t XOffset;    /**< X axis offset value */
+        int16_t YOffset;    /**< Y axis offset value */
+        int16_t ZOffset;    /**< Z axis offset value */
+        float Scaling;      /**< scaling for the device */
+        float GRange;       /**< range of the device*/
+        float FilterX[5];   /**< storage for X axis filter data*/
+        float FilterY[5];   /**< storage for Y axis filter data*/
+        float FilterZ[5];   /**< storage for Z axis filter data*/
+        uint8_t FilterCount;/**< counter to keep track of where to store latest data */
+        bool Update;        /**< Keep track on the need to repeat the calculation */
+        float Pitch;        /**< Calculated Pitch */
+        float Roll;         /**< Calculated Roll */
 };
 
 #endif /* HAL_ACCELEROMETER_H */

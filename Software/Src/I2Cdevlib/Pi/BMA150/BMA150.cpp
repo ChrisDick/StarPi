@@ -52,8 +52,8 @@ BMA150::BMA150(uint8_t address) {
  * the sensor, as well as the bandwidth
  */
 void BMA150::initialize() {
-	setRange(BMA150_RANGE_2G);
-	setBandwidth(BMA150_BW_25HZ);
+    setRange(BMA150_RANGE_2G);
+    setBandwidth(BMA150_BW_25HZ);
 }
 
 /** Verify the I2C connection.
@@ -85,7 +85,7 @@ uint8_t BMA150::getDeviceID() {
     I2Cdev::readByte(devAddr, BMA150_RA_VERSION, buffer);
     return buffer[0];
 }
-		
+        
 // AXIS registers
 /** Get 3-axis accelerometer readings.
  * @param x 16-bit signed integer container for X-axis acceleration
@@ -93,7 +93,6 @@ uint8_t BMA150::getDeviceID() {
  * @param z 16-bit signed integer container for Z-axis acceleration
  * @see BMA150_RA_Y_AXIS_LSB
  */
-
 void BMA150::getAcceleration(int16_t* x, int16_t* y, int16_t* z) {
     I2Cdev::readBytes(devAddr, BMA150_RA_X_AXIS_LSB, 6, buffer);
     *x = ((((int16_t)buffer[1]) << 8) | buffer[0]) >> 6;
@@ -134,7 +133,7 @@ int16_t BMA150::getAccelerationZ() {
  */
 bool BMA150::newDataX() {
     I2Cdev::readBit(devAddr, BMA150_RA_X_AXIS_LSB, BMA150_X_NEW_DATA_BIT, buffer);
-	return buffer[0];
+    return buffer[0];
 }
 
 /** Check for new Y axis acceleration data.
@@ -143,7 +142,7 @@ bool BMA150::newDataX() {
  */
 bool BMA150::newDataY() {
     I2Cdev::readBit(devAddr, BMA150_RA_Y_AXIS_LSB, BMA150_Y_NEW_DATA_BIT, buffer);
-	return buffer[0];
+    return buffer[0];
 }
 
 /** Check for new Z axis acceleration data.
@@ -152,9 +151,9 @@ bool BMA150::newDataY() {
  */
 bool BMA150::newDataZ() {
     I2Cdev::readBit(devAddr, BMA150_RA_Z_AXIS_LSB, BMA150_Z_NEW_DATA_BIT, buffer);
-	return buffer[0];
+    return buffer[0];
 }
-				
+                
 // TEMP register
 /** Check for current temperature
  * @return Current Temperature in 0.5C increments from -30C at 00h
@@ -164,11 +163,11 @@ int8_t BMA150::getTemperature() {
     I2Cdev::readByte(devAddr, BMA150_RA_TEMP_RD, buffer);
     return buffer[0];
 }
-		
+        
 // SMB150 registers
 bool BMA150::getStatusHG() {
     I2Cdev::readBit(devAddr, BMA150_RA_SMB150_STATUS, BMA150_STATUS_HG_BIT, buffer);
-	return buffer[0];
+    return buffer[0];
 }
 void BMA150::setStatusHG(bool enabled) {
     I2Cdev::writeBit(devAddr, BMA150_RA_SMB150_STATUS, BMA150_STATUS_HG_BIT, enabled);
@@ -176,7 +175,7 @@ void BMA150::setStatusHG(bool enabled) {
 
 bool BMA150::getStatusLG() {
     I2Cdev::readBit(devAddr, BMA150_RA_SMB150_STATUS, BMA150_STATUS_LG_BIT, buffer);
-	return buffer[0];
+    return buffer[0];
 }
 void BMA150::setStatusLG(bool enabled) {
     I2Cdev::writeBit(devAddr, BMA150_RA_SMB150_STATUS, BMA150_STATUS_LG_BIT, enabled);
@@ -184,7 +183,7 @@ void BMA150::setStatusLG(bool enabled) {
 
 bool BMA150::getHGLatched() {
     I2Cdev::readBit(devAddr, BMA150_RA_SMB150_STATUS, BMA150_HG_LATCHED_BIT, buffer);
-	return buffer[0];
+    return buffer[0];
 }
 void BMA150::setHGLatched(bool enabled) {
     I2Cdev::writeBit(devAddr, BMA150_RA_SMB150_STATUS, BMA150_HG_LATCHED_BIT, enabled);
@@ -192,7 +191,7 @@ void BMA150::setHGLatched(bool enabled) {
 
 bool BMA150::getLGLatched() {
     I2Cdev::readBit(devAddr, BMA150_RA_SMB150_STATUS, BMA150_LG_LATCHED_BIT, buffer);
-	return buffer[0];
+    return buffer[0];
 }
 void BMA150::setLGLatched(bool enabled) {
     I2Cdev::writeBit(devAddr, BMA150_RA_SMB150_STATUS, BMA150_LG_LATCHED_BIT, enabled);
@@ -200,7 +199,7 @@ void BMA150::setLGLatched(bool enabled) {
 
 bool BMA150::getAlertPhase() {
     I2Cdev::readBit(devAddr, BMA150_RA_SMB150_STATUS, BMA150_ALERT_PHASE_BIT, buffer);
-	return buffer[0];
+    return buffer[0];
 }
 void BMA150::setAlertPhase(bool enabled) {
     I2Cdev::writeBit(devAddr, BMA150_RA_SMB150_STATUS, BMA150_ALERT_PHASE_BIT, enabled);
@@ -208,7 +207,7 @@ void BMA150::setAlertPhase(bool enabled) {
 
 bool BMA150::getSTResult() {
     I2Cdev::readBit(devAddr, BMA150_RA_SMB150_STATUS, BMA150_ST_RESULT_BIT, buffer);
-	return buffer[0];
+    return buffer[0];
 }
 void BMA150::setSTResult(bool enabled) {
     I2Cdev::writeBit(devAddr, BMA150_RA_SMB150_STATUS, BMA150_ST_RESULT_BIT, enabled);
@@ -221,7 +220,7 @@ void BMA150::setSTResult(bool enabled) {
 
 bool BMA150::getSleep() {
     I2Cdev::readBit(devAddr, BMA150_RA_SMB150_CTRL, BMA150_SLEEP_BIT, buffer);
-	return buffer[0];
+    return buffer[0];
 }
 void BMA150::setSleep(bool enabled) {
     I2Cdev::writeBit(devAddr, BMA150_RA_SMB150_CTRL, BMA150_SLEEP_BIT, enabled);
@@ -229,7 +228,7 @@ void BMA150::setSleep(bool enabled) {
 
 bool BMA150::getSoftReset() {
     I2Cdev::readBit(devAddr, BMA150_RA_SMB150_CTRL, BMA150_SOFT_RESET_BIT, buffer);
-	return buffer[0];
+    return buffer[0];
 }
 void BMA150::setSoftReset(bool enabled) {
     I2Cdev::writeBit(devAddr, BMA150_RA_SMB150_CTRL, BMA150_SOFT_RESET_BIT, enabled);
@@ -237,7 +236,7 @@ void BMA150::setSoftReset(bool enabled) {
 
 bool BMA150::getSelfTest0() {
     I2Cdev::readBit(devAddr, BMA150_RA_SMB150_CTRL, BMA150_ST0_BIT, buffer);
-	return buffer[0];
+    return buffer[0];
 }
 void BMA150::setSelfTest0(bool enabled) {
     I2Cdev::writeBit(devAddr, BMA150_RA_SMB150_CTRL, BMA150_ST0_BIT, enabled);
@@ -245,7 +244,7 @@ void BMA150::setSelfTest0(bool enabled) {
 
 bool BMA150::getSelfTest1() {
     I2Cdev::readBit(devAddr, BMA150_RA_SMB150_CTRL, BMA150_ST1_BIT, buffer);
-	return buffer[0];
+    return buffer[0];
 }
 void BMA150::setSelfTest1(bool enabled) {
     I2Cdev::writeBit(devAddr, BMA150_RA_SMB150_CTRL, BMA150_ST1_BIT, enabled);
@@ -253,7 +252,7 @@ void BMA150::setSelfTest1(bool enabled) {
 
 bool BMA150::getEEW() {
     I2Cdev::readBit(devAddr, BMA150_RA_SMB150_CTRL, BMA150_EEW_BIT, buffer);
-	return buffer[0];
+    return buffer[0];
 }
 void BMA150::setEEW(bool enabled) {
     I2Cdev::writeBit(devAddr, BMA150_RA_SMB150_CTRL, BMA150_EEW_BIT, enabled);
@@ -261,7 +260,7 @@ void BMA150::setEEW(bool enabled) {
 
 bool BMA150::getUpdateImage() {
     I2Cdev::readBit(devAddr, BMA150_RA_SMB150_CTRL, BMA150_UPDATE_IMAGE_BIT, buffer);
-	return buffer[0];
+    return buffer[0];
 }
 void BMA150::setUpdateImage(bool enabled) {
     I2Cdev::writeBit(devAddr, BMA150_RA_SMB150_CTRL, BMA150_UPDATE_IMAGE_BIT, enabled);
@@ -269,7 +268,7 @@ void BMA150::setUpdateImage(bool enabled) {
 
 bool BMA150::getResetINT() {
     I2Cdev::readBit(devAddr, BMA150_RA_SMB150_CTRL, BMA150_RESET_INT_BIT, buffer);
-	return buffer[0];
+    return buffer[0];
 }
 void BMA150::setResetINT(bool enabled) {
     I2Cdev::writeBit(devAddr, BMA150_RA_SMB150_CTRL, BMA150_RESET_INT_BIT, enabled);
@@ -280,7 +279,7 @@ void BMA150::setResetINT(bool enabled) {
 
 bool BMA150::getEnableLG() {
     I2Cdev::readBit(devAddr, BMA150_RA_SMB150_CONF1, BMA150_ENABLE_LG_BIT, buffer);
-	return buffer[0];
+    return buffer[0];
 }
 void BMA150::setEnableLG(bool enabled) {
     I2Cdev::writeBit(devAddr, BMA150_RA_SMB150_CONF1, BMA150_ENABLE_LG_BIT, enabled);
@@ -288,7 +287,7 @@ void BMA150::setEnableLG(bool enabled) {
 
 bool BMA150::getEnableHG() {
     I2Cdev::readBit(devAddr, BMA150_RA_SMB150_CONF1, BMA150_ENABLE_HG_BIT, buffer);
-	return buffer[0];
+    return buffer[0];
 }
 void BMA150::setEnableHG(bool enabled) {
     I2Cdev::writeBit(devAddr, BMA150_RA_SMB150_CONF1, BMA150_ENABLE_HG_BIT, enabled);
@@ -314,7 +313,7 @@ void BMA150::setCounterHG(int8_t counter_hg) {
 
 bool BMA150::getAnyMotion() {
     I2Cdev::readBit(devAddr, BMA150_RA_SMB150_CONF1, BMA150_ANY_MOTION_BIT, buffer);
-	return buffer[0];
+    return buffer[0];
 }
 void BMA150::setAnyMotion(bool enabled) {
     I2Cdev::writeBit(devAddr, BMA150_RA_SMB150_CONF1, BMA150_ANY_MOTION_BIT, enabled);
@@ -322,7 +321,7 @@ void BMA150::setAnyMotion(bool enabled) {
 
 bool BMA150::getAlert() {
     I2Cdev::readBit(devAddr, BMA150_RA_SMB150_CONF1, BMA150_ALERT_BIT, buffer);
-	return buffer[0];
+    return buffer[0];
 }
 void BMA150::setAlert(bool enabled) {
     I2Cdev::writeBit(devAddr, BMA150_RA_SMB150_CONF1, BMA150_ALERT_BIT, enabled);
@@ -335,7 +334,7 @@ void BMA150::setAlert(bool enabled) {
 
 bool BMA150::getWakeUp() {
     I2Cdev::readBit(devAddr, BMA150_RA_SMB150_CONF2, BMA150_WAKE_UP_BIT, buffer);
-	return buffer[0];
+    return buffer[0];
 }
 void BMA150::setWakeUp(bool enabled) {
     I2Cdev::writeBit(devAddr, BMA150_RA_SMB150_CONF2, BMA150_WAKE_UP_BIT, enabled);
@@ -352,7 +351,7 @@ void BMA150::setWakeUpPause(int8_t wake_up_pause) {
 
 bool BMA150::getShadowDis() {
     I2Cdev::readBit(devAddr, BMA150_RA_SMB150_CONF2, BMA150_SHADOW_DIS_BIT, buffer);
-	return buffer[0];
+    return buffer[0];
 }
 void BMA150::setShadowDis(bool enabled) {
     I2Cdev::writeBit(devAddr, BMA150_RA_SMB150_CONF2, BMA150_SHADOW_DIS_BIT, enabled);
@@ -360,7 +359,7 @@ void BMA150::setShadowDis(bool enabled) {
 
 bool BMA150::getLatchInt() {
     I2Cdev::readBit(devAddr, BMA150_RA_SMB150_CONF2, BMA150_LATCH_INT_BIT, buffer);
-	return buffer[0];
+    return buffer[0];
 }
 void BMA150::setLatchInt(bool enabled) {
     I2Cdev::writeBit(devAddr, BMA150_RA_SMB150_CONF2, BMA150_LATCH_INT_BIT, enabled);
@@ -368,7 +367,7 @@ void BMA150::setLatchInt(bool enabled) {
 
 bool BMA150::getNewDataInt() {
     I2Cdev::readBit(devAddr, BMA150_RA_SMB150_CONF2, BMA150_NEW_DATA_INT_BIT, buffer);
-	return buffer[0];
+    return buffer[0];
 }
 void BMA150::setNewDataInt(bool enabled) {
     I2Cdev::writeBit(devAddr, BMA150_RA_SMB150_CONF2, BMA150_NEW_DATA_INT_BIT, enabled);
@@ -376,7 +375,7 @@ void BMA150::setNewDataInt(bool enabled) {
 
 bool BMA150::getEnableAdvInt() {
     I2Cdev::readBit(devAddr, BMA150_RA_SMB150_CONF2, BMA150_ENABLE_ADV_INT_BIT, buffer);
-	return buffer[0];
+    return buffer[0];
 }
 void BMA150::setEnableAdvInt(bool enabled) {
     I2Cdev::writeBit(devAddr, BMA150_RA_SMB150_CONF2, BMA150_ENABLE_ADV_INT_BIT, enabled);
@@ -384,13 +383,13 @@ void BMA150::setEnableAdvInt(bool enabled) {
 
 bool BMA150::getSPI4() {
     I2Cdev::readBit(devAddr, BMA150_RA_SMB150_CONF2, BMA150_SPI4_BIT, buffer);
-	return buffer[0];
+    return buffer[0];
 }
 void BMA150::setSPI4(bool enabled) {
     I2Cdev::writeBit(devAddr, BMA150_RA_SMB150_CONF2, BMA150_SPI4_BIT, enabled);
 }
 
-		
+        
 // LG / HG registers
 uint8_t BMA150::getLGThreshold() {
     I2Cdev::readByte(devAddr, BMA150_RA_LG_THRESHOLD, buffer);
@@ -470,7 +469,7 @@ void BMA150::setMotionDuration(uint8_t mot_dur) {
     I2Cdev::writeBits(devAddr, BMA150_RA_HYSTERESIS, BMA150_ANY_MOTION_DUR_BIT, BMA150_ANY_MOTION_DUR_LENGTH, mot_dur);
 }
 
-	
+    
 // CUSTOMER registers
 uint8_t BMA150::getCustom1() {
     I2Cdev::readByte(devAddr, BMA150_RA_CUSTOMER1, buffer);
@@ -489,7 +488,7 @@ uint8_t BMA150::getCustom2() {
 void BMA150::setCustom2(uint8_t custom2) {
     I2Cdev::writeByte(devAddr, BMA150_RA_CUSTOMER2, custom2);
 }
-	
+    
 // RANGE / BANDWIDTH registers
 
 /** Get Sensor Full Range

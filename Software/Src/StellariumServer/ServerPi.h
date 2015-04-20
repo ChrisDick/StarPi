@@ -30,17 +30,28 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "Server.hpp"
 
-//! Telescope server class for a virtual telescope that requires no physical device.
-//! Useful for remote connection testing.
+/** Class Telescope server.
+*/
 class ServerPi : public Server
 {
-public:
-    ServerPi(int port);
+    public:
+    /** Constructor
+     */
+        ServerPi(int port);
+    /** perform one step of the server
+     * @param timeout_micros
+     * @param ra
+     * @param dec
+     */    
     void step(long long int timeout_micros, float ra, float dec);
     
 private:
+    /** handler for the goto message
+     * @param ra_int
+     * @param dec_int
+     */
     void gotoReceived(unsigned int ra_int,int dec_int);
-    long long int next_pos_time;
+    long long int next_pos_time; /**< variable to prevent over sending of the messages */
 };
 
 #endif /* SERVER_ASTRO_PI_H */

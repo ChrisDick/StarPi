@@ -2625,9 +2625,6 @@ class MPU6050 {
 /** getDMPInt3Status
  */
         bool getDMPInt3Status();
-/** getDMPInt3Status
- */
-        bool getDMPInt3Status();
 /** getDMPInt2Status
  */
         bool getDMPInt2Status();

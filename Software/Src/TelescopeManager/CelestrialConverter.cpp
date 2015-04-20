@@ -20,7 +20,7 @@ float CelestrialConverter::CalculateLocalSiderealTime( CC_TIME_T GrenwichStandar
 {
     float Result = 0;
     float GstAngle = ConvertTimeToAngle ( GrenwichStandardTime );
-    result = GstAngle - LongitudeWest;
+    Result = GstAngle - LongitudeWest;
     return Result;
 }
 
@@ -41,7 +41,7 @@ void CelestrialConverter::EquitorialToCelestrial( CC_ANGLES_T* Angles, CC_TIME_T
  * @param Angles structure containing all Angles
  * @param GrenwichStandardTime current time
  */
-void CelestrialConverter::EquitorialToCelestrial( CC_ANGLES_T* Angles, CC_TIME_T GrenwichStandardTime )
+void CelestrialConverter::CelestrialToEquitorial( CC_ANGLES_T* Angles, CC_TIME_T GrenwichStandardTime )
 {
     
     
@@ -123,7 +123,7 @@ CC_TIME_T CelestrialConverter::SubtractTime( CC_TIME_T TimeA, CC_TIME_T TimeB )
         Result.Hours += 24;
     }
     
-    return result;
+    return Result;
 }
 
 /* DecimaliseTime
@@ -149,15 +149,15 @@ CC_TIME_T CelestrialConverter::UnDecimaliseTime( float TimeDec )
     /*
         extract the hours.
     */
-    Time.hours = (uint8_t)TimeDec;
+    Time.Hours = (uint8_t)TimeDec;
     /*
         extract the minutes
     */
-    Time.minutes = (uint8_t)(( TimeDec - Time.hours ) * 60);
+    Time.Minutes = (uint8_t)(( TimeDec - Time.Hours ) * 60);
     /*
          extract the seconds
     */
-    Time.seconds = (uint8_t)(((( TimeDec - Time.hours ) * 60) - Time.minutes ) * 60 ); 
+    Time.Seconds = (uint8_t)(((( TimeDec - Time.Hours ) * 60) - Time.Minutes ) * 60 ); 
     
     return Time;
 }
