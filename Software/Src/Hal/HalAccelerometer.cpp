@@ -21,7 +21,9 @@ MPU9150 Accel;
 #error no Accelerometer defined - please edit your config.h file.
 #endif
 
-/** Constructor
+HalAccelerometer HalAccelerometer::Accelerometer;
+
+/* Constructor
  */
 HalAccelerometer::HalAccelerometer( void )
 {
@@ -37,12 +39,12 @@ bool HalAccelerometer::HalAccelerometerInit( void )
     Update = false;
     Accel.initialize();
     // initialise Accelerometer specifics here
+    Scaling = 32768.0F;
 #ifdef MPU6050_ACCEL
     Accel.setAccelXSelfTest(false);
     Accel.setAccelYSelfTest(false);
     Accel.setAccelZSelfTest(false);
-    Scaling = (float)32768.0;
-    GRange = 2;
+    GRange = 2.0F;
     Result = true;
 #elif defined ADXL345_ACCEL
     #error no init code for Accelerometer
@@ -69,6 +71,8 @@ float HalAccelerometer::HalAccelerometerGetPitch( void )
         UpdatePitchAndRoll();
     }
     return Pitch;
+//  return FilterX[FilterCount];
+
 }
 
 
@@ -82,15 +86,25 @@ float HalAccelerometer::HalAccelerometerGetRoll( void )
         UpdatePitchAndRoll();
     }
     return Roll;
+    
+//  return FilterY[4];
 }
 
 /* runs the filter and updates the Roll and Pitch
  */
-void HalAccelerometer::HalAccelerometerRun( void )
+void HalAccelerometer::Run( void )
 {    
-    FilterX[FilterCount] = (((float)GetXRawAcceleration()/Scaling)*(GRange*9.81));
-    FilterY[FilterCount] = (((float)GetYRawAcceleration()/Scaling)*(GRange*9.81));
-    FilterZ[FilterCount] = (((float)GetZRawAcceleration()/Scaling)*(GRange*9.81));
+    int16_t X = 0;
+    int16_t Y = 0;
+    int16_t Z = 0;
+    
+    X = GetXRawAcceleration();
+    Y = GetYRawAcceleration();
+    Z = GetZRawAcceleration();
+    
+    FilterX[FilterCount] = (((float)X/Scaling)*(GRange*9.81F));
+    FilterY[FilterCount] = (((float)Y/Scaling)*(GRange*9.81F));
+    FilterZ[FilterCount] = (((float)Z/Scaling)*(GRange*9.81F));
     
     FilterX[4] = (FilterX[0] + FilterX[1] + FilterX[2] + FilterX[3])/4;
     FilterY[4] = (FilterY[0] + FilterY[1] + FilterY[2] + FilterY[3])/4;
@@ -98,7 +112,7 @@ void HalAccelerometer::HalAccelerometerRun( void )
     
     Update = true;
     FilterCount++;
-    if (FilterCount)
+    if (FilterCount == 4)
     {
         FilterCount = 0;  
     }

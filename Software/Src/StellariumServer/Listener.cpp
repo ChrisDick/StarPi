@@ -59,6 +59,7 @@ void Listener::PrepareSelectFds( fd_set &ReadFds, fd_set &WriteFds, int16_t &FdM
 {
     if ( IS_INVALID_SOCKET( Fd ) )
     {
+	
         struct sockaddr_in SockAddr;
         Fd = socket( AF_INET, SOCK_STREAM, 0 );
         if ( IS_INVALID_SOCKET( Fd ) )
@@ -71,7 +72,7 @@ void Listener::PrepareSelectFds( fd_set &ReadFds, fd_set &WriteFds, int16_t &FdM
                             SOL_SOCKET,
                             SO_REUSEADDR,
                             reinterpret_cast<const char*>(&Yes),
-                            sizeof(int16_t)))
+                            sizeof(int)))
         {
             exit(127);
         }
@@ -83,7 +84,7 @@ void Listener::PrepareSelectFds( fd_set &ReadFds, fd_set &WriteFds, int16_t &FdM
         {
             exit(127);
         }
-        
+
         if (listen(Fd, 10))
         {
             exit(127);

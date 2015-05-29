@@ -2,11 +2,12 @@
 #define HAL_ACCELEROMETER_H
 
 #include <stdint.h>
+#include "Runnable.h"
 
 /** HalAccelerometer
  * - Class to provide use of the Accelerometer
  */
-class HalAccelerometer {
+class HalAccelerometer: public Runnable {
     public:
         /** Constructor
         */
@@ -25,8 +26,10 @@ class HalAccelerometer {
            float HalAccelerometerGetRoll( void );
         /** runs the filter and updates the Roll and Pitch
          */
-        void  HalAccelerometerRun( void );
+        void  Run( void );
 
+        static HalAccelerometer Accelerometer;
+        
     private:
         /** Calculates the Roll and Pitch
          * see http://www.st.com/web/en/resource/technical/document/application_note/CD00268887.pdf
@@ -56,6 +59,7 @@ class HalAccelerometer {
         bool Update;        /**< Keep track on the need to repeat the calculation */
         float Pitch;        /**< Calculated Pitch */
         float Roll;         /**< Calculated Roll */
+
 };
 
 #endif /* HAL_ACCELEROMETER_H */

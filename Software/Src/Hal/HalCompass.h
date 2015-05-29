@@ -2,11 +2,12 @@
 #define HALCOMPASS_H
 
 #include <stdint.h>
+#include "Runnable.h"
 
 /** HalCompass
  * - Class to provide use to the magnetometer
  */
-class HalCompass {
+class HalCompass: public Runnable {
     public:
     /** Constructor
      */
@@ -26,7 +27,7 @@ class HalCompass {
         void HalCompassSetRoll( float NewRoll );
     /** Runs the filter
      */
-        void HalCompassRun( void );
+        void Run( void );
     /** Get the heading of the Compass
      * @return float heading 
      */
@@ -36,6 +37,8 @@ class HalCompass {
      * @return float heading 
      */
         float HalCompassGetTiltCompensatedHeading( void );
+        
+        static HalCompass Compass;
         
         private:
     /** Get the raw X heading of the Compass

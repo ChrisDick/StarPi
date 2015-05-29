@@ -31,8 +31,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <math.h>
 /* Constructor
 */
-ServerPi::ServerPi(int port)
-            :Server(port)
+ServerPi::ServerPi(int Port)
+            :Server(Port)
 {
     next_pos_time = -0x8000000000000000LL;
 }
@@ -55,7 +55,7 @@ DEC    (4 bytes,signed integer): declination of the telescope (J2000)
 STATUS (4 bytes,signed integer): status of the telescope, currently unused.
            status=0 means ok, status<0 means some error
 */
-void ServerPi::step(long long int timeout_micros, float ra, float dec)
+void ServerPi::Step(int64_t TimeoutMicros)
 {
     long long int now = GetNow();
     if (now >= next_pos_time)
@@ -65,12 +65,25 @@ void ServerPi::step(long long int timeout_micros, float ra, float dec)
             convert to integer format to send to stellarium
         */
         const unsigned int ra_int = (unsigned int)floor(
-                                       0.5 +  ra*(((unsigned int)0x80000000)/M_PI));
-        const int dec_int = (int)floor(0.5 + dec*(((unsigned int)0x80000000)/M_PI));
+                                       0.5 +  RightAscension*(((unsigned int)0x80000000)/M_PI));
+        const int dec_int = (int)floor(0.5 + Declination*(((unsigned int)0x80000000)/M_PI));
         const int status = 0;
         SendPosition(ra_int,dec_int,status);
     }
-    Server::Step(timeout_micros);
+    Server::Step(TimeoutMicros);
+}
+
+void ServerPi::SetRaDec (float Ra, float Dec )
+{
+    RightAscension = Ra;
+	Declination = Dec;
+}
+
+void ServerPi::Run( void )
+{
+    TelescopeManager::GetRaDec( &RightAscension, &Declination );
+	SetRaDec( RightAscension, Declination );
+    Step( 10000 );
 }
 
 /*
@@ -88,13 +101,13 @@ DEC    (4 bytes,signed integer): declination of the telescope (J2000)
            a value of 0x0 means 0degrees,
            a value of 0x40000000 means 90degrees
 */
-void ServerPi::gotoReceived(unsigned int ra_int, int dec_int)
+void ServerPi::GotoReceived(uint32_t ra_int, int32_t dec_int)
 {
     float ra_rads = 0; 
     float dec_rads = 0; 
     ra_rads = ra_int*(M_PI/(unsigned int)0x80000000);
     dec_rads = dec_int*(M_PI/(unsigned int)0x80000000);
-    TelescopeManager::set_goto_target(ra_rads, dec_rads);
+    TelescopeManager::SetGotoTarget(ra_rads, dec_rads);
 }
 
 

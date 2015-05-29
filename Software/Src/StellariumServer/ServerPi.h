@@ -29,29 +29,44 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #define SERVER_PI_H
 
 #include "Server.hpp"
+#include "Runnable.h"
+#include "TelescopeManager.h"
 
 /** Class Telescope server.
 */
-class ServerPi : public Server
+class ServerPi : public Server, public Runnable
 {
     public:
     /** Constructor
      */
-        ServerPi(int port);
+        ServerPi(int Port);
+    /** 
+     */
+        void Run ( void );
+    /** 
+     */
+        void SetRaDec (float Ra, float Dec );
     /** perform one step of the server
      * @param timeout_micros
      * @param ra
      * @param dec
      */    
-    void step(long long int timeout_micros, float ra, float dec);
+        void Step(int64_t TimeoutMicros);
     
 private:
     /** handler for the goto message
      * @param ra_int
      * @param dec_int
      */
-    void gotoReceived(unsigned int ra_int,int dec_int);
+    void GotoReceived(uint32_t ra_int, int32_t dec_int);
+    /**
+     */
+     
+//    TelescopeManager Telescope;    
+    
     long long int next_pos_time; /**< variable to prevent over sending of the messages */
+    float RightAscension;        /**< Right ascension */
+    float Declination;           /**< Declination */
 };
 
 #endif /* SERVER_ASTRO_PI_H */

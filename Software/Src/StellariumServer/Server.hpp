@@ -51,7 +51,7 @@ class Server
     /** Server 
      * Constructor
      */
-  //      Server( void );
+        Server( void ) {}
     /** Server
      * Constructor
      * @param Port 

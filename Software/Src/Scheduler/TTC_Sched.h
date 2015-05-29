@@ -5,28 +5,60 @@
 /* ------Public constants-------------------------------------------*/
 
 /* 
-    The maximum number of tasks required at any one time
-    during the execution of the program
     MUST BE ADJUSTED FOR EACH NEW PROJECT
 */
-#define SCH_MAX_TASKS 3
+#define SCH_MAX_TASKS 4 /**< The maximum number of tasks required at any one time during the execution of the program*/
 
+/** Class for the scheduler 
+ */
 class TTC_Sched
 {
 
 protected:
-    Runnable * tasks[SCH_MAX_TASKS];
+    Runnable * Tasks[SCH_MAX_TASKS]; /**<  */
 
 public:
-    uint8_t add_task(Runnable * new_task);
-    uint8_t delete_task(const uint8_t index);
-    void    dispatch_tasks(void);
-    void    update_tasks(void);
-    
-    virtual void    init(void)  = 0;
-    virtual void    start(void) = 0;
+/** Causes a task (function) to be executed at regular intervals
+ * or after a user-defined delay
+ *
+ * pFunction - The name of the function which is to be scheduled.
+ * delay      - The interval (TICKS) before the task is first executed
+ * period      - If 'PERIOD' is 0, the function is only called once,
+ *
+ * RETURN VALUE:
+ * 
+ * Returns the position in the task array at which the task has been
+ * added.  If the return value is SCH_MAX_TASKS then the task could
+ * not be added to the array (there was insufficient space).  If the
+ * return value is < SCH_MAX_TASKS, then the task was added
+ * successfully.
+ */
+    uint8_t AddTask( Runnable * NewTask );
+/** Removes a task from the scheduler.  Note that this does
+ * *not* delete the associated function from memory:
+ * it simply means that it is no longer called by the scheduler.
+ * @param Index The task Index.  Provided by TTC_Sched::add_task().
+ * @return RETURN VALUE:  RETURN_ERROR or RETURN_NORMAL
+ */
+    uint8_t DeleteTask(const uint8_t Index);
+/** This is the 'dispatcher' function.  When a task (function)
+ * is due to run, TTC_Sched::dispatch_tasks() will run it.
+ * This function must be called (repeatedly) from the main loop.
+ */
+    void DispatchTasks(void);
+/** This is the scheduler ISR.  It is called at a rate
+ * determined by the timer settings in TTC_Sched::init().
+ * This version is triggered by Timer 0 interrupts.
+ */
+    void UpdateTasks(void);    
+/** virtual function from platform specific implementation 
+ */
+    virtual void Init(void)  = 0;
+/** virtual function from platform specific implementation 
+ */
+    virtual void Start(void) = 0;
 
-    static const uint8_t RETURN_ERROR  = 0;
-    static const uint8_t RETURN_NORMAL = 255;
+    static const uint8_t RETURN_ERROR  = 0;   /**< return error code */
+    static const uint8_t RETURN_NORMAL = 255; /**< return normal code */
 };
 

@@ -5,37 +5,37 @@
 class Reader: public Runnable
 {
     public:
-        void run(void);
+        void Run(void);
 };
 
 class Processor: public Runnable
 {
     public:
-        void run(void);
+        void Run(void);
 };
 
 class Writer: public Runnable
 {
     public:
-        void run(void);
+        void Run(void);
 };
 
-void Reader::run(void)
+void Reader::Run(void)
 {
     static int count_i = 0;
-    printf ("Reader run %d \n", ++count_i);
+    printf ("Reader Run %d \n", ++count_i);
 }
 
-void Processor::run(void)
+void Processor::Run(void)
 {
     static int count_p = 0;
-    printf ("Processor run %d \n", ++count_p);
+    printf ("Processor Run %d \n", ++count_p);
 }
 
-void Writer::run(void)
+void Writer::Run(void)
 {
     static int count_o = 0;
-    printf ("Writer run %d \n", ++count_o);
+    printf ("Writer Run %d \n", ++count_o);
 }
 
 int main ()
@@ -46,34 +46,34 @@ int main ()
     Processor   processor;
     Writer      writer;
     
-    scheduler.init();   // call first to reset task table and configure timer.
+    scheduler.Init();   // call first to reset task table and configure timer.
     printf ("scheduler initialised.\n");
 
-    reader.set_delay(0);    // no offset is set here.
-    reader.set_period(4);   // run every 4 ticks (1 tick == 250ms).
+    reader.SetDelay(0);    // no offset is set here.
+    reader.SetPeriod(4);   // Run every 4 ticks (1 tick == 250ms).
     
-    processor.set_delay(1); // run one tick after Reader run.
-    processor.set_period(4); // also run every 4 ticks.
+    processor.SetDelay(1); // Run one tick after Reader Run.
+    processor.SetPeriod(4); // also Run every 4 ticks.
     
-    writer.set_delay(2); // run one tick after Processor run.
-    writer.set_period(4); // also run every 4 ticks.
+    writer.SetDelay(2); // Run one tick after Processor Run.
+    writer.SetPeriod(4); // also Run every 4 ticks.
         
     printf ("tasks configured.\n");
 
-    scheduler.add_task(&reader);
-    scheduler.add_task(&processor);
-    scheduler.add_task(&writer);
+    scheduler.AddTask(&reader);
+    scheduler.AddTask(&processor);
+    scheduler.AddTask(&writer);
 
     printf ("tasks added.\n");
     
-    scheduler.start();
+    scheduler.Start();
 
     printf ("scheduler started.\n");
     
     /* Do busy work. */
     while (1)
     {
-          scheduler.dispatch_tasks();
+          scheduler.DispatchTasks();
     }
     
     return 0; // unreachable statement.

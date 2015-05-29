@@ -1,4 +1,4 @@
-all:		MPU6050 HMC5883L_heading Sample_Main
+all:		Main Sample_Main
 
 INCLUDE_PATHS := 	-I./Src/I2Cdevlib/Pi/I2Cdev/ \
 					-I./Src/I2Cdevlib/Pi/HMC5883L/ \
@@ -53,6 +53,8 @@ HMC5883L_heading:	$(OBJ_DIR)HMC5883L_raw.o $(DEVICE_OBJS)
 Sample_Main:	$(OBJ_DIR)Sample_Main.o $(OBJ_DIR)TTC_Sched.o  $(OBJ_DIR)Runnable.o $(OBJ_DIR)TTC_Sched_Pi_Impl.o
 		$(CC) -Wall -lwiringPi $(OUTPUT) $(OBJ_DIR)Sample_Main.o $(DEVICE_OBJS)
 
+Main:	$(OBJ_DIR)Main.o $(DEVICE_OBJS)
+		$(CC) -Wall -lwiringPi $(OUTPUT) $(OBJ_DIR)Main.o $(DEVICE_OBJS)
 
 #todo create obj dir if it doesn't exist
 #$(DEVICE_OBJS): | $(OBJDIR)
@@ -66,6 +68,9 @@ Sample_Main:	$(OBJ_DIR)Sample_Main.o $(OBJ_DIR)TTC_Sched.o  $(OBJ_DIR)Runnable.o
 clean:
 		rm $(OBJ_DIR)*.o 
 		
+$(OBJ_DIR)Main.o:		./Src/Main.cpp
+		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/Main.cpp
+
 $(OBJ_DIR)TelescopeManager.o:		./Src/TelescopeManager/TelescopeManager.cpp
 		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/TelescopeManager/TelescopeManager.cpp
 

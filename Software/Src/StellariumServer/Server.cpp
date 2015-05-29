@@ -56,7 +56,7 @@ Server::~Server( void )
  */
 void Server::Step( int64_t TimeoutMicros )
 {
-    fd_set ReadFds, WriteFds;
+	fd_set ReadFds, WriteFds;
     FD_ZERO(&ReadFds);
     FD_ZERO(&WriteFds);
     int16_t FdMax = -1;

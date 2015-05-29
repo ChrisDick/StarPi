@@ -4,19 +4,22 @@
 
 #ifdef AK8975_MAGNETOMETER
 #include "AK8975.h"
-AK8975 Compass;
+AK8975 CompassLib;
 #elif defined HMC5843L_MAGNETOMETER
 #include "HMC5843L.h"
-HMC5843 Compass;
+HMC5843 CompassLib;
 #elif defined HMC5883L_MAGNETOMETER
 #include "HMC5883L.h"
-HMC5883L Compass;
+HMC5883L CompassLib;
 #elif defined MPU9150_MAGNETOMETER
 #include "MPU9150.h"
-MPU9150 Compass;
+MPU9150 CompassLib;
 #else
 #error no magnetometer defined - please edit your config.h file.
 #endif
+
+
+HalCompass HalCompass::Compass;
 
 /* HalCompass
  *  Constructor
@@ -26,12 +29,12 @@ HalCompass::HalCompass( void )
 }
 
 /* HalCompassInit
- *  Initialise the Compass
+ *  Initialise the CompassLib
  * @return bool Initialisation status  
  */
 bool HalCompass::HalCompassInit( void )
 {
-    Compass.initialize();
+    CompassLib.Initialize();
     Roll = 0;
     Pitch = 0;
     FilterCount = 0; 
@@ -41,7 +44,7 @@ bool HalCompass::HalCompassInit( void )
 #elif defined HMC5843_MAGNETOMETER
     #error no init code for Magnetometer
 #elif defined HMC5883L_MAGNETOMETER
-    Scaling = 32768.0; 
+    Scaling = 32767.0; 
 #elif MPU9150_MAGNETOMETER
     #error no init code for Magnetometer
 #endif
@@ -71,7 +74,7 @@ void HalCompass::HalCompassSetRoll( float NewRoll )
 /* HalCompassRun
  *  Runs the filter
  */
-void HalCompass::HalCompassRun( void )
+void HalCompass::Run( void )
 {    
     FilterX[FilterCount] = ((float)GetXRawHeading()/Scaling);
     FilterY[FilterCount] = ((float)GetYRawHeading()/Scaling);
@@ -82,7 +85,7 @@ void HalCompass::HalCompassRun( void )
     FilterZ[4] = (FilterZ[0] + FilterZ[1] + FilterZ[2] + FilterZ[3])/4;
     
     FilterCount++;
-    if (FilterCount)
+    if (FilterCount == 4)
     {
         FilterCount = 0;  
     }
@@ -130,17 +133,17 @@ int16_t HalCompass::GetXRawHeading( void )
 {
     int16_t Result = 0;
 #ifdef OBJECTIVE_END_MAGNETOMETER_X_PLUS    
-    Result = Compass.getHeadingX();
+    Result = CompassLib.GetHeadingX();
 #elif defined OBJECTIVE_END_MAGNETOMETER_X_MINUS
-    Result = 0 - Compass.getHeadingX();
+    Result = 0 - CompassLib.GetHeadingX();
 #elif defined OBJECTIVE_END_MAGNETOMETER_Y_PLUS    
-    Result = Compass.getHeadingY();
+    Result = CompassLib.GetHeadingY();
 #elif defined OBJECTIVE_END_MAGNETOMETER_Y_MINUS
-    Result = 0 - Compass.getHeadingY();
+    Result = 0 - CompassLib.GetHeadingY();
 #elif defined OBJECTIVE_END_MAGNETOMETER_Z_PLUS    
-    Result = Compass.getHeadingZ();
+    Result = CompassLib.GetHeadingZ();
 #elif defined OBJECTIVE_END_MAGNETOMETER_Z_MINUS
-    Result = 0 - Compass.getHeadingZ();
+    Result = 0 - CompassLib.GetHeadingZ();
 #else
     #error y axis not defined
 #endif
@@ -155,17 +158,17 @@ int16_t HalCompass::GetYRawHeading( void )
 {
     int16_t Result = 0;
 #ifdef TELESCOPE_RIGHT_MAGNETOMETER_X_PLUS
-    Result = Compass.getHeadingX();
+    Result = CompassLib.GetHeadingX();
 #elif defined TELESCOPE_RIGHT_MAGNETOMETER_X_MINUS
-    Result = 0 - Compass.getHeadingX();
+    Result = 0 - CompassLib.GetHeadingX();
 #elif defined TELESCOPE_RIGHT_MAGNETOMETER_Y_PLUS
-    Result = Compass.getHeadingY();
+    Result = CompassLib.GetHeadingY();
 #elif defined TELESCOPE_RIGHT_MAGNETOMETER_Y_MINUS
-    Result = 0 - Compass.getHeadingY();
+    Result = 0 - CompassLib.GetHeadingY();
 #elif defined TELESCOPE_RIGHT_MAGNETOMETER_Z_PLUS
-    Result = Compass.getHeadingZ();
+    Result = CompassLib.GetHeadingZ();
 #elif defined TELESCOPE_RIGHT_MAGNETOMETER_Z_MINUS
-    Result = 0 - Compass.getHeadingZ();
+    Result = 0 - CompassLib.GetHeadingZ();
 #else
     #error y axis not defined
 #endif
@@ -180,17 +183,17 @@ int16_t HalCompass::GetZRawHeading( void )
 {
     int16_t Result = 0;
 #ifdef UP_MAGNETOMETER_X_PLUS
-    Result = Compass.getHeadingX();
+    Result = CompassLib.GetHeadingX();
 #elif defined UP_MAGNETOMETER_X_MINUS
-    Result = 0 - Compass.getHeadingX();
+    Result = 0 - CompassLib.GetHeadingX();
 #elif defined UP_MAGNETOMETER_Y_PLUS
-    Result = Compass.getHeadingY();
+    Result = CompassLib.GetHeadingY();
 #elif defined UP_MAGNETOMETER_Y_MINUS
-    Result = 0 - Compass.getHeadingY();
+    Result = 0 - CompassLib.GetHeadingY();
 #elif defined UP_MAGNETOMETER_Z_PLUS
-    Result = Compass.getHeadingZ();
+    Result = CompassLib.GetHeadingZ();
 #elif defined UP_MAGNETOMETER_Z_MINUS
-    Result = 0 - Compass.getHeadingZ();
+    Result = 0 - CompassLib.GetHeadingZ();
 #else
     #error z axis not defined
 #endif

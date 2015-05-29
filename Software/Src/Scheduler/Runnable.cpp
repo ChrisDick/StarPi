@@ -1,60 +1,82 @@
 #include "Runnable.h"
 
-void Runnable::set_delay(uint32_t delay)
+/* Set the delay
+ */
+void Runnable::SetDelay( uint32_t Delay )
 {
-    this->delay = delay;
+    this->Delay = Delay;
 }
 
-uint32_t Runnable::get_delay(void)
+/* Get the current delay
+ */
+uint32_t Runnable::GetDelay( void )
 {
-    return this->delay;
+    return this->Delay;
 }
 
-void Runnable::reload_delay(void)
+/* Reload the delay
+ */
+void Runnable::ReloadDelay( void )
 {
-    this->delay = this->period;
+    this->Delay = this->Period;
 }
 
-void Runnable::decrease_delay(void)
+/* Decrease the delay
+ */
+void Runnable::DecreaseDelay( void )
 {
-    this->delay -=1;
+    this->Delay -= 1;
 }
 
-uint8_t Runnable::is_timed_out(void)
+/* Is the delay timed out
+ */
+uint8_t Runnable::IsTimedOut( void )
 {
-    return (0 == this->delay);
+    return (0 == this->Delay);
 }
 
-void Runnable::set_period(uint32_t period)
+/* Set the period
+ */
+void Runnable::SetPeriod( uint32_t Period )
 {
-    this->period = period;
+    this->Period = Period;
 }
  
-uint32_t Runnable::get_period(void)
+/* Get the period
+ */
+uint32_t Runnable::GetPeriod( void )
 {
-    return this->period;
+    return this->Period;
 }
 
-void Runnable::set_runnable(uint32_t runnable)
+/* Set the function to be run
+ */
+void Runnable::SetRunnable( uint32_t Runnable )
 {
-    this->runnable = runnable;
-}
-void Runnable::increase_run(void)
-{
-    this->runnable += 1;
+    this->Runnable = Runnable;
 }
 
-void Runnable::decrease_run(void)
+/* Allow the function to be run again
+ */
+void Runnable::IncreaseRun( void )
 {
-    this->runnable -= 1;
+    this->Runnable += 1;
 }
 
-uint8_t Runnable::is_runnable(void)
+/* prevent the function from being run
+ */
+void Runnable::DecreaseRun( void )
 {
-    if(this->runnable > 0)
+    this->Runnable -= 1;
+}
+
+/* Check to see if the function is to be run
+ */
+uint8_t Runnable::IsRunnable( void )
+{
+    if(this->Runnable > 0)
     {
          return 1;
     }
-
     return 0;
 }
