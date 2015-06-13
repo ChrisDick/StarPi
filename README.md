@@ -1,5 +1,5 @@
-# AstroPi
-AstroPi is a Raspberry Pi based telescope server with interface to Stellarium.
+# StarPi
+StarPi is a Raspberry Pi based telescope server with interface to Stellarium.
 
 The system,
 
@@ -20,10 +20,12 @@ Wiringpi can be installed following.
 http://wiringpi.com/download-and-install/
 
 current Pi camera control can be installed following:
-http://www.raspberrypi.org/forums/viewtopic.php?t=63276
+http://elinux.org/RPi-Cam-Web-Interface
+
+Get this Git and make!
 
 
-ToDo: install script
+ToDo: install script..
 
 # Design
 
