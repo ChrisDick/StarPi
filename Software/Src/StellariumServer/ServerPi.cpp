@@ -29,11 +29,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "Socket.hpp" // GetNow
 #include "TelescopeManager.h"
 #include <math.h>
+
+#include <stdio.h> // for debug
 /* Constructor
 */
 ServerPi::ServerPi(int Port)
             :Server(Port)
 {
+	current_pos[0] = desired_pos[0] = 1.0;
+	current_pos[1] = desired_pos[1] = 0.0;
+	current_pos[2] = desired_pos[2] = 0.0;
     next_pos_time = -0x8000000000000000LL;
 }
 
@@ -57,7 +62,45 @@ STATUS (4 bytes,signed integer): status of the telescope, currently unused.
 */
 void ServerPi::Step(int64_t TimeoutMicros)
 {
-    long long int now = GetNow();
+    int64_t now = GetNow();
+
+	if (now >= next_pos_time)
+	{
+       	next_pos_time = now + 500000;
+		current_pos[0] = 3*current_pos[0] + desired_pos[0];
+		current_pos[1] = 3*current_pos[1] + desired_pos[1];
+		current_pos[2] = 3*current_pos[2] + desired_pos[2];
+		double h = current_pos[0]*current_pos[0]
+		         + current_pos[1]*current_pos[1]
+		         + current_pos[2]*current_pos[2];
+		
+		if (h > 0.0)
+		{
+			h = 1.0 / sqrt(h);
+			current_pos[0] *= h;
+			current_pos[1] *= h;
+			current_pos[2] *= h;
+		}
+		else
+		{
+			current_pos[0] = desired_pos[0];
+			current_pos[1] = desired_pos[1];
+			current_pos[2] = desired_pos[2];
+		}
+		
+		const double ra = atan2(current_pos[1],current_pos[0]);
+		const double dec = atan2(current_pos[2],
+		                         sqrt(current_pos[0]*current_pos[0]+current_pos[1]*current_pos[1]));
+		const uint32_t ra_int = (uint32_t)floor(
+		                               0.5 +  ra*(((uint32_t)0x80000000)/M_PI));
+		const int32_t dec_int = (int32_t)floor(0.5 + dec*(((uint32_t)0x80000000)/M_PI));
+		const int32_t status = 0;
+		SendPosition(ra_int,dec_int,status);
+	}
+	
+	Server::Step(TimeoutMicros);
+#if 0
+    int64_t now = GetNow();
     if (now >= next_pos_time)
     {
         next_pos_time = now + 500000;
@@ -71,6 +114,7 @@ void ServerPi::Step(int64_t TimeoutMicros)
         SendPosition(ra_int,dec_int,status);
     }
     Server::Step(TimeoutMicros);
+#endif
 }
 
 void ServerPi::SetRaDec (float Ra, float Dec )
@@ -103,11 +147,19 @@ DEC    (4 bytes,signed integer): declination of the telescope (J2000)
 */
 void ServerPi::GotoReceived(uint32_t ra_int, int32_t dec_int)
 {
+#if 0
     float ra_rads = 0; 
     float dec_rads = 0; 
     ra_rads = ra_int*(M_PI/(unsigned int)0x80000000);
     dec_rads = dec_int*(M_PI/(unsigned int)0x80000000);
     TelescopeManager::SetGotoTarget(ra_rads, dec_rads);
+#endif
+	const double ra = ra_int*(M_PI/(uint32_t)0x80000000);
+	const double dec = dec_int*(M_PI/(uint32_t)0x80000000);
+	const double cdec = cos(dec);
+	desired_pos[0] = cos(ra)*cdec;
+	desired_pos[1] = sin(ra)*cdec;
+	desired_pos[2] = sin(dec);
 }
 
 

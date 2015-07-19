@@ -61,10 +61,12 @@ private:
     void GotoReceived(uint32_t ra_int, int32_t dec_int);
     /**
      */
-     
+        double current_pos[3];
+        double desired_pos[3];
+
 //    TelescopeManager Telescope;    
     
-    long long int next_pos_time; /**< variable to prevent over sending of the messages */
+    int64_t next_pos_time; /**< variable to prevent over sending of the messages */
     float RightAscension;        /**< Right ascension */
     float Declination;           /**< Declination */
 };

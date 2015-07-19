@@ -1,5 +1,5 @@
-all:		Main Sample_Main
-
+all:		Main 
+#HMC5883L_heading Sample_Main MPU6050
 INCLUDE_PATHS := 	-I./Src/I2Cdevlib/Pi/I2Cdev/ \
 					-I./Src/I2Cdevlib/Pi/HMC5883L/ \
 					-I./Src/I2Cdevlib/Pi/ADXL345/ \
@@ -37,6 +37,7 @@ DEVICE_OBJS := $(addprefix $(OBJ_DIR), \
 					TelescopeManager.o \
 					CelestrialConverter.o \
 					TTC_Sched_Pi_Impl.o \
+					LogFile.o \
 					)
 
 PI_DIR = ../Src/I2Cdevlib/Pi/

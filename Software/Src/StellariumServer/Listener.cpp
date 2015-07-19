@@ -25,6 +25,8 @@
 #include "Listener.hpp"
 #include "Connection.hpp"
 #include "Server.hpp"
+#include "LogFile.hpp"
+
 #include <iostream>
 #include <stdlib.h> // exit
 using namespace std;
@@ -64,6 +66,10 @@ void Listener::PrepareSelectFds( fd_set &ReadFds, fd_set &WriteFds, int16_t &FdM
         Fd = socket( AF_INET, SOCK_STREAM, 0 );
         if ( IS_INVALID_SOCKET( Fd ) )
         {
+			*log_file << Now()
+			          << "socket() failed: "
+			          << STRERROR(ERRNO)
+			          << endl;
             exit(127);
         }
         
@@ -74,6 +80,10 @@ void Listener::PrepareSelectFds( fd_set &ReadFds, fd_set &WriteFds, int16_t &FdM
                             reinterpret_cast<const char*>(&Yes),
                             sizeof(int)))
         {
+			*log_file << Now()
+			          << "setsockopt(SO_REUSEADDR) failed: "
+			          << STRERROR(ERRNO)
+			          << endl;
             exit(127);
         }
         
@@ -82,13 +92,22 @@ void Listener::PrepareSelectFds( fd_set &ReadFds, fd_set &WriteFds, int16_t &FdM
         SockAddr.sin_port = htons(Port);
         if (bind(Fd, (struct sockaddr*)(&SockAddr), sizeof(SockAddr)))
         {
+			*log_file << Now()
+			          << "bind(...) failed: "
+			          << STRERROR(ERRNO)
+			          << endl;
             exit(127);
         }
 
         if (listen(Fd, 10))
         {
+			*log_file << Now()
+			          << "listen(...) failed: "
+			          << STRERROR(ERRNO)
+			          << endl;
             exit(127);
         }        
+		*log_file << Now() << "listening on port " << Port << endl;
     }
     else
     {
@@ -119,15 +138,21 @@ void Listener::HandleSelectFds( const fd_set &ReadFds, const fd_set &WriteFds )
         
         if (IS_INVALID_SOCKET(ClientSock))
         {
+			*log_file << Now()
+			          << "accept(...) failed: "
+			          << STRERROR(ERRNO)
+			          << endl;
             close(ClientSock);
         }
-        else if (0 != SETNONBLOCK(ClientSock))
+		*log_file << Now() << "connection accepted" << endl;
+        if (0 != SETNONBLOCK(ClientSock))
         {
+			*log_file << Now()
+			          << "SETNONBLOCK(...) failed: "
+			          << STRERROR(ERRNO)
+			          << endl;
             close(ClientSock);
         }
-        else
-        {
             server.AddConnection(new Connection(server, ClientSock));
-        }
     }
 }

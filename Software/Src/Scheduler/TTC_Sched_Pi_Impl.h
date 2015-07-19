@@ -1,3 +1,6 @@
+#ifndef TTC_SCHED_PI_IMPL
+#define TTC_SCHED_PI_IMPL
+
 #include "TTC_Sched.h"
 
 #define SCHED_TIMEOUT    500 /**< Time of each tick */
@@ -22,3 +25,6 @@ class TTC_Sched_Pi_Impl: public TTC_Sched
      */
         void    Start( void );
 };
+
+
+#endif /* TTC_SCHED_PI_IMPL */

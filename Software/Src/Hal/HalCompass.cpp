@@ -98,10 +98,10 @@ void HalCompass::Run( void )
 float HalCompass::HalCompassGetHeading( void )
 {
     float Result = 0;
-    Result = atan2(FilterY[4], FilterX[4]);
+    Result = 180*atan2(FilterY[4], FilterX[4])/M_PI;
     if(Result < 0)
     {
-        Result += 2 * M_PI;
+        Result += 360;//2 * M_PI;
     }
     return Result;
 }

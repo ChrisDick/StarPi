@@ -25,6 +25,7 @@
 #include "Connection.hpp"
 #include "Server.hpp"
 #include <math.h>
+#include "LogFile.hpp"
 #include <iostream>
 #include <iomanip>
 using namespace std;
@@ -60,10 +61,14 @@ void Connection::PerformReading( void )
     {
         if (ERRNO == ECONNRESET)
         {
+			*log_file << Now() << "Connection::performReading: "
+			                      "client has closed the connection" << endl;
             HangUp();
         } 
         else if (ERRNO != EINTR && ERRNO != EAGAIN)
         {
+			*log_file << Now() << "Connection::performReading: readNonblocking failed: "
+			                   << STRERROR(ERRNO) << endl;
             HangUp();
         }
     } 
@@ -71,6 +76,8 @@ void Connection::PerformReading( void )
     {
         if (IsTcpConnection())
         {
+			*log_file << Now() << "Connection::performReading: "
+			                      "client has closed the connection" << endl;
             HangUp();
         }
     }
@@ -104,6 +111,8 @@ void Connection::PerformWriting( void )
     {
         if (ERRNO != EINTR && ERRNO != EAGAIN)
         {
+			*log_file << Now() << "Connection::performWriting: writeNonblocking failed: "
+			                   << STRERROR(ERRNO) << endl;
         HangUp();
         }
     }
@@ -173,15 +182,20 @@ void Connection::HandleSelectFds( const fd_set &ReadFds, const fd_set &WriteFds 
  */
 void Connection::DataReceived( const uint8_t* &BufferPtr, const uint8_t *ReadBuffEnd )
 {
-    while (ReadBuffEnd - BufferPtr >= 2)
+    while ( (ReadBuffEnd - BufferPtr) >= 2 )
     {
         const uint16_t Size = (uint16_t)BufferPtr[0] + ((uint16_t)BufferPtr[1] << 8);
-        if (Size > (int16_t)sizeof(ReadBuff) || Size < 4)
+	//	const int Size = (int)( ((unsigned char)(BufferPtr[0])) |
+	//	                        (((unsigned int)(unsigned char)(BufferPtr[1])) << 8) );
+
+        if ( ( Size > (int16_t)sizeof(ReadBuff) ) || ( Size < 4 ) )
         {
+			*log_file << Now() << "Connection::dataReceived: "
+		                              "bad packet size: " << Size << endl;
             HangUp();
             return;
         }
-        if (Size > ReadBuffEnd-BufferPtr)
+        if (Size > (ReadBuffEnd-BufferPtr) )
         {
             // wait for complete packet
             break;
@@ -195,6 +209,8 @@ void Connection::DataReceived( const uint8_t* &BufferPtr, const uint8_t *ReadBuf
             {
                 if (Size < 12)
                 {
+					*log_file << Now() << "Connection::dataReceived: "
+					                      "type 0: bad packet size: " << Size << endl;
                     HangUp();
                     return;
                 }
@@ -225,6 +241,11 @@ void Connection::DataReceived( const uint8_t* &BufferPtr, const uint8_t *ReadBuf
             default:
             {
                 //No other types of commands are acceptable at the moment
+				*log_file << Now()
+				          << "Connection::dataReceived: "
+				             "ignoring unknown packet, type: "
+				          << type
+				          << endl;
                 break;
             }
         }  
@@ -253,7 +274,7 @@ void Connection::SendPosition( uint32_t RAInt, int32_t DecInt, int32_t Status )
             *WriteBuffEnd++ = 0;
             // server_micros:
             //long long int Now = GetNow();
-            uint64_t Now = GetNow();
+            int64_t Now = GetNow();
             *WriteBuffEnd++ = Now; Now>>=8;
             *WriteBuffEnd++ = Now; Now>>=8;
             *WriteBuffEnd++ = Now; Now>>=8;
@@ -280,7 +301,9 @@ void Connection::SendPosition( uint32_t RAInt, int32_t DecInt, int32_t Status )
         }
         else
         {
-            // connection is too slow
+			*log_file << Now() << "Connection::sendPosition: "
+			                      "communication is too slow, I will ignore this command"
+			                   << endl;
         }
     }
 }

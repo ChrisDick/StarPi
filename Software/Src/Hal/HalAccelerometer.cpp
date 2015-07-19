@@ -45,6 +45,7 @@ bool HalAccelerometer::HalAccelerometerInit( void )
     Accel.setAccelYSelfTest(false);
     Accel.setAccelZSelfTest(false);
     GRange = 2.0F;
+    Scaling = 16384.0;
     Result = true;
 #elif defined ADXL345_ACCEL
     #error no init code for Accelerometer
@@ -126,12 +127,16 @@ void HalAccelerometer::UpdatePitchAndRoll( void )
     /*
         Update Pitch
     */
-    Pitch = atan ( FilterX[4] / ( sqrt( (FilterY[4]*FilterY[4]) + ( FilterZ[4]*FilterZ[4]) ) ) );
+    //Pitch = atan ( FilterX[4] / ( sqrt( (FilterY[4]*FilterY[4]) + ( FilterZ[4]*FilterZ[4]) ) ) );
+    Pitch = asin ( FilterX[4] / ( sqrt( (FilterX[4]*FilterX[4]) + (FilterY[4]*FilterY[4]) + ( FilterZ[4]*FilterZ[4]) ) ) );
             
     /*
         Update Roll
     */
-    Roll = atan ( FilterY[4] / ( sqrt( (FilterX[4]*FilterX[4]) + ( FilterZ[4]*FilterZ[4]) ) ));
+    //Roll = atan ( FilterY[4] / ( sqrt( (FilterX[4]*FilterX[4]) + ( FilterZ[4]*FilterZ[4]) ) ));
+    Roll = -asin ( ( FilterY[4] / ( sqrt( (FilterX[4]*FilterX[4]) + (FilterY[4]*FilterY[4]) + ( FilterZ[4]*FilterZ[4]) ) ) ) / cos(Pitch) );
+    
+    Update = false;    
 }
 
 

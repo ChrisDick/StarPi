@@ -26,30 +26,30 @@
 #include "TelescopeManager.h"
 #include "TTC_Sched_Pi_Impl.h"
 
-
 #include <iostream>
 using namespace std;
 
 
-// static volatile bool continue_looping = true;
+static volatile bool continue_looping = true;
 
-// static void signal_handler(int signum)
-// {
-    // switch (signum)
-    // {
-        // case SIGINT:
-        // case SIGQUIT:
-        // case SIGTERM:
-//           continue_looping = false;
+static void signal_handler(int signum)
+{
+    switch (signum)
+    {
+        case SIGINT:
+        case SIGQUIT:
+        case SIGTERM:
+        {
+           continue_looping = false;
 
-  //     printf ("End.\n");
-            // break;
-        // default:
+            printf ("End.\n");
+            break;
+        } 
+        default:
     //        just ignore
-            // break;
-    // }
-//}
-
+        break;
+    }
+}
 
 int main(int argc, char *argv[])
 {
@@ -58,13 +58,13 @@ int main(int argc, char *argv[])
     // SIGPIPE is normal operation when we send while the other side
     // has already closed the socket. We must ignore it:
 
-    // signal(SIGPIPE, SIG_IGN);
-    // signal(SIGINT, signal_handler);
-    // signal(SIGTERM, signal_handler);
-    // signal(SIGQUIT, signal_handler);
+    signal(SIGPIPE, SIG_IGN);
+    signal(SIGINT, signal_handler);
+    signal(SIGTERM, signal_handler);
+    signal(SIGQUIT, signal_handler);
 
     // maybe the user wants to continue after SIGHUP ?
-    //signal(SIGHUP,signal_handler);
+    signal(SIGHUP,signal_handler);
 
     int Port;
     if ((argc < 2 || argc > 4) ||
@@ -92,26 +92,25 @@ int main(int argc, char *argv[])
     TelescopeManager::Telescope.SetPeriod(200);
     
     PiServer.SetDelay(1);
-    PiServer.SetPeriod(500);
+    PiServer.SetPeriod(10);
     
     printf ("tasks configured.\n");
 
+    Scheduler.AddTask(&PiServer);
     Scheduler.AddTask(&HalAccelerometer::Accelerometer);
     Scheduler.AddTask(&TelescopeManager::Telescope);
-    Scheduler.AddTask(&HalCompass::Compass);
-    Scheduler.AddTask(&PiServer);
-    
-    printf ("tasks added.\n");
+    uint8_t error = Scheduler.AddTask(&HalCompass::Compass);    
+    printf ("tasks added = %d.\n", error);
     
     Scheduler.Start();
 
     printf ("scheduler started.\n");
     
     /* Do busy work. */
-    while (1)
+    while (continue_looping)
     {
         Scheduler.DispatchTasks();
     }
     
-        printf ("End.\n");
+    printf ("End.\n");
 }

@@ -87,7 +87,7 @@ class Socket
      * @param DecInt int32_t version of the Declination
      * @param Status int32_t version of the 
      */
-        virtual void SendPosition( uint16_t RAInt, int32_t DecInt, int32_t Status) {}
+        virtual void SendPosition( uint32_t RAInt, int32_t DecInt, int32_t Status) {}
         
     protected:
     /** Constructor
