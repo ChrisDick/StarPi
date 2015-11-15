@@ -54,18 +54,18 @@ bool HalCompass::HalCompassInit( void )
 
 /* HalCompassSetPitch
  *  Set the pitch of the Compass
- * @param NewPitch float  
+ * @param NewPitch double  
  */
-void HalCompass::HalCompassSetPitch( float NewPitch )
+void HalCompass::HalCompassSetPitch( double NewPitch )
 {
     Pitch = NewPitch;
 }
 
 /* HalCompassSetRoll
  *  Set the roll of the Compass
- * @param NewRoll float  
+ * @param NewRoll double  
  */
-void HalCompass::HalCompassSetRoll( float NewRoll )
+void HalCompass::HalCompassSetRoll( double NewRoll )
 {
     Roll = NewRoll;
 }
@@ -75,10 +75,10 @@ void HalCompass::HalCompassSetRoll( float NewRoll )
  *  Runs the filter
  */
 void HalCompass::Run( void )
-{    
-    FilterX[FilterCount] = ((float)GetXRawHeading()/Scaling);
-    FilterY[FilterCount] = ((float)GetYRawHeading()/Scaling);
-    FilterZ[FilterCount] = ((float)GetZRawHeading()/Scaling);
+{
+    FilterX[FilterCount] = ((double)GetXRawHeading()/Scaling);
+    FilterY[FilterCount] = ((double)GetYRawHeading()/Scaling);
+    FilterZ[FilterCount] = ((double)GetZRawHeading()/Scaling);
     
     FilterX[4] = (FilterX[0] + FilterX[1] + FilterX[2] + FilterX[3])/4;
     FilterY[4] = (FilterY[0] + FilterY[1] + FilterY[2] + FilterY[3])/4;
@@ -93,15 +93,15 @@ void HalCompass::Run( void )
 
 /* HalCompassGetHeading
  *  Get the heading of the Compass
- * @return float heading 
+ * @return double heading 
  */
-float HalCompass::HalCompassGetHeading( void )
+double HalCompass::HalCompassGetHeading( void )
 {
-    float Result = 0;
-    Result = 180*atan2(FilterY[4], FilterX[4])/M_PI;
+    double Result = 0;
+    Result = atan2(FilterY[4], FilterX[4]);
     if(Result < 0)
     {
-        Result += 360;//2 * M_PI;
+        Result += 2 * M_PI;
     }
     return Result;
 }
@@ -109,19 +109,23 @@ float HalCompass::HalCompassGetHeading( void )
 /* HalCompassGetHeading
  *  Get the tilt compensated heading of the Compass
  *   see http://ozzmaker.com/2014/12/17/Compass2/#more-3062
- * @return float heading 
+ * @return double heading from south +ve west.
  */
-float HalCompass::HalCompassGetTiltCompensatedHeading( void )
+double HalCompass::HalCompassGetTiltCompensatedHeading( void )
 {
-    float Result = 0;
-    float XComponent = 0;
-    float YComponent = 0;
+    double Result = 0;
+    double XComponent = 0;
+    double YComponent = 0;
 
     XComponent = (FilterX[4]*cos(Pitch))+(FilterZ[4]*sin(Pitch));
     YComponent = (FilterX[4]*sin(Roll)*sin(Pitch))+(FilterY[4]*cos(Roll))-(FilterZ[4]*sin(Roll)*cos(Pitch));
 
-    Result = 180*atan2(YComponent, XComponent)/M_PI;
+    Result = atan2(YComponent, XComponent);
     
+    if(Result < 0)
+    {
+        Result += 2 * M_PI;
+    }
     return Result;
 }
 

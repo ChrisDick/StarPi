@@ -18,25 +18,25 @@ class HalCompass: public Runnable {
      */
         bool HalCompassInit( void );
     /** Set the pitch of the Compass
-     * @param NewPitch float  
+     * @param NewPitch double  
      */
-        void HalCompassSetPitch( float NewPitch );
+        void HalCompassSetPitch( double NewPitch );
     /** Set the roll of the Compass
-     * @param NewRoll float  
+     * @param NewRoll double  
      */
-        void HalCompassSetRoll( float NewRoll );
+        void HalCompassSetRoll( double NewRoll );
     /** Runs the filter
      */
         void Run( void );
     /** Get the heading of the Compass
-     * @return float heading 
+     * @return double heading 
      */
-        float HalCompassGetHeading( void );
+        double HalCompassGetHeading( void );
     /** Get the tilt compensated heading of the Compass
      *   see http://ozzmaker.com/2014/12/17/Compass2/#more-3062
-     * @return float heading 
+     * @return double heading 
      */
-        float HalCompassGetTiltCompensatedHeading( void );
+        double HalCompassGetTiltCompensatedHeading( void );
         
         static HalCompass Compass;
         
@@ -53,13 +53,13 @@ class HalCompass: public Runnable {
      * @return int16_t heading 
      */
         int16_t GetZRawHeading( void );
-        float FilterX[5];    /**< storage for X axis filter data*/
-        float FilterY[5];    /**< storage for Y axis filter data*/
-        float FilterZ[5];    /**< storage for Z axis filter data*/
+        double FilterX[5];    /**< storage for X axis filter data*/
+        double FilterY[5];    /**< storage for Y axis filter data*/
+        double FilterZ[5];    /**< storage for Z axis filter data*/
         uint8_t FilterCount; /**< counter to keep track of where to store latest data */
-        float Scaling;       /**< scaling for the raw data */
-        float Pitch;         /**< current pitch of the compass */
-        float Roll;          /**< current roll of the compass */
+        double Scaling;       /**< scaling for the raw data */
+        double Pitch;         /**< current pitch of the compass */
+        double Roll;          /**< current roll of the compass */
 };
 
 #endif /* HALCOMPASS_H */
