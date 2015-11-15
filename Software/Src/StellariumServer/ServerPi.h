@@ -45,7 +45,7 @@ class ServerPi : public Server, public Runnable
         void Run ( void );
     /** 
      */
-        void SetRaDec (float Ra, float Dec );
+        void SetRaDec (double Ra, double Dec );
     /** perform one step of the server
      * @param timeout_micros
      * @param ra
@@ -61,14 +61,10 @@ private:
     void GotoReceived(uint32_t ra_int, int32_t dec_int);
     /**
      */
-        double current_pos[3];
-        double desired_pos[3];
 
-//    TelescopeManager Telescope;    
-    
     int64_t next_pos_time; /**< variable to prevent over sending of the messages */
-    float RightAscension;        /**< Right ascension */
-    float Declination;           /**< Declination */
+    double RightAscension;        /**< Right ascension */
+    double Declination;           /**< Declination */
 };
 
 #endif /* SERVER_ASTRO_PI_H */
