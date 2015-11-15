@@ -26,13 +26,13 @@ class TelescopeManager : public Runnable
      * @param Ra
      * @param Dec     
      */
-        static void SetGotoTarget(float Ra, float Dec);
+        static void SetGotoTarget(double Ra, double Dec);
 
     /** Export the RightAscension and Declination
      */
-        static void GetRaDec ( float* Ra, float* Dec );
-        static float RightAscension;         /**< Right ascension */
-        static float Declination;            /**< Declination */
+        static void GetRaDec ( double* Ra, double* Dec );
+        static double RightAscension;         /**< Right ascension */
+        static double Declination;            /**< Declination */
 
     /** only one instance of this class is required.
      */
@@ -40,8 +40,8 @@ class TelescopeManager : public Runnable
         
     private:
         
-        static float TargetRightAscension;   /**< Target right ascension */
-        static float TargetDeclination;      /**< Target declination */
+        static double TargetRightAscension;   /**< Target right ascension */
+        static double TargetDeclination;      /**< Target declination */
 };
 
 #endif /* TELESCOPE_MANAGER_H */
