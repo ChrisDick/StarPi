@@ -16,7 +16,7 @@ typedef struct {
 typedef struct {
     uint8_t Hours;   /**< Number of Hours.   */
     uint8_t Minutes; /**< Number of Minutes. */
-    float Seconds; /**< Number of Seconds. */
+    double Seconds; /**< Number of Seconds. */
 } CC_TIME_T;
 
 /** CC_ANGLES_T
@@ -24,15 +24,15 @@ typedef struct {
  * All angles are in radians.
  */
 typedef struct {
-    float LongitudeWest;    /**< Longitude of current position.                                        */
-    float Latitude;         /**< Latitude of the current position.                                     */
-    float Azimuth;          /**< Angle of Azimuth of the telescope.                                    */
-    float Altitude;         /**< Angle of Altitude of the telescope.                                   */
-    float HourAngle;        /**< Hour Angle of the telescope.                                          */
-    float RightAscension;   /**< Right Ascension of the position on star map in view of the telescope. */
-    float Declination;      /**< Declination of the position on star map in view of the telescope.     */
+    double LongitudeWest;    /**< Longitude of current position.                                        */
+    double Latitude;         /**< Latitude of the current position.                                     */
+    double Azimuth;          /**< Angle of Azimuth of the telescope.                                    */
+    double Altitude;         /**< Angle of Altitude of the telescope.                                   */
+    double HourAngle;        /**< Hour Angle of the telescope.                                          */
+    double RightAscension;   /**< Right Ascension of the position on star map in view of the telescope. */
+    double Declination;      /**< Declination of the position on star map in view of the telescope.     */
     CC_TIME_T LocalSiderealCCTime; /**< debug */
-    float LocalSiderealTime; /**< debug */
+    double LocalSiderealTime; /**< debug */
 } CC_ANGLES_T;
 
 
@@ -47,10 +47,10 @@ class CelestrialConverter {
         /** Calculate the Local sidereal tiem from the current time and location.
          * @param GrenwichStandardTime - CC_TIME_T - Current time.
          * @param Date CC_DATE_T Current date.
-         * @param LongitudeWest - float - Logitude of current position.
-         * @return float - Local Sidereal Time in Radians.   
+         * @param LongitudeWest - double - Logitude of current position.
+         * @return double - Local Sidereal Time in Radians.   
          */
-            float CalculateLocalSiderealTime( CC_TIME_T GrenwichMeanTime, CC_DATE_T Date, float LongitudeWest );
+            double CalculateLocalSiderealTime( CC_TIME_T GrenwichMeanTime, CC_DATE_T Date, double LongitudeWest );
         /** Convert equatorial coordinates to celestial coordinates. 
         * @param Angles - CC_ANGLES_T* - structure containing all Angles.
         * @param GrenwichStandardTime - CC_TIME_T - Current time.
@@ -60,7 +60,7 @@ class CelestrialConverter {
         * @param Angles - CC_ANGLES_T* - structure containing all Angles.
         * @param GrenwichStandardTime - CC_TIME_T - Current time.
         */
-            void CelestrialToEquitorial( CC_ANGLES_T* Angles, CC_TIME_T GrenwichStandardTime );
+            void CelestrialToEquitorial( CC_ANGLES_T* Angles, CC_TIME_T GrenwichStandardTime, CC_DATE_T Date );
         /** Add two times together, will wrap around 1 day.
         * @param TimeA - CC_TIME_T - Time to add. 
         * @param TimeB - CC_TIME_T - Time to add.
@@ -77,53 +77,53 @@ class CelestrialConverter {
             void SubtractTime( CC_TIME_T TimeA, CC_TIME_T TimeB, CC_TIME_T* Result );
         /** Convert hours minutes and seconds to hours.
          * @param Time - CC_TIME_T - structure containing all the time info.
-         * @return float - Hours in decimal format.
+         * @return double - Hours in decimal format.
          */
-            float DecimaliseTime( CC_TIME_T Time );
+            double DecimaliseTime( CC_TIME_T Time );
         /** Convert hours to hours, minutes and seconds.
-         * @param TimeDec - float - hours in decimal format.
+         * @param TimeDec - double - hours in decimal format.
          * @param Angle CC_TIME_T* - Structure containing all the time info.
          */
-            void UnDecimaliseTime( float TimeDec, CC_TIME_T* Angle );
+            void UnDecimaliseTime( double TimeDec, CC_TIME_T* Angle );
         /** ConvertRadiansToTime
          * Convert an angle in radians to a time.
          * @param Time structure containing all the time info
-         * @return float Radians - The Angle
+         * @return double Radians - The Angle
          */
-            void ConvertRadiansToTime( float Radians, CC_TIME_T* Time );
+            void ConvertRadiansToTime( double Radians, CC_TIME_T* Time );
         /** Convert a time to an angle.
          * @param Time - CC_TIME_T - Structure containing all the time info.
-         * @return float - Angle.
+         * @return double - Angle.
          */
-            float ConvertTimeToRadians( CC_TIME_T Time );
+            double ConvertTimeToRadians( CC_TIME_T Time );
         /** ConvertRadiansToDegrees
          * Convert an angle in radians to Degrees.
          * @param Degrees structure containing the result
-         * @param float Radians - The Angle
+         * @param double Radians - The Angle
          */
-            void ConvertRadiansToDegrees( float Radians, CC_TIME_T* Degrees );
+            void ConvertRadiansToDegrees( double Radians, CC_TIME_T* Degrees );
         /** ConvertDegreesToRadians
          * Convert a time to an angle in radians
          * @param Time structure containing all the angle info
-         * @return float The angle
+         * @return double The angle
          */
-            float ConvertDegreesToRadians( CC_TIME_T Degrees );
+            double ConvertDegreesToRadians( CC_TIME_T Degrees );
         /** ConvertTimeToAngle
          * Convert a time to an angle
          * @param Time structure containing all the time info
-         * @return float Angle
+         * @return double Angle
          */
-            float ConvertTimeToAngle( CC_TIME_T Time ) ;
+            double ConvertTimeToAngle( CC_TIME_T Time ) ;
         /** Convert an angle to a time
-         * @param Angle - float - Angle  
+         * @param Angle - double - Angle  
          * @param time - CC_TIME_T* - pointer to Structure to contain all the time info
          */
-            void ConvertAngleToTime( float Angle, CC_TIME_T* time );
+            void ConvertAngleToTime( double Angle, CC_TIME_T* time );
 
         /** Calculate the Julian date
          * @param Time - CC_TIME_T Time structure for calculations.
          * @param Date - CC_DATE_T Date structure for calculations.
-         * @return Julian date as a float.
+         * @return Julian date as a double.
          */
-            float CalculateJulianDate ( CC_TIME_T Time, CC_DATE_T Date );
+            double CalculateJulianDate ( CC_TIME_T Time, CC_DATE_T Date );
 };
