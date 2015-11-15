@@ -7,7 +7,7 @@
 /* 
     MUST BE ADJUSTED FOR EACH NEW PROJECT
 */
-#define SCH_MAX_TASKS 4 /**< The maximum number of tasks required at any one time during the execution of the program*/
+#define SCH_MAX_TASKS 5 /**< The maximum number of tasks required at any one time during the execution of the program*/
 
 /** Class for the scheduler 
  */

@@ -26,8 +26,25 @@
 #include "TelescopeManager.h"
 #include "TTC_Sched_Pi_Impl.h"
 
+#include "Runnable.h"
 #include <iostream>
 using namespace std;
+
+class Runner : public Runnable
+{
+    public:
+    Runner();
+    void Run();
+};
+Runner::Runner()
+{
+    
+}
+
+void Runner::Run()
+{
+    
+}
 
 
 static volatile bool continue_looping = true;
@@ -77,6 +94,7 @@ int main(int argc, char *argv[])
     
     TTC_Sched_Pi_Impl   Scheduler;
     ServerPi PiServer( Port );
+    Runner Runs;
     
     Scheduler.Init();   // call first to reset task table and configure timer.
     printf ("scheduler initialised.\n");
@@ -89,17 +107,20 @@ int main(int argc, char *argv[])
     HalCompass::Compass.SetPeriod(4); // also run every 4 ticks.
        
     TelescopeManager::Telescope.SetDelay(0); 
-    TelescopeManager::Telescope.SetPeriod(200);
+    TelescopeManager::Telescope.SetPeriod(10);
     
     PiServer.SetDelay(1);
     PiServer.SetPeriod(10);
     
+    Runs.SetDelay(1);
+    Runs.SetPeriod(1000);
+    
     printf ("tasks configured.\n");
-
-    Scheduler.AddTask(&PiServer);
+Scheduler.AddTask(&HalCompass::Compass);
+    Scheduler.AddTask(&PiServer);  
     Scheduler.AddTask(&HalAccelerometer::Accelerometer);
     Scheduler.AddTask(&TelescopeManager::Telescope);
-    uint8_t error = Scheduler.AddTask(&HalCompass::Compass);    
+    uint8_t error =   Scheduler.AddTask(&Runs);
     printf ("tasks added = %d.\n", error);
     
     Scheduler.Start();
