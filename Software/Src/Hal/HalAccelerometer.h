@@ -17,13 +17,13 @@ class HalAccelerometer: public Runnable {
          */    
             bool  HalAccelerometerInit( void );
         /** Get the Pitch of the Accelerometer
-        * @return float The Pitch
+        * @return double The Pitch
         */
-            float HalAccelerometerGetPitch( void );
+            double HalAccelerometerGetPitch( void );
         /** Get the Roll of the Accelerometer
-         * @return float The Roll
+         * @return double The Roll
          */
-           float HalAccelerometerGetRoll( void );
+           double HalAccelerometerGetRoll( void );
         /** runs the filter and updates the Roll and Pitch
          */
         void  Run( void );
@@ -50,15 +50,15 @@ class HalAccelerometer: public Runnable {
         int16_t XOffset;    /**< X axis offset value */
         int16_t YOffset;    /**< Y axis offset value */
         int16_t ZOffset;    /**< Z axis offset value */
-        float Scaling;      /**< scaling for the device */
-        float GRange;       /**< range of the device*/
-        float FilterX[5];   /**< storage for X axis filter data*/
-        float FilterY[5];   /**< storage for Y axis filter data*/
-        float FilterZ[5];   /**< storage for Z axis filter data*/
+        double Scaling;      /**< scaling for the device */
+        double GRange;       /**< range of the device*/
+        double FilterX[5];   /**< storage for X axis filter data*/
+        double FilterY[5];   /**< storage for Y axis filter data*/
+        double FilterZ[5];   /**< storage for Z axis filter data*/
         uint8_t FilterCount;/**< counter to keep track of where to store latest data */
         bool Update;        /**< Keep track on the need to repeat the calculation */
-        float Pitch;        /**< Calculated Pitch */
-        float Roll;         /**< Calculated Roll */
+        double Pitch;        /**< Calculated Pitch */
+        double Roll;         /**< Calculated Roll */
 
 };
 

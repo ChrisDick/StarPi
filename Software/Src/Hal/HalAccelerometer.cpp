@@ -65,7 +65,7 @@ bool HalAccelerometer::HalAccelerometerInit( void )
 /* Get the Pitch of the Accelerometer
  * @return float The Pitch
  */
-float HalAccelerometer::HalAccelerometerGetPitch( void )
+double HalAccelerometer::HalAccelerometerGetPitch( void )
 {
     if ( Update )
     {
@@ -80,7 +80,7 @@ float HalAccelerometer::HalAccelerometerGetPitch( void )
 /* Get the Roll of the Accelerometer
  * @return float The Roll
  */
-float HalAccelerometer::HalAccelerometerGetRoll( void )
+double HalAccelerometer::HalAccelerometerGetRoll( void )
 {
     if ( Update )
     {
@@ -103,9 +103,9 @@ void HalAccelerometer::Run( void )
     Y = GetYRawAcceleration();
     Z = GetZRawAcceleration();
     
-    FilterX[FilterCount] = (((float)X/Scaling)*(GRange*9.81F));
-    FilterY[FilterCount] = (((float)Y/Scaling)*(GRange*9.81F));
-    FilterZ[FilterCount] = (((float)Z/Scaling)*(GRange*9.81F));
+    FilterX[FilterCount] = (((double)X/Scaling)*(GRange*9.81));
+    FilterY[FilterCount] = (((double)Y/Scaling)*(GRange*9.81));
+    FilterZ[FilterCount] = (((double)Z/Scaling)*(GRange*9.81));
     
     FilterX[4] = (FilterX[0] + FilterX[1] + FilterX[2] + FilterX[3])/4;
     FilterY[4] = (FilterY[0] + FilterY[1] + FilterY[2] + FilterY[3])/4;
