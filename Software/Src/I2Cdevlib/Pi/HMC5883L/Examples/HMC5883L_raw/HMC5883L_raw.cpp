@@ -55,28 +55,31 @@ int main (int argscc, char** argsv)
     int16_t mz = 0;
     bool test = false;
 
-    mag.initialize();
+    mag.Initialize();
     test = mag.testConnection() ;
     cout << test;
     cout << "\n\r";
     mag.setMode(HMC5883L_MODE_CONTINUOUS);
-    
-    mag.getHeading(&mx, &my, &mz);
-    
-    cout << mx;
-    cout << "\n\r";
-    cout << my;
-    cout << "\n\r";
-    cout << mz;
-    cout << "\n\r";
-    float heading = atan2(my, mx);
-    if(heading < 0)
+    while (1)
     {
-        heading += 2 * M_PI;
+        mag.GetHeading(&mx, &my, &mz);
+        
+        cout << "mx:";
+        cout << mx;
+        cout << " my:";
+        cout << my;
+        cout << " mz:";
+        cout << mz;
+        float heading = atan2(my, mx);
+        if(heading < 0)
+        {
+            heading += 2 * M_PI;
+        }
+        result = (int)heading;
+        cout << " heading:";
+        cout << (heading * ( 180 / M_PI ));
+        cout << "\n\r";
     }
-    result = (int)heading;
-    cout << (heading * ( 180 / M_PI ));
-    cout << "\n\r";
     return result;
 }
 

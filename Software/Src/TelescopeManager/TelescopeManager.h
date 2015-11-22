@@ -4,8 +4,6 @@
 #include <stdint.h>
 #include "Runnable.h"
 #include "CelestrialConverter.h"
-#include "HalAccelerometer.h"
-#include "HalCompass.h"
 
 /** TelescopeManager
  * Class to manage the functionality of the telescope.
@@ -38,6 +36,7 @@ class TelescopeManager : public Runnable
      */
         static TelescopeManager Telescope;
         
+       // static void testCalculator ( void );
     private:
         
         static double TargetRightAscension;   /**< Target right ascension */

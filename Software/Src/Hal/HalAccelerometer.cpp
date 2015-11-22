@@ -6,7 +6,7 @@
 #include "MPU6050.h"
 MPU6050 Accel;
 #elif defined ADXL345_ACCEL
-#include "ADXL345"
+#include "ADXL345.h"
 ADXL345 Accel;
 #elif defined BMA150_ACCEL
 #include "BMA150.h"
@@ -36,7 +36,6 @@ bool HalAccelerometer::HalAccelerometerInit( void )
 {
     bool Result = false;    
     FilterCount = 0;
-    Update = false;
     Accel.initialize();
     // initialise Accelerometer specifics here
     Scaling = 32768.0F;
@@ -44,7 +43,6 @@ bool HalAccelerometer::HalAccelerometerInit( void )
     Accel.setAccelXSelfTest(false);
     Accel.setAccelYSelfTest(false);
     Accel.setAccelZSelfTest(false);
-    GRange = 2.0F;
     Scaling = 16384.0;
     Result = true;
 #elif defined ADXL345_ACCEL
@@ -56,39 +54,7 @@ bool HalAccelerometer::HalAccelerometerInit( void )
 #elif defined MPU9150_ACCEL
     #error no init code for Accelerometer
 #endif
-    XOffset = Accel.getXAccelOffset();
-    YOffset = Accel.getYAccelOffset();
-    ZOffset = Accel.getZAccelOffset();
     return Result;
-}
-
-/* Get the Pitch of the Accelerometer
- * @return float The Pitch
- */
-double HalAccelerometer::HalAccelerometerGetPitch( void )
-{
-    if ( Update )
-    {
-        UpdatePitchAndRoll();
-    }
-    return Pitch;
-//  return FilterX[FilterCount];
-
-}
-
-
-/* Get the Roll of the Accelerometer
- * @return float The Roll
- */
-double HalAccelerometer::HalAccelerometerGetRoll( void )
-{
-    if ( Update )
-    {
-        UpdatePitchAndRoll();
-    }
-    return Roll;
-    
-//  return FilterY[4];
 }
 
 /* runs the filter and updates the Roll and Pitch
@@ -103,40 +69,27 @@ void HalAccelerometer::Run( void )
     Y = GetYRawAcceleration();
     Z = GetZRawAcceleration();
     
-    FilterX[FilterCount] = (((double)X/Scaling)*(GRange*9.81));
-    FilterY[FilterCount] = (((double)Y/Scaling)*(GRange*9.81));
-    FilterZ[FilterCount] = (((double)Z/Scaling)*(GRange*9.81));
+    FilterX[FilterCount] = (((double)X/Scaling));
+    FilterY[FilterCount] = (((double)Y/Scaling));
+    FilterZ[FilterCount] = (((double)Z/Scaling));
     
     FilterX[4] = (FilterX[0] + FilterX[1] + FilterX[2] + FilterX[3])/4;
     FilterY[4] = (FilterY[0] + FilterY[1] + FilterY[2] + FilterY[3])/4;
     FilterZ[4] = (FilterZ[0] + FilterZ[1] + FilterZ[2] + FilterZ[3])/4;
     
-    Update = true;
     FilterCount++;
     if (FilterCount == 4)
     {
         FilterCount = 0;  
     }
 }
-
-/* Calculates the Roll and Pitch
- * see http://www.st.com/web/en/resource/technical/document/application_note/CD00268887.pdf
+/* Access to the Accelerometer data.
  */
-void HalAccelerometer::UpdatePitchAndRoll( void )
+void HalAccelerometer::HalAccelerometerGetAll( float* Ax, float* Ay, float* Az )
 {
-    /*
-        Update Pitch
-    */
-    //Pitch = atan ( FilterX[4] / ( sqrt( (FilterY[4]*FilterY[4]) + ( FilterZ[4]*FilterZ[4]) ) ) );
-    Pitch = asin ( FilterX[4] / ( sqrt( (FilterX[4]*FilterX[4]) + (FilterY[4]*FilterY[4]) + ( FilterZ[4]*FilterZ[4]) ) ) );
-            
-    /*
-        Update Roll
-    */
-    //Roll = atan ( FilterY[4] / ( sqrt( (FilterX[4]*FilterX[4]) + ( FilterZ[4]*FilterZ[4]) ) ));
-    Roll = -asin ( ( FilterY[4] / ( sqrt( (FilterX[4]*FilterX[4]) + (FilterY[4]*FilterY[4]) + ( FilterZ[4]*FilterZ[4]) ) ) ) / cos(Pitch) );
-    
-    Update = false;    
+    *Ax = FilterX[4];
+    *Ay = FilterY[4];
+    *Az = FilterZ[4];
 }
 
 
@@ -147,17 +100,17 @@ int16_t HalAccelerometer::GetXRawAcceleration( void )
 {
     int16_t Result = 0;
 #ifdef OBJECTIVE_END_ACCEL_X_PLUS    
-    Result = Accel.getAccelerationX() + XOffset;
+    Result = Accel.getAccelerationX();
 #elif defined OBJECTIVE_END_ACCEL_X_MINUS
-    Result = 0 - ( Accel.getAccelerationX() + XOffset );
+    Result = 0 - ( Accel.getAccelerationX() );
 #elif defined OBJECTIVE_END_ACCEL_Y_PLUS    
-    Result = Accel.getAccelerationY() + YOffset;
+    Result = Accel.getAccelerationY();
 #elif defined OBJECTIVE_END_ACCEL_Y_MINUS
-    Result = 0 - ( Accel.getAccelerationY() + YOffset );
+    Result = 0 - ( Accel.getAccelerationY() );
 #elif defined OBJECTIVE_END_ACCEL_Z_PLUS    
-    Result = Accel.getAccelerationZ() + ZOffset;
+    Result = Accel.getAccelerationZ();
 #elif defined OBJECTIVE_END_ACCEL_Z_MINUS
-    Result = 0 - ( Accel.getAccelerationZ() + ZOffset );
+    Result = 0 - ( Accel.getAccelerationZ() );
 #else
     #error y axis not defined
 #endif
@@ -171,17 +124,17 @@ int16_t HalAccelerometer::GetYRawAcceleration( void )
 {
     int16_t Result = 0;
 #ifdef TELESCOPE_RIGHT_ACCEL_X_PLUS
-    Result = Accel.getAccelerationX() + XOffset;
+    Result = Accel.getAccelerationX();
 #elif defined TELESCOPE_RIGHT_ACCEL_X_MINUS
-    Result = 0 - ( Accel.getAccelerationX() + XOffset );
+    Result = 0 - Accel.getAccelerationX();
 #elif defined TELESCOPE_RIGHT_ACCEL_Y_PLUS
-    Result = Accel.getAccelerationY() + YOffset;
+    Result = Accel.getAccelerationY();
 #elif defined TELESCOPE_RIGHT_ACCEL_Y_MINUS
-    Result = 0 - ( Accel.getAccelerationY() + YOffset);
+    Result = 0 - Accel.getAccelerationY();
 #elif defined TELESCOPE_RIGHT_ACCEL_Z_PLUS
-    Result = Accel.getAccelerationZ() + ZOffset;
+    Result = Accel.getAccelerationZ();
 #elif defined TELESCOPE_RIGHT_ACCEL_Z_MINUS
-    Result = 0 - ( Accel.getAccelerationZ() + ZOffset );
+    Result = 0 - Accel.getAccelerationZ();
 #else
     #error y axis not defined
 #endif
@@ -195,17 +148,17 @@ int16_t HalAccelerometer::GetZRawAcceleration( void )
 {
     int16_t Result = 0;
 #ifdef UP_ACCEL_X_PLUS
-    Result = Accel.getAccelerationX() + XOffset;
+    Result = Accel.getAccelerationX();
 #elif defined UP_ACCEL_X_MINUS
-    Result = 0 - ( Accel.getAccelerationX() + XOffset );
+    Result = 0 - Accel.getAccelerationX();
 #elif defined UP_ACCEL_Y_PLUS
-    Result = Accel.getAccelerationY() + YOffset;
+    Result = Accel.getAccelerationY();
 #elif defined UP_ACCEL_Y_MINUS
-    Result = 0 - ( Accel.getAccelerationY() + YOffset );
+    Result = 0 - Accel.getAccelerationY();
 #elif defined UP_ACCEL_Z_PLUS
-    Result = Accel.getAccelerationZ() + ZOffset;
+    Result = Accel.getAccelerationZ();
 #elif defined UP_ACCEL_Z_MINUS
-    Result = 0 - ( Accel.getAccelerationZ() + ZOffset );
+    Result = 0 - Accel.getAccelerationZ();
 #else
     #error z axis not defined
 #endif

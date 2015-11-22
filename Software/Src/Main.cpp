@@ -21,8 +21,8 @@
 #include <signal.h>
 #include <string.h>
 #include <stdio.h>
-#include "HalAccelerometer.h"
-#include "HalCompass.h"
+#include "TelescopeOrientation.h"
+#include "HalGps.h"
 #include "TelescopeManager.h"
 #include "TTC_Sched_Pi_Impl.h"
 
@@ -98,14 +98,16 @@ int main(int argc, char *argv[])
     
     Scheduler.Init();   // call first to reset task table and configure timer.
     printf ("scheduler initialised.\n");
-    HalAccelerometer::Accelerometer.HalAccelerometerInit();
-    HalAccelerometer::Accelerometer.SetDelay(0);    // no offset is set here.
-    HalAccelerometer::Accelerometer.SetPeriod(4);   // run every 4 ticks (1 tick == 500us).
     
-    HalCompass::Compass.HalCompassInit();
-    HalCompass::Compass.SetDelay(1); // run one tick after Reader run.
-    HalCompass::Compass.SetPeriod(4); // also run every 4 ticks.
-       
+   
+    TelescopeOrientation::Orient.TelescopeOrientationInit();
+    TelescopeOrientation::Orient.SetDelay(0); 
+    TelescopeOrientation::Orient.SetPeriod(4); // run every 4 ticks (1 tick == 500us).
+ 
+    HalGps::Gps.HalGpsInit();
+    HalGps::Gps.SetDelay(1); // run one tick after telescope mgr run.
+    HalGps::Gps.SetPeriod(400); // run every 200ms.
+      
     TelescopeManager::Telescope.SetDelay(0); 
     TelescopeManager::Telescope.SetPeriod(10);
     
@@ -116,9 +118,10 @@ int main(int argc, char *argv[])
     Runs.SetPeriod(1000);
     
     printf ("tasks configured.\n");
-Scheduler.AddTask(&HalCompass::Compass);
+    Scheduler.AddTask(&HalGps::Gps);
+    Scheduler.AddTask(&TelescopeOrientation::Orient);
     Scheduler.AddTask(&PiServer);  
-    Scheduler.AddTask(&HalAccelerometer::Accelerometer);
+//    Scheduler.AddTask(&HalAccelerometer::Accelerometer);
     Scheduler.AddTask(&TelescopeManager::Telescope);
     uint8_t error =   Scheduler.AddTask(&Runs);
     printf ("tasks added = %d.\n", error);

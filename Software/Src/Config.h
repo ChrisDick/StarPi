@@ -64,8 +64,8 @@
 */
 //#define TELESCOPE_RIGHT_MAGNETOMETER_X_PLUS
 //#define TELESCOPE_RIGHT_MAGNETOMETER_X_MINUS
-//#define TELESCOPE_RIGHT_MAGNETOMETER_Y_PLUS
-#define TELESCOPE_RIGHT_MAGNETOMETER_Y_MINUS
+#define TELESCOPE_RIGHT_MAGNETOMETER_Y_PLUS
+//#define TELESCOPE_RIGHT_MAGNETOMETER_Y_MINUS
 //#define TELESCOPE_RIGHT_MAGNETOMETER_Z_PLUS
 //#define TELESCOPE_RIGHT_MAGNETOMETER_Z_MINUS
 
@@ -76,9 +76,61 @@
 //#define UP_MAGNETOMETER_X_MINUS
 //#define UP_MAGNETOMETER_Y_PLUS
 //#define UP_MAGNETOMETER_Y_MINUS
-#define UP_MAGNETOMETER_Z_PLUS
-//#define UP_MAGNETOMETER_Z_MINUS
+//#define UP_MAGNETOMETER_Z_PLUS
+#define UP_MAGNETOMETER_Z_MINUS
 
+/*
+    Calibration Values:
+*/
+#define CONFIG_MxMax ((float) 612.000000   )
+#define CONFIG_MxMin ((float) -518.000000  )
+#define CONFIG_MyMax ((float) 548.000000   )
+#define CONFIG_MyMin ((float) -582.000000  )
+#define CONFIG_MzMax ((float) 318.000000   )
+#define CONFIG_MzMin ((float) -666.000000  )
+
+
+#define CONFIG_MX_OFFSET ((float) ((CONFIG_MxMin + CONFIG_MxMax)/2.0))
+#define CONFIG_MY_OFFSET ((float) ((CONFIG_MyMin + CONFIG_MyMax)/2.0))
+#define CONFIG_MZ_OFFSET ((float) ((CONFIG_MzMin + CONFIG_MzMax)/2.0))
+
+/*
+   The type of gyro is: 
+*/
+//#define ITG3200_GYRO
+//#define MPU9150_GYRO
+#define MPU6050_GYRO
+
+/*
+    Orientation of the accelerometer with respect to the telescope
+    When the telescope is level (0 degrees elevation):
+    The axis that points to the objective end of the telescope is
+*/
+//#define OBJECTIVE_END_GYRO_X_PLUS
+//#define OBJECTIVE_END_GYRO_X_MINUS
+//#define OBJECTIVE_END_GYRO_Y_PLUS
+#define OBJECTIVE_END_GYRO_Y_MINUS
+//#define OBJECTIVE_END_GYRO_Z_PLUS
+//#define OBJECTIVE_END_GYRO_Z_MINUS
+/*
+    The axis which points to the right hand side when looking into the eyepiece is
+*/
+#define TELESCOPE_RIGHT_GYRO_X_PLUS
+//#define TELESCOPE_RIGHT_GYRO_X_MINUS
+//#define TELESCOPE_RIGHT_GYRO_Y_PLUS
+//#define TELESCOPE_RIGHT_GYRO_Y_MINUS
+//#define TELESCOPE_RIGHT_GYRO_Z_PLUS
+//#define TELESCOPE_RIGHT_GYRO_Z_MINUS
+
+/*
+    The axis which points up is
+*/
+//#define UP_GYRO_X_PLUS
+//#define UP_GYRO_X_MINUS
+//#define UP_GYRO_Y_PLUS
+//#define UP_GYRO_Y_MINUS
+//#define UP_GYRO_Z_PLUS
+#define UP_GYRO_Z_MINUS
 
 
 
