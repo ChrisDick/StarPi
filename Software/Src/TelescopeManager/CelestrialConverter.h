@@ -1,5 +1,6 @@
-
 #include <stdint.h>
+#include <time.h>       /* time_t, struct tm, time, gmtime */
+
 
 /** DATE_T
  * - structure containing date information 
@@ -14,8 +15,8 @@ typedef struct {
  * - Structure containing time information. 
  */
 typedef struct {
-    uint8_t Hours;   /**< Number of Hours.   */
-    uint8_t Minutes; /**< Number of Minutes. */
+    int8_t Hours;   /**< Number of Hours.   */
+    int8_t Minutes; /**< Number of Minutes. */
     double Seconds; /**< Number of Seconds. */
 } CC_TIME_T;
 
@@ -50,17 +51,46 @@ class CelestrialConverter {
          * @param LongitudeWest - double - Logitude of current position.
          * @return double - Local Sidereal Time in Radians.   
          */
-            double CalculateLocalSiderealTime( CC_TIME_T GrenwichMeanTime, CC_DATE_T Date, double LongitudeWest );
+            double CalculateLocalSiderealTime( time_t UnixTime, double LongitudeWest );
         /** Convert equatorial coordinates to celestial coordinates. 
         * @param Angles - CC_ANGLES_T* - structure containing all Angles.
         * @param GrenwichStandardTime - CC_TIME_T - Current time.
         */
-            void EquitorialToCelestrial( CC_ANGLES_T* Angles, CC_TIME_T GrenwichStandardTime, CC_DATE_T Date );
+            void EquitorialToCelestrial( CC_ANGLES_T* Angles, time_t UnixTime );
         /** Convert celestial coordinates to equatorial coordinates. 
         * @param Angles - CC_ANGLES_T* - structure containing all Angles.
         * @param GrenwichStandardTime - CC_TIME_T - Current time.
         */
-            void CelestrialToEquitorial( CC_ANGLES_T* Angles, CC_TIME_T GrenwichStandardTime, CC_DATE_T Date );
+            void CelestrialToEquitorial( CC_ANGLES_T* Angles, time_t UnixTime );
+        /** Convert hours minutes and seconds to hours.
+         * @param Time - CC_TIME_T - structure containing all the time info.
+         * @return double - Hours in decimal format.
+         */
+            double DecimaliseTime( struct tm* Time );
+        /** Convert hours to hours, minutes and seconds.
+         * @param TimeDec - double - hours in decimal format.
+         * @param Angle CC_TIME_T* - Structure containing all the time info.
+         */
+            void UnDecimaliseTime( double TimeDec, CC_TIME_T* Angle );
+        /** Calculate the Julian date
+         * @param Time - CC_TIME_T Time structure for calculations.
+         * @param Date - CC_DATE_T Date structure for calculations.
+         * @return Julian date as a double.
+         */
+            double CalculateJulianDate ( struct tm * gmt );
+        /** ConvertRadiansToTime
+         * Convert an angle in radians to a time.
+         * @param Time structure containing all the time info
+         * @return double Radians - The Angle
+         */
+            void ConvertRadiansToTime( double Radians, CC_TIME_T* Time );
+        /** ConvertRadiansToDegrees
+         * Convert an angle in radians to Degrees.
+         * @param Degrees structure containing the result
+         * @param double Radians - The Angle
+         */
+            void ConvertRadiansToDegrees( double Radians, CC_TIME_T* Degrees );
+#if 0
         /** Add two times together, will wrap around 1 day.
         * @param TimeA - CC_TIME_T - Time to add. 
         * @param TimeB - CC_TIME_T - Time to add.
@@ -75,33 +105,11 @@ class CelestrialConverter {
          * @return CC_TIME_T - The subtraction of the two times.
          */
             void SubtractTime( CC_TIME_T TimeA, CC_TIME_T TimeB, CC_TIME_T* Result );
-        /** Convert hours minutes and seconds to hours.
-         * @param Time - CC_TIME_T - structure containing all the time info.
-         * @return double - Hours in decimal format.
-         */
-            double DecimaliseTime( CC_TIME_T Time );
-        /** Convert hours to hours, minutes and seconds.
-         * @param TimeDec - double - hours in decimal format.
-         * @param Angle CC_TIME_T* - Structure containing all the time info.
-         */
-            void UnDecimaliseTime( double TimeDec, CC_TIME_T* Angle );
-        /** ConvertRadiansToTime
-         * Convert an angle in radians to a time.
-         * @param Time structure containing all the time info
-         * @return double Radians - The Angle
-         */
-            void ConvertRadiansToTime( double Radians, CC_TIME_T* Time );
         /** Convert a time to an angle.
          * @param Time - CC_TIME_T - Structure containing all the time info.
          * @return double - Angle.
          */
             double ConvertTimeToRadians( CC_TIME_T Time );
-        /** ConvertRadiansToDegrees
-         * Convert an angle in radians to Degrees.
-         * @param Degrees structure containing the result
-         * @param double Radians - The Angle
-         */
-            void ConvertRadiansToDegrees( double Radians, CC_TIME_T* Degrees );
         /** ConvertDegreesToRadians
          * Convert a time to an angle in radians
          * @param Time structure containing all the angle info
@@ -119,11 +127,5 @@ class CelestrialConverter {
          * @param time - CC_TIME_T* - pointer to Structure to contain all the time info
          */
             void ConvertAngleToTime( double Angle, CC_TIME_T* time );
-
-        /** Calculate the Julian date
-         * @param Time - CC_TIME_T Time structure for calculations.
-         * @param Date - CC_DATE_T Date structure for calculations.
-         * @return Julian date as a double.
-         */
-            double CalculateJulianDate ( CC_TIME_T Time, CC_DATE_T Date );
+#endif
 };
