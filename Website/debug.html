@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<pre id="status"></pre>
+<pre id="declination"></pre>
+<pre id="right_ascension"></pre>
+<pre id="Azimuth"></pre>
+<pre id="Altitude"></pre>
+<pre id="Latitude"></pre>
+<pre id="longitude"></pre>
+<pre id="Height"></pre>
+<pre id="MagneticDeclination"></pre>
+<pre id="TrueHeading"></pre>
+<pre id="MagneticHeading"></pre>
+<pre id="Day"></pre>
+<pre id="Month"></pre>
+<pre id="Year"></pre>
+<pre id="TimeDisplay"></pre>
+<pre id="SummerTime"></pre>
+<pre id="lst"></pre>
+
+<form>
+Latitude:<input type="text" name="UserLatitude">
+Longitude:<input type="text" name="UserLongitude">
+Height:<input type="text" name="UserHeight">
+</form>
+
+<script>
+
+  // helper function: log message to screen
+  function status(msg) {
+    document.getElementById('status').textContent = "status: " + msg;
+  }
+  
+  function declination(msg) {
+    document.getElementById('declination').textContent = "Declination: " + msg;
+  }
+
+  function right_ascension(msg) {
+    document.getElementById('right_ascension').textContent = "Right Ascension: " + msg;
+  }
+  function Pitch(msg) {
+    document.getElementById('Altitude').textContent = "Altitude: " + msg;
+  }
+  function Azimuth(msg) {
+    document.getElementById('Azimuth').textContent = "Azimuth: " + msg;
+  }
+  function Lat(msg) {
+    document.getElementById('Latitude').textContent = "Latitude: " + msg;
+  }
+  function longitude(msg) {
+    document.getElementById('longitude').textContent = "longitude: " + msg;
+  }
+  function Height(msg) {
+    document.getElementById('Height').textContent = "Height: " + msg;
+  }
+  function MagneticDeclination(msg) {
+    document.getElementById('MagneticDeclination').textContent = "Magnetic Declination: " + msg;
+  }
+  function TrueHeading(msg) {
+    document.getElementById('TrueHeading').textContent = "True Heading: " + msg;
+  }
+  function MagneticHeading(msg) {
+    document.getElementById('MagneticHeading').textContent = "Magnetic Heading: " + msg;
+  }
+  function Day(msg) {
+    document.getElementById('Day').textContent = "Day: " + msg;
+  }
+  function Month(msg) {
+    document.getElementById('Month').textContent = "Month: " + msg;
+  }
+  function Year(msg) {
+    document.getElementById('Year').textContent = "Year: " + (1900 + msg);
+  }
+  function TimeUpdate(msg) {
+    document.getElementById('TimeDisplay').textContent = "Time: " + msg;
+  }
+  function summertime(msg) {
+    document.getElementById('SummerTime').textContent = "SummerTime: " + msg;
+  }
+  function lst(msg) {
+    document.getElementById('lst').textContent = "Local Sidreal Time: " + msg;
+  }
+  // setup websocket with callbacks
+  var ws = new WebSocket('ws://192.168.0.33:1234/');
+  ws.onopen = function() {
+    status('CONNECT');
+  };
+  ws.onclose = function() {
+    status('DISCONNECT');
+  };
+  ws.onmessage = function(event) {
+     var text = event.data;
+    if (text.indexOf("Declination") != -1)
+    {
+        declination(text.slice(11));
+    }
+    if (text.indexOf("RightAscension") != -1)
+    {
+        right_ascension(text.slice(14));
+    }
+    if (text.indexOf("Pitch:") != -1)
+    {
+        Pitch(text.slice(6));
+    }
+    if (text.indexOf("Azimuth:") != -1)
+    {
+        Azimuth(text.slice(8));
+    }
+    if (text.indexOf("Lat") != -1)
+    {
+        Lat(text.slice(3));
+    }
+    if (text.indexOf("long") != -1)
+    {
+        longitude(text.slice(5));
+    }
+    if (text.indexOf("Magneticdeclination:") != -1)
+    {
+        MagneticDeclination(text.slice(20));
+    }
+    if (text.indexOf("Magnetic Heading:") != -1)
+    {
+        MagneticHeading(text.slice(17));
+    }
+    if (text.indexOf("Height:") != -1)
+    {
+        Height(text.slice(7));
+    }
+    if (text.indexOf("True Heading:") != -1)
+    {
+        TrueHeading(text.slice(13));
+    }
+    if (text.indexOf("Month") != -1)
+    {
+        Month(text.slice(6));
+    }
+    if (text.indexOf("Day") != -1)
+    {
+        Day(text.slice(3));
+    }
+    if (text.indexOf("Year") != -1)
+    {
+        Year(text.slice(5));
+    }
+    if (text.indexOf("Time:") != -1)
+    {
+        TimeUpdate(text.slice(6));
+    }
+    if (text.indexOf("summertime") != -1)
+    {
+        summertime(text.slice(11));
+    }
+    if (text.indexOf("lst") != -1)
+    {
+        lst(text.slice(4));
+    }
+};
+</script>
