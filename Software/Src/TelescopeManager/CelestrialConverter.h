@@ -1,3 +1,23 @@
+/*
+A module to convert between different coordinate systems
+
+Author and copyright of this file:
+Chris Dick, 2015
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+*/
 #include <stdint.h>
 #include <time.h>       /* time_t, struct tm, time, gmtime */
 
@@ -72,12 +92,6 @@ class CelestrialConverter {
          * @param Angle CC_TIME_T* - Structure containing all the time info.
          */
             void UnDecimaliseTime( double TimeDec, CC_TIME_T* Angle );
-        /** Calculate the Julian date
-         * @param Time - CC_TIME_T Time structure for calculations.
-         * @param Date - CC_DATE_T Date structure for calculations.
-         * @return Julian date as a double.
-         */
-            double CalculateJulianDate ( struct tm * gmt );
         /** ConvertRadiansToTime
          * Convert an angle in radians to a time.
          * @param Time structure containing all the time info
@@ -91,6 +105,12 @@ class CelestrialConverter {
          */
             void ConvertRadiansToDegrees( double Radians, CC_TIME_T* Degrees );
 #if 0
+        /** Calculate the Julian date
+         * @param Time - CC_TIME_T Time structure for calculations.
+         * @param Date - CC_DATE_T Date structure for calculations.
+         * @return Julian date as a double.
+         */
+            double CalculateJulianDate ( struct tm * gmt );
         /** Add two times together, will wrap around 1 day.
         * @param TimeA - CC_TIME_T - Time to add. 
         * @param TimeB - CC_TIME_T - Time to add.

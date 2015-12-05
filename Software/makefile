@@ -1,3 +1,4 @@
+all:		./Out/Main
 
 INCLUDE_PATHS := 	-I./Src/I2Cdevlib/Pi/I2Cdev/ \
 					-I./Src/I2Cdevlib/Pi/HMC5883L/ \
@@ -12,6 +13,7 @@ INCLUDE_PATHS := 	-I./Src/I2Cdevlib/Pi/I2Cdev/ \
 					-I./Src/Scheduler/ \
 					-I./Src/StellariumServer/ \
 					-I./Src/GPSD/ \
+					-I./Src/MagModelCorrection/ \
 					-I./Src/
 
 
@@ -42,6 +44,8 @@ DEVICE_OBJS := $(addprefix $(OBJ_DIR), \
 					TTC_Sched_Pi_Impl.o \
 					LogFile.o \
 					libgpsmm.o \
+					MagModel.o \
+					GeomagnetismLibrary.o \
 					)
 
 OUT_DIR = ./Out/
@@ -57,7 +61,6 @@ $(OBJ_DIR):
 $(OUT_DIR):
 		mkdir $(OUT_DIR)
 
-all:		$(OUT_DIR)Main
 #todo change output to out directory
 $(OUT_DIR)MPU6050:	$(OBJ_DIR)MPU6050_raw.o $(OBJ_DIR)MPU6050.o  $(OBJ_DIR)I2Cdev.o | $(DEVICE_OBJS)
 		$(CC) -Wall -lwiringPi $(OUTPUT) $(OBJ_DIR)MPU6050_raw.o $(DEVICE_OBJS)
@@ -77,7 +80,10 @@ $(OUT_DIR)gpsd_example:	$(OBJ_DIR)gpsd_example.o ./Obj/libgpsmm.o
 $(OUT_DIR)test_gpsmm:	$(OBJ_DIR)test_gpsmm.o ./Obj/libgpsmm.o 
 		$(CC) -Wall $(OUTPUT) $(OBJ_DIR)test_gpsmm.o  -lgps ./Obj/libgpsmm.o
 
-
+$(OUT_DIR)test_magmodel:	$(OBJ_DIR)MagModelTest.o $(OBJ_DIR)GeomagnetismLibrary.o $(OBJ_DIR)MagModel.o
+		$(CC) -Wall $(OUTPUT) $(OBJ_DIR)MagModelTest.o  $(OBJ_DIR)GeomagnetismLibrary.o $(OBJ_DIR)MagModel.o
+#gcc -lm wmm_point.c GeomagnetismLibrary.c -o wmm_point
+        
 .PHONY: clean
 clean:
 		rm $(OBJ_DIR)*.o 
@@ -95,6 +101,18 @@ $(OBJ_DIR)libgpsmm.o:		./Src/GPSD/libgpsmm.cpp
 $(OBJ_DIR)test_gpsmm.o:		./Src/GPSD/test_gpsmm.cpp
 		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/GPSD/test_gpsmm.cpp
 
+# Mag Model Correction
+$(OBJ_DIR)MagModelTest.o:		./Src/MagModelCorrection/MagModelTest.cpp  
+		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/MagModelCorrection/MagModelTest.cpp 
+#./Src/MagModelCorrection/GeomagnetismLibrary.c 
+
+$(OBJ_DIR)MagModel.o:		./Src/MagModelCorrection/MagModel.cpp  
+		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/MagModelCorrection/MagModel.cpp 
+
+$(OBJ_DIR)GeomagnetismLibrary.o:		./Src/MagModelCorrection/GeomagnetismLibrary.c
+		$(CC) -lm -c ./Src/MagModelCorrection/GeomagnetismLibrary.c $(OUTPUT)
+#        gcc -lm -c $(INCLUDE_PATHS) $(OUTPUT) ./Src/MagModelCorrection/GeomagnetismLibrary.c
+        
 # Telescope manager
 $(OBJ_DIR)TelescopeManager.o:		./Src/TelescopeManager/TelescopeManager.cpp
 		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/TelescopeManager/TelescopeManager.cpp

@@ -1,5 +1,5 @@
-/*
- * Author and Copyright of this file and of the telescope manager:
+/** StarPi, a Raspberry Pi Telescope System
+ * Author and Copyright of this program:
  * Chris Dick, 2015
  *
  * This program is free software; you can redistribute it and/or
@@ -83,6 +83,8 @@ int main(int argc, char *argv[])
     // maybe the user wants to continue after SIGHUP ?
     signal(SIGHUP,signal_handler);
 
+    // Disable output buffering.
+    setbuf(stdout, NULL);
     int Port;
     if ((argc < 2 || argc > 4) ||
         1 != sscanf(argv[1], "%d", &Port) ||

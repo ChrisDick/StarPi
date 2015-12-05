@@ -1,11 +1,33 @@
+/*
+HalGps provides an interface to retrive the time and location from 
+the GPSD deamon.
+
+Author and copyright of this file:
+Chris Dick, 2015
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+*/
 #include "HalGps.h"
 #include "Config.h"
 
 HalGps   HalGps::Gps;
 double   HalGps::Longitude;         /**< longitude of the telescope */
-double   HalGps::Latitude;          /**< latitude of the telescope */
-double   HalGps::Time;              /**< latest time */
-uint16_t HalGps::GpsdPort;         /**< port to connect to GPSD */
+double   HalGps::Latitude;          /**< latitude of the telescope  */
+double   HalGps::Time;              /**< latest time                */
+double   HalGps::Height;            /**< current height of the Gps  */
+uint16_t HalGps::GpsdPort;          /**< port to connect to GPSD    */
 gpsmm* HalGps::gps_ptr;
 
 /* HalGps
@@ -51,6 +73,10 @@ void HalGps::Run( void )
             Latitude  = NewGpsData->fix.latitude, 
             Longitude = NewGpsData->fix.longitude;
         }
+        if ( NewGpsData->set & ALTITUDE_SET)
+        {
+            Height = NewGpsData->fix.altitude;
+        }
     }
 }
 
@@ -79,4 +105,22 @@ double HalGps::HalGpsGetLongitude( void )
 double HalGps::HalGpsGetTime( void )
 {
     return Time;
+}
+
+/* HalGpsGetHeight
+ *  Get the current Height in kilometers
+ * @return double Hieght 
+ */
+double HalGps::HalGpsGetHeight( void )
+{
+    return Height;
+}
+
+/* HalGpsGetHeightInkm
+ *  Get the current Height in kilometers
+ * @return double Hieght 
+ */
+double HalGps::HalGpsGetHeightInkm( void )
+{
+    return (Height/1000.0);
 }

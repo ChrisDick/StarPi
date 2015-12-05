@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<pre id="status"></pre>
+<pre id="declination"></pre>
+<pre id="right_ascension"></pre>
+<pre id="Azimuth"></pre>
+<pre id="Altitude"></pre>
+<pre id="Latitude"></pre>
+<pre id="longitude"></pre>
+
+<form>
+User name:<input type="text" name="magcorrection">
+</form>
+
+<script>
+  // helper function: log message to screen
+  function status(msg) {
+    document.getElementById('status').textContent = "status: " + msg;
+  }
+  
+  function declination(msg) {
+    document.getElementById('declination').textContent = "Declination: " + msg;
+  }
+
+  function right_ascension(msg) {
+    document.getElementById('right_ascension').textContent = "Right Ascension: " + msg;
+  }
+  function Pitch(msg) {
+    document.getElementById('Altitude').textContent = "Altitude: " + msg;
+  }
+  function Azimuth(msg) {
+    document.getElementById('Azimuth').textContent = "Azimuth: " + msg;
+  }
+  function Lat(msg) {
+    document.getElementById('Latitude').textContent = "Latitude: " + msg;
+  }
+  function longitude(msg) {
+    document.getElementById('longitude').textContent = "longitude: " + msg;
+  }
+
+  // setup websocket with callbacks
+  var ws = new WebSocket('ws://192.168.0.33:1234/');
+  ws.onopen = function() {
+    status('CONNECT');
+  };
+  ws.onclose = function() {
+    status('DISCONNECT');
+  };
+  ws.onmessage = function(event) {
+     var text = event.data;
+    if (text.indexOf("Declination") != -1)
+    {
+        declination(text.slice(11));
+    }
+    if (text.indexOf("RightAscension") != -1)
+    {
+        right_ascension(text.slice(14));
+    }
+    if (text.indexOf("Pitch:") != -1)
+    {
+        Pitch(text.slice(6));
+    }
+    if (text.indexOf("Azimuth:") != -1)
+    {
+        Azimuth(text.slice(8));
+    }
+    if (text.indexOf("Lat") != -1)
+    {
+        Lat(text.slice(3));
+    }
+    if (text.indexOf("long") != -1)
+    {
+        longitude(text.slice(5));
+    }
+  };
+</script>

@@ -1,8 +1,27 @@
+/*
+A module to convert between different coordinate systems
 
+Author and copyright of this file:
+Chris Dick, 2015
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+*/
 #include "CelestrialConverter.h"
 #include <stdint.h>
 #include <math.h>
-#include <stdio.h> // for debug
+#include <stdio.h> 
 /* CelestrialConverter
  * Constructor
  */
@@ -33,68 +52,69 @@ CelestrialConverter::CelestrialConverter()
  */
 void CelestrialConverter::EquitorialToCelestrial( CC_ANGLES_T* Angles, time_t UnixTime )
 {
-    double SineHourAngle = 0;
+    //double SineHourAngle = 0;
     double CosHourAngle = 0;
     /*
         sin(DE)=(sin (AL)*sin (LA))+(cos(AL)*cos (LA)*cos (AZ)).
         Take the inverse sine of sin(DE) to get the declination.
     */
-    Angles->Declination = asin( ( ( sin(Angles->Altitude)*sin(Angles->Latitude) ) + ( cos(Angles->Altitude)*cos(Angles->Latitude)*cos(Angles->Azimuth) ) ));
+    Angles->Declination = asin( 
+                                 ( sin(Angles->Altitude)*sin(Angles->Latitude) )
+                               + ( cos(Angles->Altitude)*cos(Angles->Latitude)*cos(Angles->Azimuth) ) 
+                               );
+    // Angles->Declination = acos( 
+                                // ( cos((M_PI/2)-Angles->Altitude)*cos((M_PI/2)-Angles->Latitude) )
+                              // + ( sin((M_PI/2)-Angles->Altitude)*cos((M_PI/2)-Angles->Latitude)*cos((2*M_PI)-Angles->Azimuth) ) 
+                              // );
     
- //   if ( Angles->Declination > ( M_PI / 2 ) )
- //   {
- //       Angles->Declination -= (2 * M_PI );
- //   }
+    Angles->Declination = fmod( Angles->Declination, ( 2 * M_PI ));
     /*
         cos (HA)=(sin (AL)-(sin (LA)*sin(DE)))/(cos (LA)*cos (DE))
         Take the inverse cosine of cos (HA).
     */
-    SineHourAngle = (-1*sin(Angles->Azimuth)*cos(Angles->Altitude))/cos(Angles->Declination);
-    CosHourAngle = ( sin( Angles->Altitude ) - ( sin( Angles->Declination ) * sin( Angles->Latitude ) ) ) / ( cos ( Angles->Declination ) * cos ( Angles->Latitude ) );
-    //Angles->HourAngle = asin( SineHourAngle );
-
-    //Angles->HourAngle = acos( CosHourAngle );
+    CosHourAngle = ( sin( Angles->Altitude ) - ( sin( Angles->Declination ) * sin( Angles->Latitude ) ) ) 
+                                                    / 
+                          ( cos ( Angles->Declination ) * cos ( Angles->Latitude ) );
+    Angles->HourAngle = acos( CosHourAngle );
+//    SineHourAngle = (-1*sin(Angles->Azimuth)*cos(Angles->Altitude))/cos(Angles->Declination);
+//    Angles->HourAngle = asin( SineHourAngle );
+    while ( Angles->HourAngle < 0 )
+    {
+        Angles->HourAngle += (2*M_PI);
+    }
+    while ( Angles->HourAngle > (2*M_PI))
+    {
+        Angles->HourAngle -= (2*M_PI);
+    }
     /*
         Take the sine of AZ.
         If it is positive then HA=360-HA.
     */
-//    if ( sin(Angles->Azimuth) > 0 )
-//    {
-//        Angles->HourAngle = ( 2 * M_PI ) - Angles->HourAngle; 
-//    }
-//    #if 0
-    if ( ( SineHourAngle > 0 ) && ( CosHourAngle < 0 ) )
+    if ( sin(Angles->Azimuth) > 0 )
     {
-        // flip over 90'
-        Angles->HourAngle = M_PI - Angles->HourAngle;
+        Angles->HourAngle = ( 2 * M_PI ) - Angles->HourAngle; 
     }
-    else if ( ( SineHourAngle < 0 ) && ( CosHourAngle > 0 ) )
-    {
-        // flip over 270'
-        Angles->HourAngle = ( 2 * M_PI ) - ( Angles->HourAngle - M_PI );
-    }
-    else 
-    {
-        // leave the angle as is.
-    }
-//    #endif
+    
+    
     Angles->LocalSiderealTime = CalculateLocalSiderealTime( UnixTime, Angles->LongitudeWest );
-    /* debug */
+    /* 
+        Format data for website. 
+    */
     UnDecimaliseTime( Angles->LocalSiderealTime, &Angles->LocalSiderealCCTime );
-    /* */
+    /* 
+        Calculate Right Ascension
+    */
     Angles->RightAscension = Angles->LocalSiderealTime - Angles->HourAngle;  
 
-    if ( Angles->RightAscension < 0 )
+    while ( Angles->RightAscension < 0 )
     {
         Angles->RightAscension += (2*M_PI);
     }
-    Angles->RightAscension = fmod( Angles->RightAscension, ( 2 * M_PI ));
-    Angles->Declination = fmod( Angles->Declination, ( 2 * M_PI ));
+    while ( Angles->RightAscension > (2*M_PI))
+    {
+        Angles->RightAscension -= (2*M_PI);
+    }
     
-    /*
-     Angle Raplus = AngleHrs(-0,-0,-33.83);
-    Angle Decplus = AngleDegs(0,3,40.46);
-    */
 }
 
 /* CelestrialToEquitorial
@@ -162,142 +182,82 @@ void CelestrialConverter::UnDecimaliseTime( double TimeDec, CC_TIME_T* Angle )
     Angle->Seconds = ((( TimeDec - (double)Angle->Hours ) * 60.0) - (double)Angle->Minutes ) * 60.0 ; 
     
 }
-/* Calculate the Julian date
- * To compute the Julian Date:
- * 
- * Convert local time to Greenwich Mean Time
- * Let Y equal the year, M equal the month, D equal the day in decimal form.
- * If M equals 1 or 2 then subtract 1 from Y. and add 12 to M.
- * Compute A. A=INT(Y/100)
- * Compute B. B=2-A+INT(A/4). However, if the date is earlier than October 15, 1582 then B=0.
- * Calculate C. C=INT(365.25*Y). If Y is negative then C=INT((365.25*Y)-.75).
- * Calculate E. E=INT(30.6001*(M+1))
- * Calculate JD (Julian Date). JD=B+C+D+E+1720994.5
- * @param Time - CC_TIME_T Time structure for calculations.
- * @param Date - CC_DATE_T Date structure for calculations.
- * @return Julian date as a double.
- */
-double CelestrialConverter::CalculateJulianDate ( struct tm * gmt )
-{
-    /*
-       First ccalculate the number of years and months since 
-       the beginning of the Julian calendar. 1 March 4801BC
-    */
-    uint8_t CorrectionFactor = 0;  /* correction for no 0 B.C. year */   
-    uint16_t Years = 0; /* number of years */
-    uint8_t Months = 0;  /* number of months */
-    /*
-        The correction factor will be 1 for January and Febuary and 0 for everything else.
-    */    
-    CorrectionFactor = ( 14 - gmt->tm_mon ) / 12; /* discard remainder. */
-
-    Years = gmt->tm_year + 1900 + 4800 - CorrectionFactor;
-    
-    Months = gmt->tm_mon - (12 * CorrectionFactor ) - 3;
-    
-    /*
-       Then we need to calculate the Julian Day number. this relies on integer rounding.
-    */
-    double JulianDayNumber = 0;
-    JulianDayNumber = gmt->tm_mday + ( ( ( 153 * Months ) + 2) / 5 ) +( 365 * Years ) + ( Years / 4 ) - ( Years /100 ) + ( Years / 400 ) - 32045;
-    
-    /* 
-        Now we can use the time to calculate the Date.
-    */
-    double JulianDate = JulianDayNumber + ( ( (double)gmt->tm_hour - 12.0 ) / 24.0 ) + ( (double)gmt->tm_min / 1440.0 ) + ( gmt->tm_sec / 86400.0 );  
-    
-    /*
-        to test this the Julian date for January 1st 2000 at 12:00:00 is 2451545.0
-    */
-    
-    return JulianDate;
-}
-
 
 /* CalculateLocalSiderealTime
  * calculate the Local sidereal time from the current time and location
- * GMST = 6.697374558 + 0.06570982441908 D0 + 1.00273790935 H + 0.000026 T2 
- ToDo update comments: http://aa.usno.navy.mil/faq/docs/GAST.php
- ToDo Improve accuracy with GAST = GMST + equation of the equinoxes
- * Where D is the Julian date at 2000 January 1, 12h UT, 
- * which is a Julian date of 2451545.0
- * D = JD - 2451545.0
- without equinox correction:
- HourAngle 0.934725
-lst 15:36:3.379669 or 15.600939
- RightAscension 2.099843
-Declination 0.352585
-
  * @param GrenwichStandardTime current time 
  * @param LongitudeWest 
- * @return double time in radians. 
-GMST = 6.697374558 + 0.06570982441908 D0 + 1.00273790935 H + 0.000026 T2
-JD = JD0 + H/24.
- 
+ * @return double time in radians.  
  */
-double CelestrialConverter::CalculateLocalSiderealTime( time_t UnixTime, double LongitudeWest ) // time_t UnixTime  CC_TIME_T GrenwichMeanTime, CC_DATE_T Date
+double CelestrialConverter::CalculateLocalSiderealTime( time_t UnixTime, double LongitudeWest )
 {
     double Result = 0;
     double JulianDate = 0;
     double JulianDate2000 = 0;
-    //double JulianDate2015 = 0;
     double GMST = 0;
     double JulianMidnight = 0;
-    
-    struct tm * gmt;
-    gmt = gmtime ( &UnixTime );
-    //JulianDate = CalculateJulianDate( gmt );
-    JulianDate =  ( UnixTime / 86400.0 ) + 2440587.5; //unix time = (JD − 2440587.5) × 86400
-    //printf("julian date %f\n", JulianDate);
-    //JulianDate = 2457187.42350;
-    JulianDate2000 = JulianDate - 2451545.0;
-    //JulianDate2015 = 2457024.0; 
-    
-    JulianMidnight = JulianDate2000 - ( DecimaliseTime( gmt ) / 24.0 );
-    
-    GMST = 6.697374558 + ( 0.06570982441908 * JulianMidnight ) + ( 1.00273790935 * DecimaliseTime( gmt ) ) + ( 0.000026 * ( ( (uint32_t)JulianDate2000 / 36525 ) * ( (uint32_t)JulianDate2000 / 36525 ) ) );
-    
-//    GMST = 18.697374558 + ( 24.06570982441908 * JulianDate2000 ); Not accurate enough!
-    
-    GMST = fmod ( GMST, 24.0 );
     double eqeq = 0;
     double nutation = 0;
     double obliquity  = 0;
+    double GAST = 0;
+    struct tm * gmt;
+
+    /*
+        Calculate the time and Julian Date from unix time
+        unix time = (JD − 2440587.5) × 86400
+    */
+    gmt = gmtime ( &UnixTime );
+//    JulianDate = CalculateJulianDate( gmt );
+    JulianDate =  ( UnixTime / 86400.0 ) + 2440587.5; //unix time = (JD − 2440587.5) × 86400
+    /*
+        ToDo move this to telescope server
+    */
+    printf("julian date %f\n", JulianDate);
+    /*
+        Calculate the grenwich mean standard time
+        GMST = 6.697374558 + 0.06570982441908 D0 + 1.00273790935 H + 0.000026 T2 
+        Where D is the Julian date at 2000 January 1, 12h UT, 
+        which is a Julian date of 2451545.0
+        D = JD - 2451545.0
+    */
+    JulianDate2000 = JulianDate - 2451545.0;
+    JulianMidnight = JulianDate2000 - ( DecimaliseTime( gmt ) / 24.0 );
+    GMST = 6.697374558 + ( 0.06570982441908 * JulianMidnight ) + ( 1.00273790935 * DecimaliseTime( gmt ) ) + ( 0.000026 * ( ( (uint32_t)JulianDate2000 / 36525 ) * ( (uint32_t)JulianDate2000 / 36525 ) ) );
+    GMST = fmod ( GMST, 24.0 );
+    /*
+        http://aa.usno.navy.mil/faq/docs/GAST.php
+        The correction term is called the nutation in right ascension or the equation of the equinoxes. Thus,
+        GAST = GMST + eqeq.
+        eqeq = Δψ cos ε
+        Δψ ≈ -0.000319 sin ( 125.04 - ( 0.052954 * JulianDate2000 ) ) - 0.000024 sin (2(280.47 + ( 0.98565 * JulianDate2000 )));
+        ε = 23.4393 - ( 0.0000004 * JulianDate2000)
+        
+        The equation of the equinoxes is given as eqeq = Δψ cos ε where Δψ, the nutation in longitude, is given in hours approximately by
+        
+        Δψ ≈ -0.000319 sin Ω - 0.000024 sin 2L
+        
+        with Ω, the Longitude of the ascending node of the Moon, given as
+        
+        Ω = 125.04 - 0.052954 D,
+        
+        and L, the Mean Longitude of the Sun, given as
+        
+        L = 280.47 + 0.98565 D.
+        
+        ε is the obliquity and is given as
+        
+        ε = 23.4393 - 0.0000004 D.
+        
+        The above expressions for Ω, L, and ε are all expressed in degrees.
+    */
+
     nutation = -0.000319 * sin ( 125.04 - ( 0.052954 * JulianDate2000 ) ) - ( 0.000024 * sin (2 * (280.47 + ( 0.98565 * JulianDate2000 ))));
     obliquity = 23.4393 - ( 0.0000004 * JulianDate2000);
     eqeq = nutation * cos ( obliquity );
-    
-    double GAST = GMST + eqeq;
-    
+    GAST = GMST + eqeq;
     /*
-    The correction term is called the nutation in right ascension or the equation of the equinoxes. Thus,
-
-GAST = GMST + eqeq.
-eqeq = Δψ cos ε
-Δψ ≈ -0.000319 sin ( 125.04 - ( 0.052954 * JulianDate2000 ) ) - 0.000024 sin (2(280.47 + ( 0.98565 * JulianDate2000 )));
-ε = 23.4393 - ( 0.0000004 * JulianDate2000)
-
-The equation of the equinoxes is given as eqeq = Δψ cos ε where Δψ, the nutation in longitude, is given in hours approximately by
-
-Δψ ≈ -0.000319 sin Ω - 0.000024 sin 2L
-
-with Ω, the Longitude of the ascending node of the Moon, given as
-
-Ω = 125.04 - 0.052954 D,
-
-and L, the Mean Longitude of the Sun, given as
-
-L = 280.47 + 0.98565 D.
-
-ε is the obliquity and is given as
-
-ε = 23.4393 - 0.0000004 D.
-
-The above expressions for Ω, L, and ε are all expressed in degrees.
+        Sidereal time is the corrected grenwich sidereal time less the longitude
     */
-    
-    
-    //Result = GMST - LongitudeWest;
     Result = GAST - LongitudeWest;
     
     return Result;
@@ -314,6 +274,7 @@ void CelestrialConverter::ConvertRadiansToTime( double Radians, CC_TIME_T* Time 
     TimeDec = Radians * ( 12.0 / M_PI ) ; 
     UnDecimaliseTime( TimeDec, Time );
 }
+
 /* ConvertRadiansToDegrees
  * Convert an angle in radians to Degrees.
  * @param Degrees structure containing the result
@@ -321,9 +282,7 @@ void CelestrialConverter::ConvertRadiansToTime( double Radians, CC_TIME_T* Time 
  */
 void CelestrialConverter::ConvertRadiansToDegrees( double Radians, CC_TIME_T* Degrees )
 {
-    double DegreesDec = 0;    
-    //UnDecimaliseTime( DegreesDec, Degrees );
- 
+    double DegreesDec = 0;     
     if (Radians < 0 )
     {
         DegreesDec = (0.0 - Radians) * ( 180.0 / M_PI ); 
@@ -361,6 +320,57 @@ void CelestrialConverter::ConvertRadiansToDegrees( double Radians, CC_TIME_T* De
 }
 
 #if 0
+/* Calculate the Julian date
+ * To compute the Julian Date:
+ * 
+ * Convert local time to Greenwich Mean Time
+ * Let Y equal the year, M equal the month, D equal the day in decimal form.
+ * If M equals 1 or 2 then subtract 1 from Y. and add 12 to M.
+ * Compute A. A=INT(Y/100)
+ * Compute B. B=2-A+INT(A/4). However, if the date is earlier than October 15, 1582 then B=0.
+ * Calculate C. C=INT(365.25*Y). If Y is negative then C=INT((365.25*Y)-.75).
+ * Calculate E. E=INT(30.6001*(M+1))
+ * Calculate JD (Julian Date). JD=B+C+D+E+1720994.5
+ * @param Time - CC_TIME_T Time structure for calculations.
+ * @pa.ram Date - CC_DATE_T Date structure for calculations.
+ * @return Julian date as a double.
+ */
+double CelestrialConverter::CalculateJulianDate ( struct tm * gmt )
+{
+    /*
+       First calculate the number of years and months since 
+       the beginning of the Julian calendar. 1 March 4801BC
+    */
+    uint8_t CorrectionFactor = 0;  /* correction for no 0 B.C. year */   
+    uint16_t Years = 0; /* number of years */
+    uint8_t Months = 0;  /* number of months */
+    /*
+        The correction factor will be 1 for January and Febuary and 0 for everything else.
+    */    
+    CorrectionFactor = ( 13 - gmt->tm_mon ) / 12; /* discard remainder. */
+
+    Years = gmt->tm_year + 1900 + 4800 - CorrectionFactor;
+    
+    Months = gmt->tm_mon + (12 * CorrectionFactor ) - 3;
+    
+    /*
+       Then we need to calculate the Julian Day number. this relies on integer rounding.
+    */
+    double JulianDayNumber = 0;
+    JulianDayNumber = gmt->tm_mday + ( ( ( 153 * Months ) + 2) / 5 ) +( 365 * Years ) + ( Years / 4 ) - ( Years /100 ) + ( Years / 400 ) - 32045;
+    
+    /* 
+        Now we can use the time to calculate the Date.
+    */
+    double JulianDate = JulianDayNumber + ( ( (double)gmt->tm_hour - 12.0 ) / 24.0 ) + ( (double)gmt->tm_min / 1440.0 ) + ( gmt->tm_sec / 86400.0 );  
+    
+    /*
+        to test this the Julian date for January 1st 2000 at 12:00:00 is 2451545.0
+    */
+    
+    return JulianDate;
+}
+
 /* AddTime   
  *  Add two times together, will wrap around 1 day.
  * @param TimeA

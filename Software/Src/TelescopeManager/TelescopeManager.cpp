@@ -1,96 +1,104 @@
-#include <stdio.h> // for debug
-#include "TelescopeManager.h"
+/*
+Telescope manager is a higher level system manager
+
+Author and copyright of this file:
+Chris Dick, 2015
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+#include <stdio.h> 
 #include <math.h>
-#include "HalAccelerometer.h"
 #include "TelescopeOrientation.h"
 #include "HalGps.h"
+#include "MagModel.h"
+
+#include "TelescopeManager.h"
 
 TelescopeManager TelescopeManager::Telescope;
 double TelescopeManager::RightAscension;         /**< Right ascension */
 double TelescopeManager::Declination;            /**< Declination */
 double TelescopeManager::TargetRightAscension;   /**< Target right ascension */
 double TelescopeManager::TargetDeclination;      /**< Target declination */
-
+bool TelescopeManager::HeadingCorrected;
 /* constructor
 */
 TelescopeManager::TelescopeManager()
 {
-    
+    HeadingCorrected = false;
+    RightAscension = 0;
+    Declination = 0;
+    TargetRightAscension = 0;
+    TargetDeclination = 0;
 }
-/*
-    CC_TIME_T RA = { 14, 16, 22.1 };
-    double Dec = ((14/24) + ((6/60)/24) + ((6.6/3600)/24))*(2*M_PI);
-    RA 14h16m22.1s = 
-    Dec19d06'06.6"
-*/
 
 /* main run function of the telescope manager
 */
 void TelescopeManager::Run()
 {
     CC_ANGLES_T Angles;
+    struct tm * gmt;
+    float MagneticDeclination = 0;
+    MagModel MagCorrect;
     /*
         Get the Position, Orientation and time of the telescope
     */
-    double Pitch = TelescopeOrientation::Orient.TelescopeOrientationGetPitch();
+    double Pitch   = TelescopeOrientation::Orient.TelescopeOrientationGetPitch();
+    float Heading = TelescopeOrientation::Orient.TelescopeOrientationGetHeading();
     time_t UnixTime = (time_t)HalGps::Gps.HalGpsGetTime();
+    float HieghtAboveGround = HalGps::Gps.HalGpsGetHeightInkm();
     Angles.LongitudeWest = ( HalGps::Gps.HalGpsGetLongitude() / 180 ) * M_PI;
     Angles.Latitude = ( HalGps::Gps.HalGpsGetLatitude() / 180 ) * M_PI;    
-    Angles.Azimuth = TelescopeOrientation::Orient.TelescopeOrientationGetHeading();
-
-    if ( Pitch > (M_PI/2) )
-    {
-        Angles.Altitude = 0;
-    }
-    else if ( Pitch < 0 )
-    {
-        Angles.Altitude = (M_PI/2);        
-    }
-    else
-    {
-        Angles.Altitude = (M_PI/2) - Pitch;
-    }
-
-#if 0
-    if (Angles.Altitude > (M_PI/2))
-    {
-        Angles.Altitude = (M_PI/2);
-    }
-    else if (Angles.Altitude < 0)
-    {
-        Angles.Altitude = 0;
-    }
+    gmt = gmtime ( &UnixTime );
+     
+    /*
+        get compensation for magnetic declination
+        ToDo only do this when the location updates from satellite lock or user input, need to improve Hal_Gps to do this
+    */
+    MagCorrect.MagModelSetParams( Angles.Latitude, Angles.LongitudeWest, HieghtAboveGround, gmt->tm_mday, (gmt->tm_mon + 1), (gmt->tm_year + 1900) );
+    MagneticDeclination = MagCorrect.MagModelGetDeclination();
+        
+    // ToDo + or - Mag dec?
+    Angles.Azimuth = Heading + ((MagneticDeclination/180)*M_PI); // ToDo make this come from magmodel in radians
     Angles.Altitude = Pitch;
-#endif
     Calculator.EquitorialToCelestrial( &Angles, UnixTime );
     RightAscension = Angles.RightAscension;
     Declination = Angles.Declination;
-
+    
     /*
-        Debug Output
+        Output Data to websocket using websocketd
     */
-
-    printf ("Pitch: %f ", (180*(Pitch/M_PI))); // debug
+    printf ("Day %d\n", gmt->tm_mday); 
+    printf ("Month %d\n", gmt->tm_mon); 
+    printf ("Year %d\n", gmt->tm_year);
+    printf ("Pitch: %f \n", (180*(Pitch/M_PI)));
     printf ("Azimuth: %f \n", (180*(Angles.Azimuth/M_PI)));
-  
-//    printf ("Roll %f \n", (180*(Roll/M_PI))); // debug
-//    printf ("Lat %f \n", (180*(Angles.Latitude/M_PI)));
-//    printf ("long %f \n", (180*(Angles.LongitudeWest/M_PI)));
+    printf ("Lat %f \n", (180*(Angles.Latitude/M_PI)));
+    printf ("long %f \n", (180*(Angles.LongitudeWest/M_PI)));
     printf ("time %f \n", (double)UnixTime);
-    printf ("RA %f \n", Angles.RightAscension);
-    printf ("Dec %f \n", Angles.Declination);
-//    printf ("lst %d:%d:%f or %f\n", Angles.LocalSiderealCCTime.Hours, Angles.LocalSiderealCCTime.Minutes, Angles.LocalSiderealCCTime.Seconds, Angles.LocalSiderealTime );
-    
-    
-    
+    printf ("lst %d:%d:%2f\n", Angles.LocalSiderealCCTime.Hours, Angles.LocalSiderealCCTime.Minutes, Angles.LocalSiderealCCTime.Seconds );
+    printf ("Magneticdeclination: %f \n", MagneticDeclination); 
+    printf ("Magnetic Heading: %f \n", (180*(Heading/M_PI)));
+    printf ("Height: %f \n", HieghtAboveGround);
+    printf ("True Heading: %f \n", (180*(Angles.Azimuth/M_PI)));    
     CC_TIME_T Temp;
     Calculator.ConvertRadiansToTime( Angles.RightAscension, &Temp );
     printf ("RightAscension %d:%d:%f \n", Temp.Hours, Temp.Minutes, Temp.Seconds);
     Calculator.ConvertRadiansToDegrees( Angles.Declination, &Temp );
     printf ("Declination %d:%d:%f \n", Temp.Hours, Temp.Minutes, Temp.Seconds);
-//    RightAscension = Calculator.DecimaliseTime( RA_time )* (2 * M_PI);
-//    Declination = Dec;
-    
+    printf ("Time: %2d:%2d:%2d\n", gmt->tm_hour, gmt->tm_min, gmt->tm_sec );
+    printf ("summertime %d\n", gmt->tm_isdst );
 }
 
 

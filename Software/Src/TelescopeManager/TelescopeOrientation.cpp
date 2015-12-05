@@ -1,3 +1,23 @@
+/*
+A module to handle the actual orientation of an alt-azimuth mount telescope
+
+Author and copyright of this file:
+Chris Dick, 2015
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+*/
 #include "TelescopeOrientation.h"
 #include "HalMagnetometer.h"
 #include "HalAccelerometer.h"
@@ -105,16 +125,20 @@ float TelescopeOrientation::TelescopeOrientationGetHeading( void )
     YComponent = Myo;
     heading = atan2(-YComponent,XComponent);
     /*
-        heading must be between -180' and 180'
+        heading must be between 0' and 360'
     */
-    if (heading > M_PI) 
+    if (heading > (2*M_PI)) 
     {
         heading -= (2*M_PI);
+    }
+    if (heading < 0) 
+    {
+        heading += (2*M_PI);
     }
     /* 
         need to invert the heading so east is +90'
     */
-    return (-1*heading);
+    return (heading);
 }
 
 
