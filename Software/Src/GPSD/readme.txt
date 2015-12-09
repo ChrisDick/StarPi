@@ -1,0 +1,1 @@
+The contents of the GPSD folder are downloaded by the install script.
