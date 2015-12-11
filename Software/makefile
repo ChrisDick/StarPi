@@ -1,4 +1,4 @@
-all:		./Out/Main
+all:		./Out/StarPi
 
 INCLUDE_PATHS := 	-I./Src/I2Cdevlib/Pi/I2Cdev/ \
 					-I./Src/I2Cdevlib/Pi/HMC5883L/ \
@@ -71,7 +71,7 @@ $(OUT_DIR)HMC5883L_heading:	$(OBJ_DIR)HMC5883L_raw.o $(DEVICE_OBJS)
 $(OUT_DIR)Sample_Main:	$(OBJ_DIR)Sample_Main.o $(OBJ_DIR)TTC_Sched.o  $(OBJ_DIR)Runnable.o $(OBJ_DIR)TTC_Sched_Pi_Impl.o
 		$(CC) -Wall -lwiringPi $(OUTPUT) $(OBJ_DIR)Sample_Main.o $(DEVICE_OBJS)
 
-$(OUT_DIR)Main:	$(OBJ_DIR)Main.o $(DEVICE_OBJS)
+$(OUT_DIR)StarPi:	$(OBJ_DIR)Main.o $(DEVICE_OBJS)
 		$(CC) -Wall -lwiringPi -lgps $(OUTPUT) $(OBJ_DIR)Main.o $(DEVICE_OBJS)
 
 $(OUT_DIR)gpsd_example:	$(OBJ_DIR)gpsd_example.o ./Obj/libgpsmm.o 

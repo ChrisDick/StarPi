@@ -19,8 +19,10 @@ sudo apt-get -y install libncurses5-dev python-dev pps-tools git-core scons
 git clone https://github.com/silvanmelchior/RPi_Cam_Web_Interface.git
 cd RPi_Cam_Web_Interface
 chmod u+x *.sh
-sudo install.sh
-
+sudo source install.sh
+#add default web interface page
+sudo mkdir /var/www/RPiCam
+sudo cp -r ./www/* /var/www/RPiCam
 cd ../Software
 
 #Gps deamon
@@ -39,8 +41,13 @@ cd ./../..
 mkdir Obj
 mkdir Out
 make
+#copy executables to somewhere in the PATH
+sudo cp ./Out/StarPi /usr/local/bin/StarPi
+sudo cp  websocketd /usr/local/bin/websocketd
+
 cd ..
-sudo cp -r ./Website/* /var/www
+sudo mkdir /var/www/StarPi
+sudo cp -r ./Website/* /var/www/StarPi
 
 
 
