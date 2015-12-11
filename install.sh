@@ -29,7 +29,7 @@ tar -zxvf  gpsd-master.tar.gz
 
 rm gpsd-master.tar.gz
 
-cp -r gpsd-master/* StarPi/Software/Src/GPSD 
+cp -r gpsd-master/* ./Src/GPSD 
 rm -r gpsd-master
 
 cd ./Src/GPSD 
