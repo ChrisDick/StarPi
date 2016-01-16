@@ -17,34 +17,17 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#include "ServerPi.h"
 #include <signal.h>
 #include <string.h>
 #include <stdio.h>
-#include "TelescopeOrientation.h"
+#include "ServerPi.h"
+#include "HalWebsocketd.h"
 #include "HalGps.h"
+#include "TelescopeOrientation.h"
 #include "TelescopeManager.h"
 #include "TTC_Sched_Pi_Impl.h"
-
-#include "Runnable.h"
 #include <iostream>
 using namespace std;
-
-class Runner : public Runnable
-{
-    public:
-    Runner();
-    void Run();
-};
-Runner::Runner()
-{
-    
-}
-
-void Runner::Run()
-{
-    
-}
 
 
 static volatile bool continue_looping = true;
@@ -85,7 +68,7 @@ int main(int argc, char *argv[])
 
     // Disable output buffering.
     setbuf(stdout, NULL);
-    int Port;
+    int Port = 0;
     if ((argc < 2 || argc > 4) ||
         1 != sscanf(argv[1], "%d", &Port) ||
         Port < 0 || Port > 0xFFFF)
@@ -93,44 +76,49 @@ int main(int argc, char *argv[])
         cout << "Usage: " << argv[0] << " port" << endl;
         return 126;
     }
-    
     TTC_Sched_Pi_Impl   Scheduler;
     ServerPi PiServer( Port );
-    Runner Runs;
+    
+    TelescopeManager::Telescope.TelescopeManagerInit(); 
     
     Scheduler.Init();   // call first to reset task table and configure timer.
-    printf ("scheduler initialised.\n");
-    
-   
-    TelescopeOrientation::Orient.TelescopeOrientationInit();
+    //printf ("scheduler initialised.\n");
+       
     TelescopeOrientation::Orient.SetDelay(0); 
     TelescopeOrientation::Orient.SetPeriod(4); // run every 4 ticks (1 tick == 500us).
+    
+    HalWebsocketd::Websocket.HalWebsocketdInit();
+    HalWebsocketd::Websocket.SetDelay(0); 
+    HalWebsocketd::Websocket.SetPeriod(10);
  
-    HalGps::Gps.HalGpsInit();
     HalGps::Gps.SetDelay(1); // run one tick after telescope mgr run.
     HalGps::Gps.SetPeriod(400); // run every 200ms.
-      
+        
     TelescopeManager::Telescope.SetDelay(0); 
     TelescopeManager::Telescope.SetPeriod(10);
     
     PiServer.SetDelay(1);
     PiServer.SetPeriod(10);
     
-    Runs.SetDelay(1);
-    Runs.SetPeriod(1000);
     
-    printf ("tasks configured.\n");
-    Scheduler.AddTask(&HalGps::Gps);
-    Scheduler.AddTask(&TelescopeOrientation::Orient);
-    Scheduler.AddTask(&PiServer);  
-//    Scheduler.AddTask(&HalAccelerometer::Accelerometer);
-    Scheduler.AddTask(&TelescopeManager::Telescope);
-    uint8_t error =   Scheduler.AddTask(&Runs);
-    printf ("tasks added = %d.\n", error);
+    uint8_t error = 0;
+    //printf ("tasks configured.\n");
+    error = Scheduler.AddTask(&HalGps::Gps);
+    //printf ("tasks added = %d.\n", error);
+    error = Scheduler.AddTask(&TelescopeOrientation::Orient);
+    //printf ("tasks added = %d.\n", error);
+    error = Scheduler.AddTask(&PiServer);  
+    //printf ("tasks added = %d.\n", error);
+    error = Scheduler.AddTask(&TelescopeManager::Telescope);
+    //printf ("tasks added = %d.\n", error);
+    error = Scheduler.AddTask(&HalWebsocketd::Websocket);
+    //printf ("tasks added = %d.\n", error);
+    //error =   Scheduler.AddTask(&Runs);
+    //printf ("tasks added = %d.\n", error);
     
     Scheduler.Start();
 
-    printf ("scheduler started.\n");
+    //printf ("scheduler started.\n");
     
     /* Do busy work. */
     while (continue_looping)

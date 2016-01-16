@@ -19,9 +19,9 @@ License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 #include "CelestrialConverter.h"
+#include "TelescopeIO.h"
 #include <stdint.h>
 #include <math.h>
-#include <stdio.h> 
 /* CelestrialConverter
  * Constructor
  */
@@ -210,9 +210,9 @@ double CelestrialConverter::CalculateLocalSiderealTime( time_t UnixTime, double 
 //    JulianDate = CalculateJulianDate( gmt );
     JulianDate =  ( UnixTime / 86400.0 ) + 2440587.5; //unix time = (JD − 2440587.5) × 86400
     /*
-        ToDo move this to telescope server
+        ToDo move this to telescope manager
     */
-    printf("julian date %f\n", JulianDate);
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( JULIANDATE, &JulianDate );
     /*
         Calculate the grenwich mean standard time
         GMST = 6.697374558 + 0.06570982441908 D0 + 1.00273790935 H + 0.000026 T2 

@@ -15,30 +15,27 @@
  * return value is < SCH_MAX_TASKS, then the task was added
  * successfully.
  */
-uint8_t    TTC_Sched::AddTask(Runnable * NewTask)
+uint8_t TTC_Sched::AddTask(Runnable * NewTask)
 {
     uint8_t Index = 0;
 
     // First find a gap in the array (if there is one)
-    while ( (0 != this->Tasks[Index]) && (Index < SCH_MAX_TASKS))
+    while ( 0 != this->Tasks[Index] )
     {
         Index++;
+        if (Index == SCH_MAX_TASKS)
+        {
+            Index = RETURN_ERROR;
+            break;
+        }
     }
-
-    // Check if we reached the end of the list.
-    if (Index == SCH_MAX_TASKS)
+    if ( this->Tasks[Index] == 0 )
     {
-        // Task list is full
-        // return an error code
-        return SCH_MAX_TASKS;
+        // there is a space in the task array
+        this->Tasks[Index] = NewTask;
+        // make the task not runnable (reset runnable flag).
+        NewTask->SetRunnable(0);
     }
-
-    // If we're here, there is a space in the task array
-    this->Tasks[Index] = NewTask;
-
-    // make the task not runnable (reset runnable flag).
-    NewTask->SetRunnable(0);
-
     // return position of task (to allow later deletion)
     return Index; 
 }
@@ -62,9 +59,8 @@ uint8_t TTC_Sched::DeleteTask( const uint8_t Index )
     else
     {
         Result = TTC_Sched::RETURN_NORMAL;
+        this->Tasks[Index] = 0;
     }
-
-    this->Tasks[Index] = 0;
 
     return Result;       // return status
 }

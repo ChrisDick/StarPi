@@ -33,9 +33,11 @@ DEVICE_OBJS := $(addprefix $(OBJ_DIR), \
 					Server.o \
 					Socket.o \
 					TelescopeOrientation.o \
+					TelescopeIO.o \
 					HalGps.o \
 					HalAccelerometer.o \
 					HalMagnetometer.o \
+					HalWebsocketd.o \
 					TTC_Sched.o \
 					Runnable.o \
 					ServerPi.o \
@@ -49,7 +51,7 @@ DEVICE_OBJS := $(addprefix $(OBJ_DIR), \
 					)
 
 OUT_DIR = ./Out/
-CFLAGS =  -c -Wall -lwiringPi -lgps
+CFLAGS =  -c -Wall -lwiringPi -lgps 
 CC = g++
 OUTPUT = -o $@
 # create obj dir if it doesn't exist
@@ -61,7 +63,6 @@ $(OBJ_DIR):
 $(OUT_DIR):
 		mkdir $(OUT_DIR)
 
-#todo change output to out directory
 $(OUT_DIR)MPU6050:	$(OBJ_DIR)MPU6050_raw.o $(OBJ_DIR)MPU6050.o  $(OBJ_DIR)I2Cdev.o | $(DEVICE_OBJS)
 		$(CC) -Wall -lwiringPi $(OUTPUT) $(OBJ_DIR)MPU6050_raw.o $(DEVICE_OBJS)
 
@@ -87,6 +88,19 @@ $(OUT_DIR)test_magmodel:	$(OBJ_DIR)MagModelTest.o $(OBJ_DIR)GeomagnetismLibrary.
 .PHONY: clean
 clean:
 		rm $(OBJ_DIR)*.o 
+
+.PHONY: cleansched
+cleansched:
+		rm $(OBJ_DIR)TTC_Sched.o 
+		rm $(OBJ_DIR)TTC_Sched_Pi_Impl.o 
+
+.PHONY: cleandata
+cleandata:
+		rm $(OBJ_DIR)TelescopeManager.o 
+		rm $(OBJ_DIR)TelescopeIO.o 
+		rm $(OBJ_DIR)CelestrialConverter.o 
+		rm $(OBJ_DIR)HalWebsocketd.o 
+
 
 $(OBJ_DIR)Main.o:		./Src/Main.cpp
 		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/Main.cpp
@@ -119,6 +133,9 @@ $(OBJ_DIR)TelescopeManager.o:		./Src/TelescopeManager/TelescopeManager.cpp
 
 $(OBJ_DIR)TelescopeOrientation.o:	./Src/TelescopeManager/TelescopeOrientation.cpp
 		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/TelescopeManager/TelescopeOrientation.cpp 
+
+$(OBJ_DIR)TelescopeIO.o:	./Src/TelescopeManager/TelescopeIO.cpp
+		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/TelescopeManager/TelescopeIO.cpp 
 
 $(OBJ_DIR)CelestrialConverter.o:		./Src/TelescopeManager/CelestrialConverter.cpp
 		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/TelescopeManager/CelestrialConverter.cpp
@@ -158,6 +175,9 @@ $(OBJ_DIR)Runnable.o:		./Src/Scheduler/Runnable.cpp
 # HAL
 $(OBJ_DIR)HalAccelerometer.o:	./Src/Hal/HalAccelerometer.cpp
 		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/Hal/HalAccelerometer.cpp 
+
+$(OBJ_DIR)HalWebsocketd.o:	./Src/Hal/HalWebsocketd.cpp
+		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/Hal/HalWebsocketd.cpp 
 
 $(OBJ_DIR)HalMagnetometer.o:	./Src/Hal/HalMagnetometer.cpp
 		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/Hal/HalMagnetometer.cpp 

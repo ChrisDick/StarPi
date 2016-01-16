@@ -37,6 +37,10 @@ class TelescopeManager : public Runnable
      */
         TelescopeManager();
         
+    /** Telescope initialisation
+     */
+        void TelescopeManagerInit( void );
+
     /** main run function of the telescope manager
     */
         void Run( void );

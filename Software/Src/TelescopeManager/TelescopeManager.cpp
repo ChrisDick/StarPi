@@ -21,6 +21,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <stdio.h> 
 #include <math.h>
 #include "TelescopeOrientation.h"
+#include "TelescopeIO.h"
 #include "HalGps.h"
 #include "MagModel.h"
 
@@ -36,12 +37,22 @@ bool TelescopeManager::HeadingCorrected;
 */
 TelescopeManager::TelescopeManager()
 {
+}
+
+/* Telescope initialisation
+*/
+void TelescopeManager::TelescopeManagerInit()
+{
     HeadingCorrected = false;
     RightAscension = 0;
     Declination = 0;
     TargetRightAscension = 0;
     TargetDeclination = 0;
+    TelescopeOrientation::Orient.TelescopeOrientationInit();
+    HalGps::Gps.HalGpsInit();
+    
 }
+
 
 /* main run function of the telescope manager
 */
@@ -49,18 +60,30 @@ void TelescopeManager::Run()
 {
     CC_ANGLES_T Angles;
     struct tm * gmt;
+    uint16_t Year = 0;
     float MagneticDeclination = 0;
     MagModel MagCorrect;
+    float AzimuthDegrees;
+    float LatitudeDegrees;
+    float LongitudeDegrees;
+    float HeadingDegrees;
     /*
         Get the Position, Orientation and time of the telescope
     */
-    double Pitch   = TelescopeOrientation::Orient.TelescopeOrientationGetPitch();
+    
+    TelescopeIO::TeleIO.TelescopeIOWebRecieve();
+    float Pitch   = TelescopeOrientation::Orient.TelescopeOrientationGetPitch();
+    float PitchDegrees = (180*(Pitch/M_PI));
     float Heading = TelescopeOrientation::Orient.TelescopeOrientationGetHeading();
-    time_t UnixTime = (time_t)HalGps::Gps.HalGpsGetTime();
-    float HieghtAboveGround = HalGps::Gps.HalGpsGetHeightInkm();
+    float UnixTime = HalGps::Gps.HalGpsGetTime();
+	//ToDo make these come from gps as default, then selectable from other sources 
+    //float HieghtAboveGround = HalGps::Gps.HalGpsGetHeightInkm();
+    float HieghtAboveGround = 0;//
+    TelescopeIO::TeleIO.TelescopeIOGetValue( HEIGHT, &HieghtAboveGround);
     Angles.LongitudeWest = ( HalGps::Gps.HalGpsGetLongitude() / 180 ) * M_PI;
     Angles.Latitude = ( HalGps::Gps.HalGpsGetLatitude() / 180 ) * M_PI;    
-    gmt = gmtime ( &UnixTime );
+    time_t Time = (time_t)UnixTime;
+    gmt = gmtime ( &Time );
      
     /*
         get compensation for magnetic declination
@@ -77,28 +100,45 @@ void TelescopeManager::Run()
     Declination = Angles.Declination;
     
     /*
-        Output Data to websocket using websocketd
+        Update Data
     */
-    printf ("Day %d\n", gmt->tm_mday); 
-    printf ("Month %d\n", gmt->tm_mon); 
-    printf ("Year %d\n", gmt->tm_year);
-    printf ("Pitch: %f \n", (180*(Pitch/M_PI)));
-    printf ("Azimuth: %f \n", (180*(Angles.Azimuth/M_PI)));
-    printf ("Lat %f \n", (180*(Angles.Latitude/M_PI)));
-    printf ("long %f \n", (180*(Angles.LongitudeWest/M_PI)));
-    printf ("time %f \n", (double)UnixTime);
-    printf ("lst %d:%d:%2f\n", Angles.LocalSiderealCCTime.Hours, Angles.LocalSiderealCCTime.Minutes, Angles.LocalSiderealCCTime.Seconds );
-    printf ("Magneticdeclination: %f \n", MagneticDeclination); 
-    printf ("Magnetic Heading: %f \n", (180*(Heading/M_PI)));
-    printf ("Height: %f \n", HieghtAboveGround);
-    printf ("True Heading: %f \n", (180*(Angles.Azimuth/M_PI)));    
+    Year = (gmt->tm_year + 1900 );
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( GMTYEAR, &Year );
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( GMTDAY, &gmt->tm_mday );
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( GMTMON, &gmt->tm_mon );
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( GMTHOUR, &gmt->tm_hour );
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( GMTMIN, &gmt->tm_min );
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( GMTSEC, &gmt->tm_sec );
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( BST, &gmt->tm_isdst );
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( UNIXTIME, &UnixTime );
+
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( MAGDEC, &MagneticDeclination );
+    HeadingDegrees = (180*(Heading/M_PI));
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( MAGHEAD, &HeadingDegrees );
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( HEIGHT, &HieghtAboveGround );
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( TRUEHEAD, &AzimuthDegrees );
+    LatitudeDegrees = (180*(Angles.Latitude/M_PI));
+
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( LATITUDE, &LatitudeDegrees );
+    LongitudeDegrees = (180*(Angles.LongitudeWest/M_PI));
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( LONGITUDE, &LongitudeDegrees );
+
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( ALTITUDE, &PitchDegrees );
+    AzimuthDegrees = (180*(Angles.Azimuth/M_PI));
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( AZIMUTH, &AzimuthDegrees );
+    
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( LSTHOUR, &Angles.LocalSiderealCCTime.Hours );
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( LSTMIN, &Angles.LocalSiderealCCTime.Minutes );
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( LSTSEC, &Angles.LocalSiderealCCTime.Seconds );
     CC_TIME_T Temp;
     Calculator.ConvertRadiansToTime( Angles.RightAscension, &Temp );
-    printf ("RightAscension %d:%d:%f \n", Temp.Hours, Temp.Minutes, Temp.Seconds);
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( RAHOURS, &Temp.Hours );
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( RAMIN, &Temp.Minutes );
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( RASEC, &Temp.Seconds );
     Calculator.ConvertRadiansToDegrees( Angles.Declination, &Temp );
-    printf ("Declination %d:%d:%f \n", Temp.Hours, Temp.Minutes, Temp.Seconds);
-    printf ("Time: %2d:%2d:%2d\n", gmt->tm_hour, gmt->tm_min, gmt->tm_sec );
-    printf ("summertime %d\n", gmt->tm_isdst );
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( DECHOURS, &Temp.Hours );
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( DECMIN, &Temp.Minutes );
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( DECSEC, &Temp.Seconds );
 }
 
 

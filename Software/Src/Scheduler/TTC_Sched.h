@@ -6,6 +6,8 @@
 
 /* 
     MUST BE ADJUSTED FOR EACH NEW PROJECT
+    When a new task is added to a project, a rebuild of the scheduler is required.
+    ToDo - change this to a const?
 */
 #define SCH_MAX_TASKS 5 /**< The maximum number of tasks required at any one time during the execution of the program*/
 
@@ -58,7 +60,7 @@ public:
  */
     virtual void Start(void) = 0;
 
-    static const uint8_t RETURN_ERROR  = 0;   /**< return error code */
-    static const uint8_t RETURN_NORMAL = 255; /**< return normal code */
+    static const uint8_t RETURN_ERROR  = 255;   /**< return error code */
+    static const uint8_t RETURN_NORMAL = 0; /**< return normal code */
 };
 
