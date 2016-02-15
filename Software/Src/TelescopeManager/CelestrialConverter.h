@@ -37,7 +37,7 @@ typedef struct {
 typedef struct {
     int8_t Hours;   /**< Number of Hours.   */
     int8_t Minutes; /**< Number of Minutes. */
-    double Seconds; /**< Number of Seconds. */
+    float Seconds; /**< Number of Seconds. */
 } CC_TIME_T;
 
 /** CC_ANGLES_T

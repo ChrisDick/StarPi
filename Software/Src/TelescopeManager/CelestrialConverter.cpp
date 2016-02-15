@@ -167,20 +167,47 @@ double CelestrialConverter::DecimaliseTime( struct tm* Time )
  * @return Structure containing all the time info
 */
 void CelestrialConverter::UnDecimaliseTime( double TimeDec, CC_TIME_T* Angle )
-{
-    /*
-        extract the hours.
-    */
-    Angle->Hours = (uint8_t)TimeDec;
-    /*
-        extract the minutes
-    */
-    Angle->Minutes = (uint8_t)(( TimeDec - (double)Angle->Hours ) * 60.0);
-    /*
-         extract the seconds
-    */
-    Angle->Seconds = ((( TimeDec - (double)Angle->Hours ) * 60.0) - (double)Angle->Minutes ) * 60.0 ; 
-    
+{ 
+    double fractpart = 0;
+    double intpart = 0;
+    if (TimeDec < 0 )
+    {
+        TimeDec = fabs( TimeDec );
+        fractpart = modf( TimeDec, &intpart );
+        /*
+            extract the hours.
+        */
+        Angle->Hours = (uint8_t)intpart;
+        /*
+            extract the minutes
+        */
+        fractpart = modf( ( fractpart * 60.0 ), &intpart);
+        Angle->Minutes =  (uint8_t)intpart;
+        /*
+            extract the seconds
+        */
+        Angle->Seconds = ( -1.0 * ( fractpart * 60.0 ));
+        Angle->Hours = -1 * Angle->Hours;
+        Angle->Minutes = -1 * Angle->Minutes;
+
+    }
+    else
+    {
+        fractpart = modf (TimeDec, &intpart);
+        /*
+            extract the hours.
+        */
+        Angle->Hours = (uint8_t)intpart;
+        /*
+            extract the minutes
+        */
+        fractpart = modf( ( fractpart * 60.0 ), &intpart);
+        Angle->Minutes =  (uint8_t)intpart;
+        /*
+            extract the seconds
+        */
+        Angle->Seconds = ( fractpart * 60.0 );
+    }
 }
 
 /* CalculateLocalSiderealTime
@@ -283,39 +310,47 @@ void CelestrialConverter::ConvertRadiansToTime( double Radians, CC_TIME_T* Time 
 void CelestrialConverter::ConvertRadiansToDegrees( double Radians, CC_TIME_T* Degrees )
 {
     double DegreesDec = 0;     
+    double fractpart = 0;
+    double intpart = 0;
     if (Radians < 0 )
     {
         DegreesDec = (0.0 - Radians) * ( 180.0 / M_PI ); 
+        fractpart = modf (DegreesDec , &intpart);
+  
         /*
             extract the hours.
         */
-        Degrees->Hours = ((uint8_t)DegreesDec);
+        Degrees->Hours = (uint8_t)intpart;
         /*
             extract the minutes
         */
-        Degrees->Minutes =  ((uint8_t)(( DegreesDec - (double)Degrees->Hours ) * 60.0));
+        fractpart = modf( ( fractpart * 60.0 ), &intpart);
+        Degrees->Minutes =  (uint8_t)intpart;
         /*
             extract the seconds
         */
-        Degrees->Seconds = -1 * ((( DegreesDec - (double)Degrees->Hours ) * 60.0) - (double)Degrees->Minutes ) * 60.0 ; 
+        Degrees->Seconds = ( -1.0 * ( fractpart * 60.0 ));
         Degrees->Hours = -1 * Degrees->Hours;
         Degrees->Minutes = -1 * Degrees->Minutes;
     }
     else
     {
         DegreesDec = Radians * ( 180.0 / M_PI ); 
+        fractpart = modf (DegreesDec , &intpart);
+  
         /*
             extract the hours.
         */
-        Degrees->Hours = (uint8_t)DegreesDec;
+        Degrees->Hours = (uint8_t)intpart;
         /*
             extract the minutes
         */
-        Degrees->Minutes = (uint8_t)(( DegreesDec - (double)Degrees->Hours ) * 60.0);
+        fractpart = modf( ( fractpart * 60.0 ), &intpart);
+        Degrees->Minutes =  (uint8_t)intpart;
         /*
             extract the seconds
         */
-        Degrees->Seconds = ((( DegreesDec - (double)Degrees->Hours ) * 60.0) - (double)Degrees->Minutes ) * 60.0 ; 
+        Degrees->Seconds = ( fractpart * 60.0 );
     }
 }
 

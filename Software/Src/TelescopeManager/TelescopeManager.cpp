@@ -68,20 +68,37 @@ void TelescopeManager::Run()
     float LongitudeDegrees;
     float HeadingDegrees;
     /*
+        Grab any messages for the Telescope
+    */
+    TelescopeIO::TeleIO.TelescopeIOWebRecieve();
+    /*
         Get the Position, Orientation and time of the telescope
     */
-    
-    TelescopeIO::TeleIO.TelescopeIOWebRecieve();
     float Pitch   = TelescopeOrientation::Orient.TelescopeOrientationGetPitch();
     float PitchDegrees = (180*(Pitch/M_PI));
     float Heading = TelescopeOrientation::Orient.TelescopeOrientationGetHeading();
-    float UnixTime = HalGps::Gps.HalGpsGetTime();
-	//ToDo make these come from gps as default, then selectable from other sources 
-    //float HieghtAboveGround = HalGps::Gps.HalGpsGetHeightInkm();
-    float HieghtAboveGround = 0;//
-    TelescopeIO::TeleIO.TelescopeIOGetValue( HEIGHT, &HieghtAboveGround);
-    Angles.LongitudeWest = ( HalGps::Gps.HalGpsGetLongitude() / 180 ) * M_PI;
-    Angles.Latitude = ( HalGps::Gps.HalGpsGetLatitude() / 180 ) * M_PI;    
+    float HieghtAboveGround = 0;
+    float UnixTime = 0;
+    SOURCE_T source; 
+    TelescopeIO::TeleIO.TelescopeIOGetValue( GPSSOURCE, &source);
+    if ( source == WEBSITE )
+    {
+        float DecimalLogitude = 0;
+        float DecimalLatitude = 0;
+        TelescopeIO::TeleIO.TelescopeIOGetValue( LONGITUDE, &DecimalLogitude);
+        Angles.LongitudeWest = ( DecimalLogitude / 180 ) * M_PI;
+        TelescopeIO::TeleIO.TelescopeIOGetValue( LATITUDE, &DecimalLatitude);
+        Angles.Latitude = ( DecimalLatitude / 180 ) * M_PI;
+        TelescopeIO::TeleIO.TelescopeIOGetValue( HEIGHT, &HieghtAboveGround);
+        UnixTime = HalGps::Gps.HalGpsGetTime();
+    }
+    else
+    {
+        UnixTime = HalGps::Gps.HalGpsGetTime();
+        HieghtAboveGround = HalGps::Gps.HalGpsGetHeightInkm();
+        Angles.LongitudeWest = ( HalGps::Gps.HalGpsGetLongitude() / 180 ) * M_PI;
+        Angles.Latitude = ( HalGps::Gps.HalGpsGetLatitude() / 180 ) * M_PI;    
+    }
     time_t Time = (time_t)UnixTime;
     gmt = gmtime ( &Time );
      

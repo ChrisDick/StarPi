@@ -87,18 +87,21 @@ void HalWebsocketd::ThreadRun( void )
     struct pollfd fds;
     fds.fd = STDIN_FILENO ; /* this is STDIN */
     fds.events = POLLIN;
-    while ( poll(&fds, 1, 0) == 1)
+    if ( poll(&fds, 1, 0) == 1)
     {
-        InputMessage[BufferIndex] = getchar();
-        if ( InputMessage[BufferIndex] == '\n' )
+        while ( poll(&fds, 1, 0) == 1)
         {
-            InputMessage[BufferIndex] = '\0';
-            HalWebsocketdAddMessage( &InputQueue, InputMessage, 0 );   
-            BufferIndex = 0;
-        }
-        else
-        {
-            BufferIndex++;
+            InputMessage[BufferIndex] = getchar();
+            if ( InputMessage[BufferIndex] == '\n' )
+            {
+                InputMessage[BufferIndex] = '\0';
+                HalWebsocketdAddMessage( &InputQueue, InputMessage, 0 );   
+                BufferIndex = 0;
+            }
+            else
+            {
+                BufferIndex++;
+            }
         }
     }
     if ( BufferIndex > DATALENGTH )
