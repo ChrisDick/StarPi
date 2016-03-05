@@ -227,23 +227,23 @@
     };
     function sendHeight()
     {
-        var message = "High " + document.getElementById('UserHeight').value + "\n" ;
+        var message = "WHIH " + document.getElementById('UserHeight').value + "\n" ;
         ws.send( message );
         document.getElementById('sent').textContent = "Sent: " + message;
     };
     function sendLatitude()
     {
+        /* make this convert to HMS format */
         var message = "Lati " + document.getElementById('UserLatitude').value + "\n" ;
         ws.send( message );
         document.getElementById('sent').textContent = "Sent: " + message;
-        sendSetUser();
     };
     function sendLongitude()
     {
+        /* make this convert to HMS format */
         var message = "Long " + document.getElementById('UserLongitude').value + "\n" ;
         ws.send( message );
         document.getElementById('sent').textContent = "Sent: " + message;
-        sendSetUser();
     };
 
     function sendSetUser()

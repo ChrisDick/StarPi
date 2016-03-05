@@ -213,13 +213,21 @@
                 <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <li><a data-toggle="pill" href="#CameraPicture">Picture</a></li>
-                    <li><a data-toggle="pill" href="#CameraEffect">Effect</a></li>
-                    <li><a data-toggle="pill" href="#CameraQuality">Quality</a></li>
                     <li><a data-toggle="pill" href="#CameraVideo">Video</a></li> 
+                    <li><a data-toggle="pill" href="#CameraResolution">Resolution</a></li>
+                    <li><a data-toggle="pill" href="#CameraQuality">Quality</a></li>
+                    <li><a data-toggle="pill" href="#CameraEffect">Effect</a></li>
                     <li><a data-toggle="pill" href="#CameraConfiguration">Configuration</a></li> 
                 </ul>
             </li>
-            <li><a data-toggle="pill" href="#location">Location</a></li>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#Location">Location
+                <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a data-toggle="pill" href="#LocationLocation">Location</a></li>
+                    <li><a data-toggle="pill" href="#LocationMagnetics">Magnetic Information</a></li>
+                </ul>
+            </li>
             <li><a data-toggle="pill" href="#TimeandDate">Time and Date</a></li>
             <li><a data-toggle="pill" href="#System">System</a></li>
         </ul>
@@ -266,25 +274,45 @@
                     </tr>
                 </table>
             </div>
-            <div id="CameraPicture" class="tab-pane fade">
-                <h3>Picture</h3>
+            <div id="CameraResolution" class="tab-pane fade">
+                <h3>Resolution</h3>
                 <table align="center">
                     <tr>
-                        <td align="left">Resolutions:</td>
-                        <td align="left">Load Preset: <select onchange="set_preset(this.value)">
-                            <option value="1920 1080 25 25 2592 1944">Select option...</option>
-                            <option value="1920 1080 25 25 2592 1944">Full HD 1080p 16:9</option>
-                            <option value="1280 0720 25 25 2592 1944">HD-ready 720p 16:9</option>
-                            <option value="1296 972 25 25 2592 1944">Max View 972p 4:3</option>
-                            <option value="768 576 25 25 2592 1944">SD TV 576p 4:3</option>
-                            <option value="1920 1080 01 30 2592 1944">Full HD Timelapse (x30) 1080p 16:9</option>
-                        </select><br>
-                        Custom Values:<br>
-                            Video res: <?php makeInput('video_width', 4); ?>x<?php makeInput('video_height', 4); ?>px<br>
-                            Video fps: <?php makeInput('video_fps', 2); ?>recording, <?php makeInput('MP4Box_fps', 2); ?>boxing<br>
-                            Image res: <?php makeInput('image_width', 4); ?>x<?php makeInput('image_height', 4); ?>px<br>
-                        <input type="button" value="OK" onclick="set_res();">
+                        <td align="left">Load Preset:</td>
+                        <td align="left">
+                            <select onchange="set_preset(this.value)">
+                                <option value="1920 1080 25 25 2592 1944">Select option...</option>
+                                <option value="1920 1080 25 25 2592 1944">Full HD 1080p 16:9</option>
+                                <option value="1280 0720 25 25 2592 1944">HD-ready 720p 16:9</option>
+                                <option value="1296 972 25 25 2592 1944">Max View 972p 4:3</option>
+                                <option value="768 576 25 25 2592 1944">SD TV 576p 4:3</option>
+                                <option value="1920 1080 01 30 2592 1944">Full HD Timelapse (x30) 1080p 16:9</option>
+                            </select>
                         </td>
+                    </tr>
+                    <tr>
+                        <td align="left">Custom Values:</td>
+                    </tr>
+                    <tr>
+                        <td align="left">Video res: </td>
+                        <td align="left"><?php makeInput('video_width', 4); ?>x<?php makeInput('video_height', 4); ?>px</td>
+                    </tr>
+                    <tr>
+                        <td align="left">Video fps:</td>
+                        <td align="left"><?php makeInput('video_fps', 2); ?>recording, <?php makeInput('MP4Box_fps', 2); ?>boxing</td>
+                    </tr>
+                    <tr>
+                        <td align="left">Image res:</td>
+                        <td align="left"><?php makeInput('image_width', 4); ?>x<?php makeInput('image_height', 4); ?>px<td>
+                    </tr>
+                    <tr>
+                        <td align="left"><input type="button" value="OK" onclick="set_res();"></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="CameraPicture" class="tab-pane fade">
+                <h3>Picture</h3>
+                <table align="center">        
                     <tr>
                         <td align="left">Timelapse-Interval (0.1...3200):</td>
                         <td align="left"><?php makeInput('tl_interval', 4); ?>s <input type="button" value="OK" onclick="send_cmd('tv ' + 10 * document.getElementById('tl_interval').value)"></td>
@@ -464,23 +492,33 @@
                     </tr>                    
                 </table>
             </div>
-            <div id="location" class="tab-pane fade">
+            <div id="LocationLocation" class="tab-pane fade">
                 <h3>Location</h3>
-                <p>Current Location</p>
                 <table align="center">
                     <tr>
                         <td align="left">Latitude:</td>
                         <td id="Latitude" align="left">0</td>
+                        <td align="left"><input type="text" Id="UserLatitude" value="0"><input type="button" value="Ok" onclick="sendLatitude();"></td>
                     </tr>
                     <tr>
                         <td align="left">longitude:</td>
                         <td id="longitude" align="left">0</td>
+                        <td align="left"><input type="text" Id="UserLongitude" value="0"><input type="button" value="Ok" onclick="sendLongitude()"></td>
                     </tr>
                     <tr>
                         <td align="left">Height:</td>
                         <td id="Height" align="left">0</td>
+                        <td align="left"><input type="text" Id="UserHeight" value="0"><input type="button" value="Ok" onclick="sendHeight()"></td>
                     </tr>
-                    
+                    <tr>
+                        <td align="left">Location Data Source</td>
+                        <td align="left"><button type="button" onclick="sendSetUser()">User</button><button type="button" onclick="sendSetGps()">GPS</button></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="LocationMagnetics" class="tab-pane fade">
+                <h3>Magnetic Information</h3>
+                <table align="center">
                     <tr>
                         <td align="left">Magnetic Declination:</td>
                         <td id="MagneticDeclination" align="left">0</td>
@@ -493,23 +531,6 @@
                         <td align="left">Magnetic Heading:</td>
                         <td id="MagneticHeading" align="left">0</td>
                     </tr>
-                <tr>
-                    <td align="left">Latitude:</td>
-                    <td align="left"><input type="text" Id="UserLatitude" value="0"><input type="button" value="Ok" onclick="sendLatitude();"></td>
-                        
-                </tr>
-                <tr>
-                    <td align="left">Longitude:</td>
-                    <td align="left"><input type="text" Id="UserLongitude" value="0"><input type="button" value="Ok" onclick="sendLongitude()"></td>
-                </tr>
-                <tr>
-                    <td align="left">Height:</td>
-                    <td align="left"><input type="text" Id="UserHeight" value="0"><input type="button" value="Ok" onclick="sendHeight()"></td>
-                </tr>
-                <tr>
-                    <td align="left">Location Data Source</td>
-                    <td align="left"><button type="button" onclick="sendSetUser()">User</button><button type="button" onclick="sendSetGps()">GPS</button></td>
-                </tr>
                 </table>
             </div>
             <div id="TimeandDate" class="tab-pane fade">
