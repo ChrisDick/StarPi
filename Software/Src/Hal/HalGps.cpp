@@ -23,11 +23,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "Config.h"
 
 HalGps   HalGps::Gps;
-double   HalGps::Longitude;         /**< longitude of the telescope */
-double   HalGps::Latitude;          /**< latitude of the telescope  */
-double   HalGps::Time;              /**< latest time                */
-double   HalGps::Height;            /**< current height of the Gps  */
-uint16_t HalGps::GpsdPort;          /**< port to connect to GPSD    */
+double   HalGps::Longitude;          /**< longitude of the telescope       */
+double   HalGps::Latitude;           /**< latitude of the telescope        */
+double   HalGps::Time;               /**< latest time                      */
+double   HalGps::Height;             /**< current height of the Gps        */
+uint8_t  HalGps::Mode;               /**< fix mode                         */
+uint8_t  HalGps::NumberOfSatellites; /**< the number of satellites in view */
+uint16_t HalGps::GpsdPort;           /**< port to connect to GPSD          */
 gpsmm* HalGps::gps_ptr;
 
 /* HalGps
@@ -77,6 +79,14 @@ void HalGps::Run( void )
         {
             Height = NewGpsData->fix.altitude;
         }
+        if ( NewGpsData->set & SATELLITE_SET) 
+        {
+            NumberOfSatellites =  NewGpsData->satellites_visible;
+        }
+        if ( NewGpsData->set & MODE_SET)
+        {    
+            Mode = NewGpsData->fix.mode;
+        }
     }
 }
 
@@ -105,6 +115,43 @@ double HalGps::HalGpsGetLongitude( void )
 double HalGps::HalGpsGetTime( void )
 {
     return Time;
+}
+
+/* HalGpsGetMode
+ *  Get the fix mode
+ * 0 = invalid
+ * 1 = GPS fix (SPS)
+ * 2 = DGPS fix
+ * 3 = PPS fix
+ * 4 = Real Time Kinematic
+ * 5 = Float RTK
+ * 6 = estimated (dead reckoning) (2.3 feature)
+ * 7 = Manual input mode
+ * 8 = Simulation mode
+ * @return uint8_t Mode 
+ */
+uint8_t HalGps::HalGpsGetMode( void )
+{
+    return Mode;
+}
+
+/* HalGpsGetfix
+ *  Get the current fix status
+ * @return bool fix 
+ */
+bool HalGps::HalGpsGetFix( void )
+{
+    /* ToDo: does this need to include more modes? */
+    return ( Mode == 3 ) ;
+}
+
+/* HalGpsGetNoOfSatellites
+ *  Get the number of satellites in view
+ * @return uint8_t Number Of Satellites 
+ */
+uint8_t HalGps::HalGpsGetNoOfSatellites( void )
+{
+    return NumberOfSatellites;
 }
 
 /* HalGpsGetHeight

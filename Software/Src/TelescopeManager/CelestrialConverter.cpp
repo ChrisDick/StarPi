@@ -149,15 +149,27 @@ void CelestrialConverter::CelestrialToEquitorial( CC_ANGLES_T* Angles, time_t Un
     
 }
 
+/* DecimaliseTm
+ * convert hours minutes and seconds to hours
+ * @param time structure containing all the time info
+ * @return double hours
+ */
+double CelestrialConverter::DecimaliseTm( struct tm* Time )
+{
+    double DecTime = 0.0;
+    DecTime  = Time->tm_hour + ((double)Time->tm_min/60.0) + ((double)Time->tm_sec/3600.0); 
+    return DecTime;
+}
+
 /* DecimaliseTime
  * convert hours minutes and seconds to hours
  * @param time structure containing all the time info
  * @return double hours
  */
-double CelestrialConverter::DecimaliseTime( struct tm* Time )
+double CelestrialConverter::DecimaliseTime( CC_TIME_T Time )
 {
     double DecTime = 0.0;
-    DecTime  = Time->tm_hour + ((double)Time->tm_min/60.0) + ((double)Time->tm_sec/3600.0); 
+    DecTime  = Time.Hours + ((double)Time.Minutes/60.0) + ((double)Time.Seconds/3600.0); 
     return DecTime;
 }
 
@@ -248,8 +260,8 @@ double CelestrialConverter::CalculateLocalSiderealTime( time_t UnixTime, double 
         D = JD - 2451545.0
     */
     JulianDate2000 = JulianDate - 2451545.0;
-    JulianMidnight = JulianDate2000 - ( DecimaliseTime( gmt ) / 24.0 );
-    GMST = 6.697374558 + ( 0.06570982441908 * JulianMidnight ) + ( 1.00273790935 * DecimaliseTime( gmt ) ) + ( 0.000026 * ( ( (uint32_t)JulianDate2000 / 36525 ) * ( (uint32_t)JulianDate2000 / 36525 ) ) );
+    JulianMidnight = JulianDate2000 - ( DecimaliseTm( gmt ) / 24.0 );
+    GMST = 6.697374558 + ( 0.06570982441908 * JulianMidnight ) + ( 1.00273790935 * DecimaliseTm( gmt ) ) + ( 0.000026 * ( ( (uint32_t)JulianDate2000 / 36525 ) * ( (uint32_t)JulianDate2000 / 36525 ) ) );
     GMST = fmod ( GMST, 24.0 );
     /*
         http://aa.usno.navy.mil/faq/docs/GAST.php
@@ -352,6 +364,29 @@ void CelestrialConverter::ConvertRadiansToDegrees( double Radians, CC_TIME_T* De
         */
         Degrees->Seconds = ( fractpart * 60.0 );
     }
+}
+
+
+/* ConvertTimeToAngle
+ * Convert a time to an angle in degrees
+ * @param Time structure containing all the time info
+ * @return double Angle
+ */
+double CelestrialConverter::ConvertTimeToAngle( CC_TIME_T Time )
+{
+    double Angle = 0;
+    double TimeDec = 0;
+    /*
+        first convert time to a decimal.
+    */
+    TimeDec = DecimaliseTime( Time );
+    
+    /*
+        then multiply by 15'
+    */
+    Angle = TimeDec * 15.0;
+    
+    return Angle;
 }
 
 #if 0
@@ -525,29 +560,6 @@ double CelestrialConverter::ConvertDegreesToRadians( CC_TIME_T Degrees )
     Radians = DegreesDec * (M_PI/180.0);
     
     return Radians;
-}
-
-
-/* ConvertTimeToAngle
- * Convert a time to an angle in degrees
- * @param Time structure containing all the time info
- * @return double Angle
- */
-double CelestrialConverter::ConvertTimeToAngle( CC_TIME_T Time )
-{
-    double Angle = 0;
-    double TimeDec = 0;
-    /*
-        first convert time to a decimal.
-    */
-    TimeDec = DecimaliseTime( Time );
-    
-    /*
-        then multiply by 15'
-    */
-    Angle = TimeDec * 15.0;
-    
-    return Angle;
 }
 
 

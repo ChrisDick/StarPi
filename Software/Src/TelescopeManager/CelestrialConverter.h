@@ -83,10 +83,15 @@ class CelestrialConverter {
         */
             void CelestrialToEquitorial( CC_ANGLES_T* Angles, time_t UnixTime );
         /** Convert hours minutes and seconds to hours.
+         * @param Time - tm - structure containing all the time info.
+         * @return double - Hours in decimal format.
+         */
+            double DecimaliseTm( struct tm* Time );
+        /** Convert hours minutes and seconds to hours.
          * @param Time - CC_TIME_T - structure containing all the time info.
          * @return double - Hours in decimal format.
          */
-            double DecimaliseTime( struct tm* Time );
+            double DecimaliseTime( CC_TIME_T Time );
         /** Convert hours to hours, minutes and seconds.
          * @param TimeDec - double - hours in decimal format.
          * @param Angle CC_TIME_T* - Structure containing all the time info.
@@ -104,6 +109,12 @@ class CelestrialConverter {
          * @param double Radians - The Angle
          */
             void ConvertRadiansToDegrees( double Radians, CC_TIME_T* Degrees );
+        /** ConvertTimeToAngle
+         * Convert a time to an angle
+         * @param Time structure containing all the time info
+         * @return double Angle
+         */
+            double ConvertTimeToAngle( CC_TIME_T Time ) ;
 #if 0
         /** Calculate the Julian date
          * @param Time - CC_TIME_T Time structure for calculations.
@@ -136,12 +147,6 @@ class CelestrialConverter {
          * @return double The angle
          */
             double ConvertDegreesToRadians( CC_TIME_T Degrees );
-        /** ConvertTimeToAngle
-         * Convert a time to an angle
-         * @param Time structure containing all the time info
-         * @return double Angle
-         */
-            double ConvertTimeToAngle( CC_TIME_T Time ) ;
         /** Convert an angle to a time
          * @param Angle - double - Angle  
          * @param time - CC_TIME_T* - pointer to Structure to contain all the time info

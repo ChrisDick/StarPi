@@ -56,6 +56,31 @@ class HalGps: public Runnable
      * @return double time
      */
         double HalGpsGetTime( void );
+    /** HalGpsGetMode
+     *  Get the fix mode
+     * 0 = invalid
+     * 1 = GPS fix (SPS)
+     * 2 = DGPS fix
+     * 3 = PPS fix
+     * 4 = Real Time Kinematic
+     * 5 = Float RTK
+     * 6 = estimated (dead reckoning) (2.3 feature)
+     * 7 = Manual input mode
+     * 8 = Simulation mode
+     * @return uint8_t Mode 
+     */
+        uint8_t HalGpsGetMode( void );
+
+    /** HalGpsGetfix
+     * Get the current fix status
+     * @return bool fix 
+     */
+        bool HalGpsGetFix( void );
+    /** HalGpsGetNoOfSatellites
+     * Get the number of satellites in view
+     * @return uint8_t Number Of Satellites 
+     */
+        uint8_t HalGpsGetNoOfSatellites( void );
     /** Get the height above ground in meters
      * @return double Height
      */
@@ -68,11 +93,13 @@ class HalGps: public Runnable
         static HalGps Gps;
         
         private:
-        static double Longitude;     /**< longitude of the telescope */
-        static double Latitude;      /**< latitude of the telescope */
-        static double Time;          /**< latest time */
-        static double Height;        /**< height above sea level of the gps */
-        static uint16_t GpsdPort;    /**< port to connect to GPSD */
+        static double Longitude;           /**< longitude of the telescope */
+        static double Latitude;            /**< latitude of the telescope */
+        static double Time;                /**< latest time */
+        static double Height;              /**< height above sea level of the gps */
+        static uint8_t Mode;               /**< fix mode                         */
+        static uint8_t NumberOfSatellites; /**< the number of satellites in view */
+        static uint16_t GpsdPort;          /**< port to connect to GPSD */
 };
 
 #endif /* HALGPS_H */
