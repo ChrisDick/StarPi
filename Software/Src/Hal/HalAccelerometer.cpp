@@ -40,6 +40,9 @@ L3G4200D Accel;
 #elif defined MPU9150_ACCEL
 #include "MPU9150.h"
 MPU9150 Accel;
+#elif defined LSM303LHC_ACCEL
+#include "LSM303LHC.h"
+LSM303LHC Accel;
 #else
 #error no Accelerometer defined - please edit your config.h file.
 #endif
@@ -75,6 +78,8 @@ bool HalAccelerometer::HalAccelerometerInit( void )
 #elif L3G4200D_ACCEL
     #error no init code for Accelerometer
 #elif defined MPU9150_ACCEL
+    #error no init code for Accelerometer
+#elif defined LSM303LHC_ACCEL
     #error no init code for Accelerometer
 #endif
     return Result;

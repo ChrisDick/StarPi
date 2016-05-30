@@ -87,10 +87,22 @@ bool TelescopeIO::TelescopeIOUpdateData( DATAID_T Id, void* Data )
             SendMessage = true;
             break;
         }
+        case INT8_2:
+        {
+            sprintf ( TelescopeData[Id].Data, " %2d", *((int8_t*)Data) );
+            SendMessage = true;
+            break;
+        }
+        case INT16_4:
+        {
+            sprintf ( TelescopeData[Id].Data, " %4d", *((int16_t*)Data) );
+            SendMessage = true;
+            break;
+        }
         case FLOAT:
         case DOUBLE:
         {
-            sprintf ( TelescopeData[Id].Data, " %4.4f", *((float*)Data) );
+            sprintf ( TelescopeData[Id].Data, " %4.2f", *((float*)Data) );
             SendMessage = true;
             break;
         }
@@ -144,12 +156,22 @@ void TelescopeIO::TelescopeIOGetValue( DATAID_T Id, void* Data )
     {
         case UINT8_2:
         {
-            sscanf ( TelescopeData[Id].Data, "%2d", ((int*)Data) );
+            sscanf ( TelescopeData[Id].Data, "%2d", ((uint8_t*)Data) );
             break;
         }
         case UINT16_4:
         {
-            sscanf ( TelescopeData[Id].Data, "%4d", ((int*)Data) );
+            sscanf ( TelescopeData[Id].Data, "%4d", ((uint16_t*)Data) );
+            break;
+        }
+        case INT8_2:
+        {
+            sscanf ( TelescopeData[Id].Data, "%2d", ((uint8_t*)Data) );
+            break;
+        }
+        case INT16_4:
+        {
+            sscanf ( TelescopeData[Id].Data, "%4d", ((uint16_t*)Data) );
             break;
         }
         case FLOAT:

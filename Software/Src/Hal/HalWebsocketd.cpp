@@ -85,7 +85,7 @@ void HalWebsocketd::ThreadRun( void )
         Check for new input and add to queue
     */
     struct pollfd fds;
-    fds.fd = STDIN_FILENO ; /* this is STDIN */
+    fds.fd = 0;//STDIN_FILENO ; /* this is STDIN */
     fds.events = POLLIN;
     if ( poll(&fds, 1, 0) == 1)
     {

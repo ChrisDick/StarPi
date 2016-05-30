@@ -79,7 +79,9 @@ typedef enum
 {
     BOOL,
     UINT8_2,
+    INT8_2,
     UINT16_4,
+    INT16_4,
     FLOAT,
     DOUBLE,
     STRING,
@@ -109,33 +111,33 @@ static TELEDATA_T TelescopeData[NUMBEROFDATA] =
 /* AZIMUTH,   */ { "Azim", true,  FLOAT,    {0} }, /**< (180*(Angles.Azimuth/M_PI))        */
 /* LATITUDE,  */ { "Lati", false, FLOAT,    {0} }, /**< (180*(Angles.Latitude/M_PI))       */
 /* LONGITUDE, */ { "Long", false, FLOAT,    {0} }, /**< (180*(Angles.LongitudeWest/M_PI))  */
-/* LSTHOUR,   */ { "LSTH", true,  UINT8_2,  {0} }, /**< Local Sidereal Time Hours          */
-/* LSTMIN,    */ { "LSTm", true,  UINT8_2,  {0} }, /**< Local Sidereal Time Minutes        */
+/* LSTHOUR,   */ { "LSTH", true,  INT8_2,  {0} }, /**< Local Sidereal Time Hours          */
+/* LSTMIN,    */ { "LSTm", true,  INT8_2,  {0} }, /**< Local Sidereal Time Minutes        */
 /* LSTSEC,    */ { "LSTS", true,  FLOAT,    {0} }, /**< Local Sidereal Time Seconds        */
 /* MAGDEC,    */ { "MagD", true,  FLOAT,    {0} }, /**< Magnetic Declination               */
 /* MAGHEAD,   */ { "MagH", true,  FLOAT,    {0} }, /**< (180*(Heading/M_PI))               */
 /* TRUEHEAD,  */ { "TruH", true,  FLOAT,    {0} }, /**< (180*(Angles.Azimuth/M_PI)));      */
 /* HEIGHT,    */ { "High", true,  FLOAT,    {0} }, /**< Hieght Above Ground (km)           */
-/* RAHOURS,   */ { "RAH ", true,  UINT8_2,  {0} }, /**< Right Ascension Degrees            */
-/* RAMIN,     */ { "RAm ", true,  UINT8_2,  {0} }, /**< Right Ascension Minutes            */
+/* RAHOURS,   */ { "RAH ", true,  INT8_2,  {0} }, /**< Right Ascension Degrees            */
+/* RAMIN,     */ { "RAm ", true,  INT8_2,  {0} }, /**< Right Ascension Minutes            */
 /* RASEC,     */ { "RAS ", true,  FLOAT,    {0} }, /**< Right Ascension Seconds            */
-/* DECHOURS,  */ { "DECH", true,  UINT8_2,  {0} }, /**< Declination Hours                  */
-/* DECMIN,    */ { "DECm", true,  UINT8_2,  {0} }, /**< Declination Minutes                */
+/* DECHOURS,  */ { "DECH", true,  INT8_2,  {0} }, /**< Declination Hours                  */
+/* DECMIN,    */ { "DECm", true,  INT8_2,  {0} }, /**< Declination Minutes                */
 /* DECSEC,    */ { "DECS", true,  FLOAT,    {0} }, /**< Declination Seconds                */
 /* JULIANDATE,*/ { "JDAT", true,  FLOAT,    {0} }, /**< JulianDate                         */
 /* GPSSOURCE, */ { "GPSS", true,  UINT8_2,  {0} }, /**< Source of GPS                      */
-/* GPSLATD,   */ { "GLAD", true,  UINT8_2,  {0} }, /**< Gps source latitude degrees        */
-/* GPSLATM,   */ { "GLAM", true,  UINT8_2,  {0} }, /**< Gps source latitude minutes        */
+/* GPSLATD,   */ { "GLAD", true,  INT8_2,  {0} }, /**< Gps source latitude degrees        */
+/* GPSLATM,   */ { "GLAM", true,  INT8_2,  {0} }, /**< Gps source latitude minutes        */
 /* GPSLATS,   */ { "GLAS", true,  FLOAT,    {0} }, /**< Gps source latitude seconds        */
-/* GPSLONH,   */ { "GLOH", true,  UINT8_2,  {0} }, /**< Gps source longitude hours         */
-/* GPSLONM,   */ { "GLOM", true,  UINT8_2,  {0} }, /**< Gps source longitude minutes       */
+/* GPSLONH,   */ { "GLOH", true,  INT8_2,  {0} }, /**< Gps source longitude hours         */
+/* GPSLONM,   */ { "GLOM", true,  INT8_2,  {0} }, /**< Gps source longitude minutes       */
 /* GPSLONS,   */ { "GLOS", true,  FLOAT,    {0} }, /**< Gps source longitude seconds       */
 /* GPSHIEGHT, */ { "GHIH", true,  FLOAT,    {0} }, /**< Gps source longitude seconds       */
-/* WEBLATD,   */ { "WLAD", false, UINT8_2,  {0} }, /**< Web source latitude degrees        */
-/* WEBLATM,   */ { "WLAM", false, UINT8_2,  {0} }, /**< Web source latitude minutes        */
+/* WEBLATD,   */ { "WLAD", false, INT8_2,  {0} }, /**< Web source latitude degrees        */
+/* WEBLATM,   */ { "WLAM", false, INT8_2,  {0} }, /**< Web source latitude minutes        */
 /* WEBLATS,   */ { "WLAS", false, FLOAT,    {0} }, /**< Web source latitude seconds        */
-/* WEBLONH,   */ { "WLOH", false, UINT8_2,  {0} }, /**< Web source longitude hours         */
-/* WEBLONM,   */ { "WLOM", false, UINT8_2,  {0} }, /**< Web source longitude minutes       */
+/* WEBLONH,   */ { "WLOH", false, INT8_2,  {0} }, /**< Web source longitude hours         */
+/* WEBLONM,   */ { "WLOM", false, INT8_2,  {0} }, /**< Web source longitude minutes       */
 /* WEBLONS,   */ { "WLOS", false, FLOAT,    {0} }, /**< Web source longitude seconds       */
 /* WEBHIEGHT, */ { "WHIH", false, FLOAT,    {0} }, /**< Web source longitude seconds       */
 /* DEBUG,     */ { "DEBU", true,  STRING,   {0} }, /**< any debug string                   */ 

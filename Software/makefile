@@ -8,6 +8,7 @@ INCLUDE_PATHS := 	-I./Src/I2Cdevlib/Pi/I2Cdev/ \
 					-I./Src/I2Cdevlib/Pi/HMC5843/ \
 					-I./Src/I2Cdevlib/Pi/MPU6050/ \
 					-I./Src/I2Cdevlib/Pi/MPU9150/ \
+					-I./Src/I2Cdevlib/Pi/LSM303LHC/ \
 					-I./Src/Hal/ \
 					-I./Src/TelescopeManager/ \
 					-I./Src/Scheduler/ \
@@ -27,6 +28,7 @@ DEVICE_OBJS := $(addprefix $(OBJ_DIR), \
 					HMC5883L.o \
 					MPU6050.o \
 					MPU9150.o \
+					LSM303LHC.o \
 					I2Cdev.o \
 					Connection.o \
 					Listener.o \
@@ -236,6 +238,9 @@ $(OBJ_DIR)MPU6050.o:	./Src/I2Cdevlib/Pi/MPU6050/MPU6050.cpp
 
 $(OBJ_DIR)MPU9150.o:	./Src/I2Cdevlib/Pi/MPU9150/MPU9150.cpp
 		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/I2Cdevlib/Pi/MPU9150/MPU9150.cpp 
+
+$(OBJ_DIR)LSM303LHC.o:	./Src/I2Cdevlib/Pi/LSM303LHC/LSM303LHC.cpp
+		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/I2Cdevlib/Pi/LSM303LHC/LSM303LHC.cpp 
 
 $(OBJ_DIR)TCA6424A.o:	./Src/I2Cdevlib/Pi/TCA6424A/TCA6424A.cpp
 		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/I2Cdevlib/Pi/TCA6424A/TCA6424A.cpp

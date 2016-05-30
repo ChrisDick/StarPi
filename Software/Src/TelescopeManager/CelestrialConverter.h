@@ -35,8 +35,8 @@ typedef struct {
  * - Structure containing time information. 
  */
 typedef struct {
-    int8_t Hours;   /**< Number of Hours.   */
-    int8_t Minutes; /**< Number of Minutes. */
+    int16_t Hours;   /**< Number of Hours.   */
+    int16_t Minutes; /**< Number of Minutes. */
     float Seconds; /**< Number of Seconds. */
 } CC_TIME_T;
 
