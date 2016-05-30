@@ -182,7 +182,7 @@
         <script src="js/style_minified.js"></script>
         <script src="js/script.js"></script>
         <script src="js/pipan.js"></script>
-        <script src="//SPACECAM/StarPi.js"></script>
+        <script src="js/StarPi.js"></script>
      </head>
      
      <body onload="setTimeout('init(<?php echo "$mjpegmode, $video_fps, $divider" ?>);', 100);">
