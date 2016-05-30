@@ -8,8 +8,8 @@
 sudo sed -i 's/raspberrypi/spacecam/g' /etc/hosts
 sudo sed -i 's/raspberrypi/spacecam/g' /etc/hostname
 
-OSCODENAME=grep VERSION= /etc/os-release | cut -d ' ' -f 2-  | tr -d '"' 
-if [ OSCODENAME -eq "(jessie)" ]
+OSCODENAME='grep VERSION= /etc/os-release | cut -d ' ' -f 2-  | tr -d '"' '
+if [ OSCODENAME -eq "'(jessie')" ]
 then
 #we have a jessie based install
 sudo apt-get install scons 
@@ -63,10 +63,10 @@ sudo mkdir /var/www
 sudo mkdir /var/www/html
 sudo mkdir /var/www/html/StarPi
 sudo mkdir /var/www/html/RPiCam
-sudo cp -r ./Website/* /var/www/html/StarPi
+sudo cp -ar ./Website/* /var/www/html/StarPi
 cd RPi_Cam_Web_Interface
-sudo cp -r ./www/* /var/www/html/RPiCam
+sudo cp -ar ./www/* /var/www/html/RPiCam
 
-chmod u+x install.sh
+chmod u+x *.sh
 sudo ./install.sh q
 #line above will ask for reboot, this is the last thing we need to do.
