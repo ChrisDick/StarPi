@@ -7,6 +7,7 @@
 //#define L3G4200D_ACCEL
 //#define MPU9150_ACCEL
 #define MPU6050_ACCEL
+//#define LSM303DLHC_ACCEL
 
 /*
     Orientation of the accelerometer with respect to the telescope
@@ -47,6 +48,7 @@
 //#define HMC5843_MAGNETOMETER
 #define HMC5883L_MAGNETOMETER
 //#define MPU9150_MAGNETOMETER
+//#define LSM303DLHC_MAGNETOMETER
 
 /*
     Orientation of the magnetometer with respect to the telescope

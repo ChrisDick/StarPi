@@ -36,6 +36,9 @@ HMC5883L Magnetomometer;
 #elif defined MPU9150_MAGNETOMETER
 #include "MPU9150.h"
 MPU9150 Magnetomometer;
+#elif defined LSM303DLHC_MAGNETOMETER
+#include "LSM303DLHC.h"
+LSM303DLHC_Mag Magnetomometer;
 #else
 #error no magnetometer defined - please edit your config.h file.
 #endif
@@ -65,8 +68,10 @@ bool HalMagnetometer::HalMagnetometerInit( void )
     #error no init code for Magnetometer
 #elif defined HMC5883L_MAGNETOMETER
     Scaling = 1; 
-#elif MPU9150_MAGNETOMETER
+#elif defined MPU9150_MAGNETOMETER
     #error no init code for Magnetometer
+#elif defined LSM303DLHC_MAGNETOMETER
+    Scaling = 1; 
 #endif
     return true; // todo
 }
