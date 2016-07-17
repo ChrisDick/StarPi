@@ -125,6 +125,5 @@ int main(int argc, char *argv[])
     {
         Scheduler.DispatchTasks();
     }
-    PiServer.CloseAcceptedConnections();
-    printf ("End.\n");
+
 }
