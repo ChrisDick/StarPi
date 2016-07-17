@@ -5,27 +5,16 @@
 #chmod u+x install.sh
 #./install.sh
 # then go and make a nice cup of tea.
-sudo sed -i 's/raspberrypi/spacecam/g' /etc/hosts
-sudo sed -i 's/raspberrypi/spacecam/g' /etc/hostname
+#sudo sed -i 's/raspberrypi/spacecam/g' /etc/hosts
+#sudo sed -i 's/raspberrypi/spacecam/g' /etc/hostname
 
-OSCODENAME='grep VERSION= /etc/os-release | cut -d ' ' -f 2-  | tr -d '"' '
-if [ OSCODENAME -eq "'(jessie')" ]
-then
 #we have a jessie based install
 sudo apt-get install scons 
-sudo apt-get install libgps-dev  ???
-else
-#assume it's wheezy
-sudo sed -i -e "\$adeb http://http.debian.net/debian wheezy-backports main" /etc/apt/sources.list
-sudo apt-get update
-sudo apt-get install debian-archive-keyring 
-sudo apt-get update
-sudo apt-get -y -t wheezy-backports install scons
-fi
+sudo apt-get install libgps-dev
 
-sudo apt-get update
-sudo apt-get dist-upgrade
-sudo rpi-update
+#sudo apt-get update
+#sudo apt-get dist-upgrade
+#sudo rpi-update
 sudo apt-get -y install libncurses5-dev python-dev pps-tools git-core python-smbus i2c-tools
 
 cd ./Software
