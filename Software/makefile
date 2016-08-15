@@ -15,7 +15,10 @@ INCLUDE_PATHS := 	-I./Src/I2Cdevlib/Pi/I2Cdev/ \
 					-I./Src/StellariumServer/ \
 					-I./Src/GPSD/ \
 					-I./Src/MagModelCorrection/ \
-					-I./Src/
+					-I./Src/ \
+					-I./Src/Utils \
+					-I./Src/Drivers/ 
+
 
 
 OBJ_DIR = ./Obj/
@@ -50,6 +53,10 @@ DEVICE_OBJS := $(addprefix $(OBJ_DIR), \
 					libgpsmm.o \
 					MagModel.o \
 					GeomagnetismLibrary.o \
+					GPIO.o \
+					LM29x.o \
+					HalMotor.o \
+					PID.o \
 					)
 
 OUT_DIR = ./Out/
@@ -82,6 +89,9 @@ $(OUT_DIR)gpsd_example:	$(OBJ_DIR)gpsd_example.o ./Obj/libgpsmm.o
 
 $(OUT_DIR)test_gpsmm:	$(OBJ_DIR)test_gpsmm.o ./Obj/libgpsmm.o 
 		$(CC) -Wall $(OUTPUT) $(OBJ_DIR)test_gpsmm.o  -lgps ./Obj/libgpsmm.o
+
+$(OUT_DIR)GPIO_test:	$(OBJ_DIR)GPIO_test.o $(DEVICE_OBJS)
+		$(CC) -Wall -lwiringPi $(OUTPUT) $(OBJ_DIR)GPIO_test.o $(DEVICE_OBJS)
 
 $(OUT_DIR)test_magmodel:	$(OBJ_DIR)MagModelTest.o $(OBJ_DIR)GeomagnetismLibrary.o $(OBJ_DIR)MagModel.o
 		$(CC) -Wall $(OUTPUT) $(OBJ_DIR)MagModelTest.o  $(OBJ_DIR)GeomagnetismLibrary.o $(OBJ_DIR)MagModel.o
@@ -187,6 +197,9 @@ $(OBJ_DIR)HalMagnetometer.o:	./Src/Hal/HalMagnetometer.cpp
 $(OBJ_DIR)HalGps.o:	./Src/Hal/HalGps.cpp
 		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/Hal/HalGps.cpp 
         
+$(OBJ_DIR)HalMotor.o:	./Src/Hal/HalMotor.cpp
+		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/Hal/HalMotor.cpp 
+        
 $(OBJ_DIR)HMC5883L_raw.o:		./Src/I2Cdevlib/Pi/HMC5883L/Examples/HMC5883L_raw/HMC5883L_raw.cpp
 		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/I2Cdevlib/Pi/HMC5883L/Examples/HMC5883L_raw/HMC5883L_raw.cpp 
 
@@ -257,3 +270,16 @@ $(OBJ_DIR)IAQ2000.o:	./Src/I2Cdevlib/Pi/IAQ2000/IAQ2000.cpp
 $(OBJ_DIR)HMC5843.o:	./Src/I2Cdevlib/Pi/HMC5843/HMC5843.cpp
 		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/I2Cdevlib/Pi/HMC5843/HMC5843.cpp
 
+#Drivers
+$(OBJ_DIR)LM29x.o:	./Src/Drivers/LM29x.cpp
+		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/Drivers/LM29x.cpp 
+        
+$(OBJ_DIR)GPIO.o:	./Src/Drivers/GPIO.cpp
+		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/Drivers/GPIO.cpp 
+        
+
+
+#Utils
+$(OBJ_DIR)PID.o:	./Src/Utils/PID.cpp
+		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/Utils/PID.cpp 
+        
