@@ -26,6 +26,79 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "TelescopeIO.h"
 TelescopeIO TelescopeIO::TeleIO;
 
+
+
+typedef enum
+{
+    BOOL,
+    UINT8_2,
+    INT8_2,
+    UINT16_4,
+    INT16_4,
+    FLOAT,
+    DOUBLE,
+    STRING,
+} FORMAT_T;
+
+typedef struct 
+{
+    const char* Header;
+    bool Web;
+    FORMAT_T DataFormat;
+    char Data[DATALENGTH];
+} TELEDATA_T;
+
+static TELEDATA_T TelescopeData[NUMBEROFDATA] = 
+{
+/* Id              Header  Web  DataType Data                                            */
+/* EMPTY,     */ { "EMPT", false, STRING,   {0} }, /**< Unused slot - reserved (always 0)  */
+/* UNIXTIME,  */ { "Unix", false, FLOAT,    {0} }, /**< UnixTime                           */
+/* GMTDAY,    */ { "GMTD", true,  UINT8_2,  {0} }, /**< gmt->tm_mday                       */
+/* GMTMON,    */ { "GMTM", true,  UINT8_2,  {0} }, /**< gmt->tm_mon                        */
+/* GMTYEAR,   */ { "GMTY", true,  UINT16_4, {0} }, /**< (gmt->tm_year + 1900)              */
+/* GMTHOUR,   */ { "GMTH", true,  UINT8_2,  {0} }, /**< gmt->tm_hour                       */
+/* GMTMIN,    */ { "GMTm", true,  UINT8_2,  {0} }, /**< gmt->tm_min                        */
+/* GMTSEC,    */ { "GMTS", true,  UINT8_2,  {0} }, /**< gmt->tm_sec                        */
+/* BST        */ { "BST ", true,  UINT8_2,  {0} }, /**< gmt->tm_isdst                      */
+/* ALTITUDE,  */ { "Pitc", true,  FLOAT,    {0} }, /**< (180*(Pitch/M_PI))                 */
+/* AZIMUTH,   */ { "Azim", true,  FLOAT,    {0} }, /**< (180*(Angles.Azimuth/M_PI))        */
+/* LATITUDE,  */ { "Lati", false, FLOAT,    {0} }, /**< (180*(Angles.Latitude/M_PI))       */
+/* LONGITUDE, */ { "Long", false, FLOAT,    {0} }, /**< (180*(Angles.LongitudeWest/M_PI))  */
+/* LSTHOUR,   */ { "LSTH", true,  INT8_2,  {0} }, /**< Local Sidereal Time Hours          */
+/* LSTMIN,    */ { "LSTm", true,  INT8_2,  {0} }, /**< Local Sidereal Time Minutes        */
+/* LSTSEC,    */ { "LSTS", true,  FLOAT,    {0} }, /**< Local Sidereal Time Seconds        */
+/* MAGDEC,    */ { "MagD", true,  FLOAT,    {0} }, /**< Magnetic Declination               */
+/* MAGHEAD,   */ { "MagH", true,  FLOAT,    {0} }, /**< (180*(Heading/M_PI))               */
+/* TRUEHEAD,  */ { "TruH", true,  FLOAT,    {0} }, /**< (180*(Angles.Azimuth/M_PI)));      */
+/* HEIGHT,    */ { "High", true,  FLOAT,    {0} }, /**< Hieght Above Ground (km)           */
+/* RAHOURS,   */ { "RAH ", true,  INT8_2,  {0} }, /**< Right Ascension Degrees            */
+/* RAMIN,     */ { "RAm ", true,  INT8_2,  {0} }, /**< Right Ascension Minutes            */
+/* RASEC,     */ { "RAS ", true,  FLOAT,    {0} }, /**< Right Ascension Seconds            */
+/* DECHOURS,  */ { "DECH", true,  INT8_2,  {0} }, /**< Declination Hours                  */
+/* DECMIN,    */ { "DECm", true,  INT8_2,  {0} }, /**< Declination Minutes                */
+/* DECSEC,    */ { "DECS", true,  FLOAT,    {0} }, /**< Declination Seconds                */
+/* JULIANDATE,*/ { "JDAT", true,  FLOAT,    {0} }, /**< JulianDate                         */
+/* GPSSOURCE, */ { "GPSS", true,  UINT8_2,  {0} }, /**< Source of GPS                      */
+/* GPSLATD,   */// { "GLAD", true,  INT8_2,  {0} }, /**< Gps source latitude degrees        */
+/* GPSLATM,   */// { "GLAM", true,  INT8_2,  {0} }, /**< Gps source latitude minutes        */
+/* GPSLATS,   */// { "GLAS", true,  FLOAT,    {0} }, /**< Gps source latitude seconds        */
+/* GPSLONH,   */// { "GLOH", true,  INT8_2,  {0} }, /**< Gps source longitude hours         */
+/* GPSLONM,   */// { "GLOM", true,  INT8_2,  {0} }, /**< Gps source longitude minutes       */
+/* GPSLONS,   */// { "GLOS", true,  FLOAT,    {0} }, /**< Gps source longitude seconds       */
+/* GPSHIEGHT, */// { "GHIH", true,  FLOAT,    {0} }, /**< Gps source longitude seconds       */
+/* WEBLATD,   */// { "WLAD", false, INT8_2,  {0} }, /**< Web source latitude degrees        */
+/* WEBLATM,   */// { "WLAM", false, INT8_2,  {0} }, /**< Web source latitude minutes        */
+/* WEBLATS,   */// { "WLAS", false, FLOAT,    {0} }, /**< Web source latitude seconds        */
+/* WEBLONH,   */// { "WLOH", false, INT8_2,  {0} }, /**< Web source longitude hours         */
+/* WEBLONM,   */// { "WLOM", false, INT8_2,  {0} }, /**< Web source longitude minutes       */
+/* WEBLONS,   */// { "WLOS", false, FLOAT,    {0} }, /**< Web source longitude seconds       */
+/* WEBHIEGHT, */// { "WHIH", false, FLOAT,    {0} }, /**< Web source longitude seconds       */
+/* DEBUG,     */ { "DEBU", true,  STRING,   {0} }, /**< any debug string                   */ 
+};
+
+#define HEADERLENGTH sizeof(TelescopeData[0].Header)
+
+
 /* TelescopeIO
  *  Constructor
  */
@@ -38,8 +111,53 @@ TelescopeIO::TelescopeIO( void )
 bool TelescopeIO::TelescopeIOInit( void )
 {
     /*
-         Initialise all the data to defaults?
+         Initialise all the data to zero. (defaults?)
     */
+    uint8_t Id = 0;
+    uint8_t Data = 0;
+    while (Id < NUMBEROFDATA)
+    {
+        switch ( TelescopeData[Id].DataFormat )
+        {
+            case UINT8_2:
+            {
+                sprintf ( TelescopeData[Id].Data, " %2d", (uint32_t)*((uint8_t*)Data) );
+                break;
+            }
+            case UINT16_4:
+            {
+                sprintf ( TelescopeData[Id].Data, " %4d", (uint32_t)*((uint16_t*)Data) );
+                break;
+            }
+            case INT8_2:
+            {
+                sprintf ( TelescopeData[Id].Data, " %2d", (uint32_t)*((int8_t*)Data) );
+                break;
+            }
+            case INT16_4:
+            {
+                sprintf ( TelescopeData[Id].Data, " %4d", (uint32_t)*((int16_t*)Data) );
+                break;
+            }
+            case FLOAT:
+            case DOUBLE:
+            {
+                sprintf ( TelescopeData[Id].Data, " %4f", *((float*)Data) );
+                break;
+            }
+            case STRING:
+            {
+                sprintf ( TelescopeData[Id].Data, " %s", ((char*)Data) );
+                break;
+            }        
+            default:
+            {
+                // ignore it.
+            }
+       }
+       Id++;
+    }
+    
     return true;
 }
 
@@ -77,32 +195,32 @@ bool TelescopeIO::TelescopeIOUpdateData( DATAID_T Id, void* Data )
     {
         case UINT8_2:
         {
-            sprintf ( TelescopeData[Id].Data, " %2d", *((uint8_t*)Data) );
+            sprintf ( TelescopeData[Id].Data, " %2d", (uint32_t)*((uint8_t*)Data) );
             SendMessage = true;
             break;
         }
         case UINT16_4:
         {
-            sprintf ( TelescopeData[Id].Data, " %4d", *((uint16_t*)Data) );
+            sprintf ( TelescopeData[Id].Data, " %4d", (uint32_t)*((uint16_t*)Data) );
             SendMessage = true;
             break;
         }
         case INT8_2:
         {
-            sprintf ( TelescopeData[Id].Data, " %2d", *((int8_t*)Data) );
+            sprintf ( TelescopeData[Id].Data, " %2d", (uint32_t)*((int8_t*)Data) );
             SendMessage = true;
             break;
         }
         case INT16_4:
         {
-            sprintf ( TelescopeData[Id].Data, " %4d", *((int16_t*)Data) );
+            sprintf ( TelescopeData[Id].Data, " %4d", (uint32_t)*((int16_t*)Data) );
             SendMessage = true;
             break;
         }
         case FLOAT:
         case DOUBLE:
         {
-            sprintf ( TelescopeData[Id].Data, " %4.2f", *((float*)Data) );
+            sprintf ( TelescopeData[Id].Data, " %4f", *((float*)Data) );
             SendMessage = true;
             break;
         }
@@ -141,9 +259,9 @@ void TelescopeIO::TelescopeIOHandleMessage( char* Message )
         {
             char OutMessage[DATALENGTH+HEADERLENGTH] = {0};
             strcpy(  TelescopeData[Id].Data, &Message[HEADERLENGTH] );
-            strcat(OutMessage, TelescopeData[Id].Header);
-            strcat(OutMessage, TelescopeData[Id].Data);
-            HalWebsocketd::Websocket.HalWebsocketdSendMessage(OutMessage, Id );
+            //strcat(OutMessage, TelescopeData[Id].Header);
+            //strcat(OutMessage, TelescopeData[Id].Data);
+            //HalWebsocketd::Websocket.HalWebsocketdSendMessage(OutMessage, Id );
         }
     }   
 }
@@ -177,7 +295,7 @@ void TelescopeIO::TelescopeIOGetValue( DATAID_T Id, void* Data )
         case FLOAT:
         case DOUBLE:
         {
-            sscanf ( TelescopeData[Id].Data, "%f", ((float*)Data) );
+            sscanf ( TelescopeData[Id].Data, "%4f", ((float*)Data) );
             break;
         }
         default:

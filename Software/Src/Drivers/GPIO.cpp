@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include "GPIO.h"
 #include "Config.h"
-#include "Wiring.h"
+#include "wiringPi.h"
 
 GPIO GPIO::gpio;
 
@@ -38,8 +38,8 @@ GPIO::GPIO( void )
 void GPIO::Init( void )
 {
     uint8_t index = 0;
-    wiringPiSetup (void);
-    for (index = 0; index < NUMBER_OF_GPIO; index++)
+    wiringPiSetup();
+    for (index = 0; index < PIN_MAX; index++)
     {
         pinMode ( index, INPUT );
     }
@@ -110,7 +110,7 @@ void GPIO::SetMode( pwm_mode_t Mode )
             pwmSetMode ( PWM_MODE_MS  );
             break;
         }
-        
+    }
 }
 
 /* set PWM range
@@ -118,7 +118,7 @@ void GPIO::SetMode( pwm_mode_t Mode )
 void GPIO::SetRange( uint16_t Range )
 {
     PWMRange = Range;
-    pwmSetRange ( Range );
+    pwmSetRange( Range );
 }
 
 /* Get Range
@@ -126,7 +126,7 @@ void GPIO::SetRange( uint16_t Range )
  */
 uint16_t GPIO::GetRange( void )
 {
-    return Range;
+    return PWMRange;
 }
 
 /* set PWM Clock
@@ -153,14 +153,14 @@ void GPIO::SetPWM2( uint16_t Value )
 
 /* set one of the GPIO pins
  */
-bool GPIO::SetPin( pin_name_t PinName, bool State )
+void GPIO::SetPinState( pin_name_t PinName, bool State )
 {
     digitalWrite ( PinName, State ) ;
 }
 
 /* set one of the GPIO pins
  */
-bool GPIO::GetPin( pin_name_t PinName )
+bool GPIO::GetPinState( pin_name_t PinName )
 {
     return digitalRead ( PinName );
 }

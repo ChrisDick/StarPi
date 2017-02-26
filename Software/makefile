@@ -117,6 +117,9 @@ cleandata:
 $(OBJ_DIR)Main.o:		./Src/Main.cpp
 		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/Main.cpp
 
+$(OBJ_DIR)GPIO_test.o:		./Src/Drivers/GPIO_test.cpp
+		$(CC) $(CFLAGS) $(INCLUDE_PATHS) $(OUTPUT) ./Src/Drivers/GPIO_test.cpp
+
 # GPSD library
 $(OBJ_DIR)gpsd_example.o:		./Src/GPSD/gpsd_example.cpp
 		$(CC) $(CFLAGS) -I./Src/GPSD $(OUTPUT) ./Src/GPSD/gpsd_example.cpp

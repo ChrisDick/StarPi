@@ -134,12 +134,21 @@
 //#define UP_GYRO_Z_PLUS
 #define UP_GYRO_Z_MINUS
 
-
-
-
-
-
-
+/*
+    Motor stuff
+*/
+#define LM29XIN1 WIRINGPIN26
+#define LM29XIN2 WIRINGPIN27
+#define LM29XIN3 WIRINGPIN28
+#define LM29XIN4 WIRINGPIN29
+#define PWM1
+#define PWM2
+#define LM29X
+#define LM29X1 1
+#define LM29X2 2
+#define CONFIG_NUMBER_OF_MOTORS 2
+#define MOTOR_ONE LM29X1
+#define MOTOR_TWO LM29X2
 
 
 

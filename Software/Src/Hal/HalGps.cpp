@@ -64,6 +64,8 @@ void HalGps::Run( void )
 */
     struct gps_data_t* NewGpsData;
 
+    if (gps_ptr->waiting(20))
+    {
     if ((NewGpsData = gps_ptr->read()) != NULL) 
     {
         if (NewGpsData->set & TIME_SET)
@@ -72,7 +74,7 @@ void HalGps::Run( void )
         }
         if (NewGpsData->set & LATLON_SET)
         {
-            Latitude  = NewGpsData->fix.latitude, 
+            Latitude  = NewGpsData->fix.latitude; 
             Longitude = NewGpsData->fix.longitude;
         }
         if ( NewGpsData->set & ALTITUDE_SET)
@@ -87,6 +89,7 @@ void HalGps::Run( void )
         {    
             Mode = NewGpsData->fix.mode;
         }
+    }
     }
 }
 

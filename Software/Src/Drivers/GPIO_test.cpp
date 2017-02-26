@@ -8,19 +8,20 @@
 
 int main()
 {
-    uint8_t index = 0
+    uint8_t index = 0;
     uint16_t count = 0;
+    GPIO::gpio.Init();
     for ( index = 0; index < PIN_MAX ; index++ )
     {
-        SetupOutput(index);
+        GPIO::gpio.SetupOutput((pin_name_t)index);
     }
     printf( "toggling pins" );
-    while (count < 10000 )
+    while (1 )
     {
         count++;
         for ( index = 0; index < PIN_MAX ; index++ )
         {
-            GPIOSetPinState(index, !GPIOGetPinState(index));
+            GPIO::gpio.SetPinState((pin_name_t)index, !GPIO::gpio.GetPinState((pin_name_t)index));
         }
     }
     printf("done");

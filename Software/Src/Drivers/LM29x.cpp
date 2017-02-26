@@ -24,11 +24,14 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
+#include "LM29x.h"
+#include "GPIO.h"
+#include <stdint.h>
 LM29x LM29x::lm29x; 
 
 /* Constructor
  */
-LM29x( void )
+LM29x::LM29x( void )
 {
             
 }
@@ -44,9 +47,9 @@ void LM29x::Init( void )
     #ifndef LM29XIN2
     #error lm29x input 2 pin not defined
     #endif
-    GPIO::gpio.SetupPWM1()
-    GPIO::gpio.SetupOutput( LM29XIN1 )
-    GPIO::gpio.SetupOutput( LM29XIN2 )
+    GPIO::gpio.SetupPWM1();
+    GPIO::gpio.SetupOutput( LM29XIN1 );
+    GPIO::gpio.SetupOutput( LM29XIN2 );
     #endif
     #ifdef LM29X2
     #ifndef LM29XIN3
@@ -55,9 +58,9 @@ void LM29x::Init( void )
     #ifndef LM29XIN4
     #error lm29x input 4 pin not defined
     #endif
-    GPIO::gpio.SetupPWM2()
-    GPIO::gpio.SetupOutput( LM29XIN3 )
-    GPIO::gpio.SetupOutput( LM29XIN4 )
+    GPIO::gpio.SetupPWM2();
+    GPIO::gpio.SetupOutput( LM29XIN3 );
+    GPIO::gpio.SetupOutput( LM29XIN4 );
     #endif
 }
     
@@ -65,9 +68,9 @@ void LM29x::Init( void )
  * @param Value - uint16_t, value of PWM range 0-1024
  * @param Motor - uint8_t, Index of motor, 0 indexed.
  */
-void LM29x::SetValue( lm29x_motor_t Motor, unit16_t Value )
+void LM29x::SetValue( lm29x_motor_t Motor, uint16_t Value )
 {
-    if ( Value < gpio.GetRange() )
+    if ( Value < GPIO::gpio.GetRange() )
     {
         switch ( Motor )
         {
@@ -76,7 +79,7 @@ void LM29x::SetValue( lm29x_motor_t Motor, unit16_t Value )
                 GPIO::gpio.SetPWM1( Value );
                 break;
             }
-            case LM29X_MOTOR1:
+            case LM29X_MOTOR2:
             {
                 GPIO::gpio.SetPWM2( Value ); 
                 break;
@@ -103,21 +106,21 @@ void LM29x::Direction( lm29x_motor_t Motor, direction_t Direction )
             {
                 case FORWARD:
                 {
-                    GPIO::gpio.GPIOSetPinState( LM29XIN1, true );
-                    GPIO::gpio.GPIOSetPinState( LM29XIN2, false );
+                    GPIO::gpio.SetPinState( LM29XIN1, true );
+                    GPIO::gpio.SetPinState( LM29XIN2, false );
                     break;
                 }
                 case REVERSE:
                 {
-                    GPIO::gpio.GPIOSetPinState( LM29XIN1, false );
-                    GPIO::gpio.GPIOSetPinState( LM29XIN2, true );
+                    GPIO::gpio.SetPinState( LM29XIN1, false );
+                    GPIO::gpio.SetPinState( LM29XIN2, true );
                     break;
                 }
                 case STOP:
                 default:
                 {
-                    GPIO::gpio.GPIOSetPinState( LM29XIN1, false );
-                    GPIO::gpio.GPIOSetPinState( LM29XIN2, false );
+                    GPIO::gpio.SetPinState( LM29XIN1, false );
+                    GPIO::gpio.SetPinState( LM29XIN2, false );
                     break;
                 }
             }
@@ -129,21 +132,21 @@ void LM29x::Direction( lm29x_motor_t Motor, direction_t Direction )
             {
                 case FORWARD:
                 {
-                    GPIO::gpio.GPIOSetPinState( LM29XIN3, true );
-                    GPIO::gpio.GPIOSetPinState( LM29XIN4, false );
+                    GPIO::gpio.SetPinState( LM29XIN3, true );
+                    GPIO::gpio.SetPinState( LM29XIN4, false );
                     break;
                 }
                 case REVERSE:
                 {
-                    GPIO::gpio.GPIOSetPinState( LM29XIN3, false );
-                    GPIO::gpio.GPIOSetPinState( LM29XIN4, true );
+                    GPIO::gpio.SetPinState( LM29XIN3, false );
+                    GPIO::gpio.SetPinState( LM29XIN4, true );
                     break;
                 }
                 case STOP:
                 default:
                 {
-                    GPIO::gpio.GPIOSetPinState( LM29XIN3, false );
-                    GPIO::gpio.GPIOSetPinState( LM29XIN4, false );
+                    GPIO::gpio.SetPinState( LM29XIN3, false );
+                    GPIO::gpio.SetPinState( LM29XIN4, false );
                     break;
                 }
             }
@@ -155,5 +158,3 @@ void LM29x::Direction( lm29x_motor_t Motor, direction_t Direction )
         }
     }
 }
-
-    

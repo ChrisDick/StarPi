@@ -2449,7 +2449,7 @@ int MAG_readMagneticModel_SHDF(char *filename, MAGtype_MagneticModel *(*magnetic
     cutoff = (*magneticmodels)[array_size - 1]->CoefficientFileEndDate;
 
     for(i = 0; i < array_size; i++) (*magneticmodels)[i]->CoefficientFileEndDate = cutoff;
-
+    free(line); // added this
     free(ptrreset);
     line = NULL;
     ptrreset = NULL;

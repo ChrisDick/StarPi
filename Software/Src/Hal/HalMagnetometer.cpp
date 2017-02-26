@@ -59,7 +59,7 @@ HalMagnetometer::HalMagnetometer( void )
  */
 bool HalMagnetometer::HalMagnetometerInit( void )
 {
-    Magnetomometer.Initialize();
+    Magnetomometer.initialize();
     FilterCount = 0; 
     // initialise Magnetoerometer specifics here
 #ifdef AK8975_MAGNETOMETER
@@ -114,17 +114,17 @@ int16_t HalMagnetometer::GetXRawHeading( void )
 {
     int16_t Result = 0;
 #ifdef OBJECTIVE_END_MAGNETOMETER_X_PLUS    
-    Result = Magnetomometer.GetHeadingX();
+    Result = Magnetomometer.getHeadingX();
 #elif defined OBJECTIVE_END_MAGNETOMETER_X_MINUS
-    Result = 0 - Magnetomometer.GetHeadingX();
+    Result = 0 - Magnetomometer.getHeadingX();
 #elif defined OBJECTIVE_END_MAGNETOMETER_Y_PLUS    
-    Result = Magnetomometer.GetHeadingY();
+    Result = Magnetomometer.getHeadingY();
 #elif defined OBJECTIVE_END_MAGNETOMETER_Y_MINUS
-    Result = 0 - Magnetomometer.GetHeadingY();
+    Result = 0 - Magnetomometer.getHeadingY();
 #elif defined OBJECTIVE_END_MAGNETOMETER_Z_PLUS    
-    Result = Magnetomometer.GetHeadingZ();
+    Result = Magnetomometer.getHeadingZ();
 #elif defined OBJECTIVE_END_MAGNETOMETER_Z_MINUS
-    Result = 0 - Magnetomometer.GetHeadingZ();
+    Result = 0 - Magnetomometer.getHeadingZ();
 #else
     #error y axis not defined
 #endif
@@ -139,17 +139,17 @@ int16_t HalMagnetometer::GetYRawHeading( void )
 {
     int16_t Result = 0;
 #ifdef TELESCOPE_RIGHT_MAGNETOMETER_X_PLUS
-    Result = Magnetomometer.GetHeadingX();
+    Result = Magnetomometer.getHeadingX();
 #elif defined TELESCOPE_RIGHT_MAGNETOMETER_X_MINUS
-    Result = 0 - Magnetomometer.GetHeadingX();
+    Result = 0 - Magnetomometer.getHeadingX();
 #elif defined TELESCOPE_RIGHT_MAGNETOMETER_Y_PLUS
-    Result = Magnetomometer.GetHeadingY();
+    Result = Magnetomometer.getHeadingY();
 #elif defined TELESCOPE_RIGHT_MAGNETOMETER_Y_MINUS
-    Result = 0 - Magnetomometer.GetHeadingY();
+    Result = 0 - Magnetomometer.getHeadingY();
 #elif defined TELESCOPE_RIGHT_MAGNETOMETER_Z_PLUS
-    Result = Magnetomometer.GetHeadingZ();
+    Result = Magnetomometer.getHeadingZ();
 #elif defined TELESCOPE_RIGHT_MAGNETOMETER_Z_MINUS
-    Result = 0 - Magnetomometer.GetHeadingZ();
+    Result = 0 - Magnetomometer.getHeadingZ();
 #else
     #error y axis not defined
 #endif
@@ -164,17 +164,17 @@ int16_t HalMagnetometer::GetZRawHeading( void )
 {
     int16_t Result = 0;
 #ifdef UP_MAGNETOMETER_X_PLUS
-    Result = Magnetomometer.GetHeadingX();
+    Result = Magnetomometer.getHeadingX();
 #elif defined UP_MAGNETOMETER_X_MINUS
-    Result = 0 - Magnetomometer.GetHeadingX();
+    Result = 0 - Magnetomometer.getHeadingX();
 #elif defined UP_MAGNETOMETER_Y_PLUS
-    Result = Magnetomometer.GetHeadingY();
+    Result = Magnetomometer.getHeadingY();
 #elif defined UP_MAGNETOMETER_Y_MINUS
-    Result = 0 - Magnetomometer.GetHeadingY();
+    Result = 0 - Magnetomometer.getHeadingY();
 #elif defined UP_MAGNETOMETER_Z_PLUS
-    Result = Magnetomometer.GetHeadingZ();
+    Result = Magnetomometer.getHeadingZ();
 #elif defined UP_MAGNETOMETER_Z_MINUS
-    Result = 0 - Magnetomometer.GetHeadingZ();
+    Result = 0 - Magnetomometer.getHeadingZ();
 #else
     #error z axis not defined
 #endif

@@ -49,7 +49,7 @@ LSM303DLHC_Accel::LSM303DLHC_Accel()
  * after initialization, especially the gain settings if you happen to be seeing
  * a lot of -4096 values (see the datasheet for mor information).
  */
-void LSM303DLHC_Accel::Initialize()
+void LSM303DLHC_Accel::initialize()
 {
     setReboot( ENABLE );
     setXEnable( ENABLE );

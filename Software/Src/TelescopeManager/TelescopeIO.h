@@ -22,7 +22,61 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #define TELESCOPEIO_H
 
 #include <stdint.h>
-#include "TelescopeData.h"
+//#include "TelescopeData.h"
+
+typedef enum
+{
+    EMPTY,      //Empty slot for Queue
+    UNIXTIME,   //(double)UnixTime
+    GMTDAY,     //gmt->tm_mday 
+    GMTMON,     //gmt->tm_mon
+    GMTYEAR,    //(gmt->tm_year + 1900)
+    GMTHOUR,    //gmt->tm_hour
+    GMTMIN,     //gmt->tm_min
+    GMTSEC,     //gmt->tm_sec
+    BST,         //gmt->tm_isdst
+    ALTITUDE,   //(180*(Pitch/M_PI))
+    AZIMUTH,    //(180*(Angles.Azimuth/M_PI))
+    LATITUDE,   //(180*(Angles.Latitude/M_PI))
+    LONGITUDE,  //(180*(Angles.LongitudeWest/M_PI))
+    LSTHOUR,    //Angles.LocalSiderealCCTime.Hours
+    LSTMIN,     //Angles.LocalSiderealCCTime.Minutes
+    LSTSEC,     //Angles.LocalSiderealCCTime.Seconds
+    MAGDEC,     //MagneticDeclination 
+    MAGHEAD,    //(180*(Heading/M_PI))
+    TRUEHEAD,   //(180*(Angles.Azimuth/M_PI)));    
+    HEIGHT,     //HieghtAboveGround
+    RAHOURS,    //Temp.Hours
+    RAMIN,      //Temp.Minutes
+    RASEC,      //Temp.Seconds
+    DECHOURS,   //Temp.Hours
+    DECMIN,     //Temp.Minutes
+    DECSEC,     //Temp.Seconds
+    JULIANDATE, // Julian Data
+    LOCSOURCE,  // the source of gps data, default 
+    //GPSLATD,
+    //GPSLATM,
+    //GPSLATS,
+    //GPSLONH,
+    //GPSLONM,
+    //GPSLONS,
+    //GPSHIEGHT,
+    //WEBLATD,
+    //WEBLATM,
+    //WEBLATS,
+    //WEBLONH,
+    //WEBLONM,
+    //WEBLONS,
+    //WEBHIEGHT,
+    DEBUG,
+    NUMBEROFDATA      // this line must always be last in the enum
+} DATAID_T;
+
+typedef enum
+{
+    DEFAULT,
+    WEBSITE,
+} SOURCE_T;
 
 /** TelescopeIO
  * - Class to provide use to the magnetometer

@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #ifndef GPIO_H
 #define GPIO_H
 #include "Config.h"
-
+#include <stdint.h>
 typedef enum
 {
 /*
@@ -211,7 +211,7 @@ typedef enum
     PIN2_06 = WIRINGPIN20,  
 #endif
 #endif
-} 
+} pin_name_t;
 /** pin_pull_t - gpio pin pull up/down configuration 
  */
 typedef enum
@@ -236,29 +236,33 @@ class GPIO
     /** Constructor
      */
         GPIO( void );
-    
+
     /** Initialise the GPIO to all inputs
-     * @return bool Initialisation status  
+     * @return bool Initialisation status
      */
-        void GPIOInit( void );
+        void Init( void );
     /** Setup PWM 1
      */
-        void GPIOSetupPWM1( void );
+        void SetupPWM1( void );
     /** Setup PWM 2
      */
-        void GPIOSetupPWM2( void );
+        void SetupPWM2( void );
     /** Setup Output
      * @param PinName
      */
         void SetupOutput( pin_name_t PinName );
+    /** Setup pull up/down mode
+     * @param PinName
+     */
+        void SetPullMode( pin_name_t PinName, pin_pull_t PullMode );
     /** set PWM mode
      * @param Mode mode of PWM, balanced or mark space mode.
      */
-        void SetMode( pwm_mode_t Mode ); 
+        void SetMode( pwm_mode_t Mode );
     /** set PWM Range
      * @param Range uin16_t range of the pwm.
      */
-        void SetRange( uint16_t Range );        
+        void SetRange( uint16_t Range );
     /** Get Range
      * @return uint16_t Range of the PWM
      */
@@ -274,19 +278,19 @@ class GPIO
     /** Set PWM 1
      * @param Value uint16_t sets the percentage on of PWM
      */
-        void SetPWM1( uint16_t Value );
+        void SetPWM2( uint16_t Value );
     /** Get the state of an GPIO pin
      * @param PinName name of the pin to get
      * @return bool state of pin
      */
-        bool GPIOGetPinState( PinName_t PinName );
+        bool GetPinState( pin_name_t PinName );
     /** Set the state of an output pin
      * @param PinName name of the pin to set
      */
-        void GPIOSetPinState( PinName_t PinName, bool state );
+        void SetPinState( pin_name_t PinName, bool state );
 
         static GPIO gpio;
-        
+
     private:
         uint16_t PWMRange; /**< range of the PWM */
 };

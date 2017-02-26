@@ -22,12 +22,21 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #ifndef LM29X_H
 #define LM29X_H
 
+#include <stdint.h>
+
 typedef enum
 {
     LM29X_MOTOR1,
     LM29X_MOTOR2,
     LM29X_MAX
 } lm29x_motor_t;
+
+typedef enum
+{
+    STOP,
+    FORWARD,
+    REVERSE
+} direction_t;
 
 class LM29x
 {
@@ -42,7 +51,7 @@ class LM29x
      * @param Value - float, per unit demand -1 to +1
      * @param Motor - uint8_t, Index of motor, 0 indexed.
      */
-        void SetValue( lm29x_motor_t Motor, unit16_t Value );
+        void SetValue( lm29x_motor_t Motor, uint16_t Value );
     /** Direction
      * @param Enable - bool, enable signal.
      * @param Motor - uint8_t, Index of motor, 0 indexed.   

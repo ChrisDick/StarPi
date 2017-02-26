@@ -95,18 +95,21 @@ void TelescopeManager::Run()
     {
         float DecimalLogitude = 0;
         float DecimalLatitude = 0;
-        TelescopeIO::TeleIO.TelescopeIOGetValue( WEBLONH, &Longitude.Hours);
-        TelescopeIO::TeleIO.TelescopeIOGetValue( WEBLONM, &Longitude.Minutes);
-        TelescopeIO::TeleIO.TelescopeIOGetValue( WEBLONS, &Longitude.Seconds);
-        TelescopeIO::TeleIO.TelescopeIOGetValue( WEBLATD, &Latitude.Hours);
-        TelescopeIO::TeleIO.TelescopeIOGetValue( WEBLATM, &Latitude.Minutes);
-        TelescopeIO::TeleIO.TelescopeIOGetValue( WEBLATS, &Latitude.Seconds);
-        TelescopeIO::TeleIO.TelescopeIOGetValue( WEBHIEGHT, &HieghtAboveGround);
+//        TelescopeIO::TeleIO.TelescopeIOGetValue( WEBLONH, &Longitude.Hours);
+//        TelescopeIO::TeleIO.TelescopeIOGetValue( WEBLONM, &Longitude.Minutes);
+//        TelescopeIO::TeleIO.TelescopeIOGetValue( WEBLONS, &Longitude.Seconds);
+//        TelescopeIO::TeleIO.TelescopeIOGetValue( WEBLATD, &Latitude.Hours);
+//        TelescopeIO::TeleIO.TelescopeIOGetValue( WEBLATM, &Latitude.Minutes);
+//        TelescopeIO::TeleIO.TelescopeIOGetValue( WEBLATS, &Latitude.Seconds);
+//        TelescopeIO::TeleIO.TelescopeIOGetValue( WEBHIEGHT, &HieghtAboveGround);
         /*  
             Convert to decimal
         */
-        DecimalLogitude = Calculator.ConvertTimeToAngle( Longitude );
-        DecimalLatitude = Calculator.ConvertTimeToAngle( Latitude );
+//        DecimalLogitude = Calculator.ConvertTimeToAngle( Longitude );
+//        DecimalLatitude = Calculator.ConvertTimeToAngle( Latitude );
+
+            TelescopeIO::TeleIO.TelescopeIOGetValue( LATITUDE, &DecimalLatitude);
+            TelescopeIO::TeleIO.TelescopeIOGetValue( LONGITUDE, &DecimalLogitude);
         /*
             Set values for calculation
         */
