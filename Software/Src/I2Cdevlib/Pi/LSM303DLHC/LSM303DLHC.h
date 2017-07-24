@@ -582,7 +582,7 @@ class LSM303DLHC_Accel {
  * after initialization, especially the gain settings if you happen to be seeing
  * a lot of -4096 values (see the datasheet for mor information).
  */
-        void Initialize();
+        void initialize();
 /** Verify the I2C connection.
  * Make sure the device is connected and responds as expected.
  * @return True if connection is valid, false otherwise
@@ -1269,7 +1269,7 @@ class LSM303DLHC_Mag {
  * after initialization, especially the gain settings if you happen to be seeing
  * a lot of -4096 values (see the datasheet for more information).
  */
-        void Initialize();
+        void initialize();
 /** Verify the I2C connection.
  * Make sure the device is connected and responds as expected.
  * @return True if connection is valid, false otherwise

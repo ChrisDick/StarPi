@@ -1943,7 +1943,7 @@ LSM303DLHC_Mag::LSM303DLHC_Mag()
  * after initialization, especially the gain settings if you happen to be seeing
  * a lot of -4096 values (see the datasheet for more information).
  */
-void LSM303DLHC_Mag::Initialize()
+void LSM303DLHC_Mag::initialize()
 {
     setGain( MAG_SCALE_1_9 );
 
