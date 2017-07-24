@@ -26,6 +26,7 @@ TTC_Sched * TheSched;
 */
 void timer_handler (int signum)
 {
+    (void) signum;
     /*
          Used C style call of the function member (update_tasks) because
          the handler is a C function NOT a member of the class TTC_Sched_Pi_Impl

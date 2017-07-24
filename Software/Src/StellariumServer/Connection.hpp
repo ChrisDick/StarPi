@@ -40,7 +40,7 @@ class Connection : public Socket
     /** A get function for the difference in server times
      * @return int64_t the difference in times
      */
-        int64_t const GetServerMinusClientTime( void );
+        int64_t GetServerMinusClientTime( void );
      
     protected:
     /** Receives data from a TCP/IP connection and stores it in the read buffer.

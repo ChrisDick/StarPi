@@ -114,35 +114,35 @@ bool TelescopeIO::TelescopeIOInit( void )
          Initialise all the data to zero. (defaults?)
     */
     uint8_t Id = 0;
-    uint8_t Data = 0;
+    int32_t Data = 0;
     while (Id < NUMBEROFDATA)
     {
         switch ( TelescopeData[Id].DataFormat )
         {
             case UINT8_2:
             {
-                sprintf ( TelescopeData[Id].Data, " %2d", (uint32_t)*((uint8_t*)Data) );
+                sprintf ( TelescopeData[Id].Data, " %2d", Data );
                 break;
             }
             case UINT16_4:
             {
-                sprintf ( TelescopeData[Id].Data, " %4d", (uint32_t)*((uint16_t*)Data) );
+                sprintf ( TelescopeData[Id].Data, " %4d", Data );
                 break;
             }
             case INT8_2:
             {
-                sprintf ( TelescopeData[Id].Data, " %2d", (uint32_t)*((int8_t*)Data) );
+                sprintf ( TelescopeData[Id].Data, " %2d", Data );
                 break;
             }
             case INT16_4:
             {
-                sprintf ( TelescopeData[Id].Data, " %4d", (uint32_t)*((int16_t*)Data) );
+                sprintf ( TelescopeData[Id].Data, " %4d", Data );
                 break;
             }
             case FLOAT:
             case DOUBLE:
             {
-                sprintf ( TelescopeData[Id].Data, " %4f", *((float*)Data) );
+                sprintf ( TelescopeData[Id].Data, " %4f", ((float)Data) );
                 break;
             }
             case STRING:
@@ -195,7 +195,7 @@ bool TelescopeIO::TelescopeIOUpdateData( DATAID_T Id, void* Data )
     {
         case UINT8_2:
         {
-            sprintf ( TelescopeData[Id].Data, " %2d", (uint32_t)*((uint8_t*)Data) );
+            sprintf ( TelescopeData[Id].Data, " %2d", (int32_t)*((uint8_t*)Data) );
             SendMessage = true;
             break;
         }
@@ -274,22 +274,22 @@ void TelescopeIO::TelescopeIOGetValue( DATAID_T Id, void* Data )
     {
         case UINT8_2:
         {
-            sscanf ( TelescopeData[Id].Data, "%2d", ((uint8_t*)Data) );
+            sscanf ( TelescopeData[Id].Data, "%2d", (int32_t*)((uint8_t*)Data) );
             break;
         }
         case UINT16_4:
         {
-            sscanf ( TelescopeData[Id].Data, "%4d", ((uint16_t*)Data) );
+            sscanf ( TelescopeData[Id].Data, "%4d", (int32_t*)((uint16_t*)Data) );
             break;
         }
         case INT8_2:
         {
-            sscanf ( TelescopeData[Id].Data, "%2d", ((uint8_t*)Data) );
+            sscanf ( TelescopeData[Id].Data, "%2d", (int32_t*)((uint8_t*)Data) );
             break;
         }
         case INT16_4:
         {
-            sscanf ( TelescopeData[Id].Data, "%4d", ((uint16_t*)Data) );
+            sscanf ( TelescopeData[Id].Data, "%4d", (int32_t*)((uint16_t*)Data) );
             break;
         }
         case FLOAT:

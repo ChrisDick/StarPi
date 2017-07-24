@@ -114,7 +114,17 @@ void CelestrialConverter::EquitorialToCelestrial( CC_ANGLES_T* Angles, time_t Un
     {
         Angles->RightAscension -= (2*M_PI);
     }
-    
+#if 0
+    /* alternative calculation */
+    double SinDec = (sin(Angles->Altitude) * sin( Angles->Latitude )) + (cos(Angles->Altitude) * cos( Angles->Latitude ) * cos(Angles->Azimuth));  
+    Angles->Declination = asin(SinDec); 
+    double t1=sin(Angles->Azimuth);
+    double t2=cos(Angles->Azimuth)*sin( Angles->Latitude )-tan(Angles->Altitude)*cos( Angles->Latitude );
+    Angles->HourAngle=atan2(t1,t2);
+    Angles->HourAngle=Angles->HourAngle+M_PI;
+    Angles->LocalSiderealTime = CalculateLocalSiderealTime( UnixTime, Angles->LongitudeWest );
+    Angles->RightAscension = Angles->LocalSiderealTime - Angles->HourAngle;  
+#endif
 }
 
 /* CelestrialToEquitorial

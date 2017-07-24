@@ -3100,81 +3100,99 @@ uint8_t bank, uint8_t address) {
  * @param useProgMem
  */
 bool MPU9150::writeMemoryBlock(const uint8_t *data, uint16_t dataSize, uint8_t bank, uint8_t address, bool verify, bool useProgMem) {
+    bool result = true;
     setMemoryBank(bank);
     setMemoryStartAddress(address);
     uint8_t chunkSize;
-    uint8_t *verifyBuffer;
-    uint8_t *progBuffer;
+    uint8_t *verifyBuffer = NULL;
+    uint8_t *progBuffer = NULL;
     uint16_t i;
     uint8_t j;
     if (verify) verifyBuffer = (uint8_t *)malloc(MPU9150_DMP_MEMORY_CHUNK_SIZE);
     if (useProgMem) progBuffer = (uint8_t *)malloc(MPU9150_DMP_MEMORY_CHUNK_SIZE);
-    for (i = 0; i < dataSize;) {
-        // determine correct chunk size according to bank position and data size
-        chunkSize = MPU9150_DMP_MEMORY_CHUNK_SIZE;
 
-        // make sure we don't go past the data size
-        if (i + chunkSize > dataSize) chunkSize = dataSize - i;
-
-        // make sure this chunk doesn't go past the bank boundary (256 bytes)
-        if (chunkSize > 256 - address) chunkSize = 256 - address;
-        
-        if (useProgMem) {
-            // write the chunk of data as specified
-            for (j = 0; j < chunkSize; j++) progBuffer[j] = pgm_read_byte(data + i + j);
-        } else {
-            // write the chunk of data as specified
-            progBuffer = (uint8_t *)data + i;
-        }
-
-        I2Cdev::writeBytes(devAddr, MPU9150_RA_MEM_R_W, chunkSize, progBuffer);
-
-        // verify data if needed
-        if (verify && verifyBuffer) {
-            setMemoryBank(bank);
-            setMemoryStartAddress(address);
-            I2Cdev::readBytes(devAddr, MPU9150_RA_MEM_R_W, chunkSize, verifyBuffer);
-            if (memcmp(progBuffer, verifyBuffer, chunkSize) != 0) {
-                /*Serial.print("Block write verification error, bank ");
-                Serial.print(bank, DEC);
-                Serial.print(", address ");
-                Serial.print(address, DEC);
-                Serial.print("!\nExpected:");
-                for (j = 0; j < chunkSize; j++) {
-                    Serial.print(" 0x");
-                    if (progBuffer[j] < 16) Serial.print("0");
-                    Serial.print(progBuffer[j], HEX);
+    if (
+           ( ( progBuffer != NULL ) || ( !useProgMem ) )
+        && ( ( verifyBuffer != NULL ) || ( !verify ) )
+        )
+    {
+        for (i = 0; i < dataSize;) {
+            // determine correct chunk size according to bank position and data size
+            chunkSize = MPU9150_DMP_MEMORY_CHUNK_SIZE;
+    
+            // make sure we don't go past the data size
+            if (i + chunkSize > dataSize) chunkSize = dataSize - i;
+    
+            // make sure this chunk doesn't go past the bank boundary (256 bytes)
+            if (chunkSize > 256 - address) chunkSize = 256 - address;
+            
+            if (useProgMem) {
+                // write the chunk of data as specified
+                for (j = 0; j < chunkSize; j++) progBuffer[j] = pgm_read_byte(data + i + j);
+            } else {
+                // write the chunk of data as specified
+                progBuffer = (uint8_t *)data + i;
+            }
+    
+            I2Cdev::writeBytes(devAddr, MPU9150_RA_MEM_R_W, chunkSize, progBuffer);
+    
+            // verify data if needed
+            if (verify && verifyBuffer) {
+                setMemoryBank(bank);
+                setMemoryStartAddress(address);
+                I2Cdev::readBytes(devAddr, MPU9150_RA_MEM_R_W, chunkSize, verifyBuffer);
+                if (memcmp(progBuffer, verifyBuffer, chunkSize) != 0) {
+                    /*Serial.print("Block write verification error, bank ");
+                    Serial.print(bank, DEC);
+                    Serial.print(", address ");
+                    Serial.print(address, DEC);
+                    Serial.print("!\nExpected:");
+                    for (j = 0; j < chunkSize; j++) {
+                        Serial.print(" 0x");
+                        if (progBuffer[j] < 16) Serial.print("0");
+                        Serial.print(progBuffer[j], HEX);
+                    }
+                    Serial.print("\nReceived:");
+                    for (uint8_t j = 0; j < chunkSize; j++) {
+                        Serial.print(" 0x");
+                        if (verifyBuffer[i + j] < 16) Serial.print("0");
+                        Serial.print(verifyBuffer[i + j], HEX);
+                    }
+                    Serial.print("\n");*/
+                    result = false; // uh oh.
+                    break;
                 }
-                Serial.print("\nReceived:");
-                for (uint8_t j = 0; j < chunkSize; j++) {
-                    Serial.print(" 0x");
-                    if (verifyBuffer[i + j] < 16) Serial.print("0");
-                    Serial.print(verifyBuffer[i + j], HEX);
-                }
-                Serial.print("\n");*/
-                free(verifyBuffer);
-                if (useProgMem) free(progBuffer);
-                return false; // uh oh.
+            }
+    
+            // increase byte index by [chunkSize]
+            i += chunkSize;
+    
+            // uint8_t automatically wraps to 0 at 256
+            address += chunkSize;
+    
+            // if we aren't done, update bank (if necessary) and address
+            if (i < dataSize) {
+                if (address == 0) bank++;
+                setMemoryBank(bank);
+                setMemoryStartAddress(address);
             }
         }
-
-        // increase byte index by [chunkSize]
-        i += chunkSize;
-
-        // uint8_t automatically wraps to 0 at 256
-        address += chunkSize;
-
-        // if we aren't done, update bank (if necessary) and address
-        if (i < dataSize) {
-            if (address == 0) bank++;
-            setMemoryBank(bank);
-            setMemoryStartAddress(address);
-        }
     }
-    if (verify) free(verifyBuffer);
-    if (useProgMem) free(progBuffer);
-    return true;
+    else
+    {
+        result = false;
+    }
+    if ( verify && ( verifyBuffer != NULL ) ) 
+    {
+        free(verifyBuffer);
+    }
+    if ( useProgMem && ( progBuffer != NULL ) ) 
+    {
+        free(progBuffer);    
+    }
+    return result;
 }
+
 /* writeProgMemoryBlock
  * @param data
  * @param dataSize
@@ -3191,7 +3209,10 @@ bool MPU9150::writeProgMemoryBlock(const uint8_t *data, uint16_t dataSize, uint8
  * @param useProgMem
  */
 bool MPU9150::writeDMPConfigurationSet(const uint8_t *data, uint16_t dataSize, bool useProgMem) {
-    uint8_t *progBuffer, success, special;
+    bool result = true;
+    uint8_t* progBuffer = NULL;
+    uint8_t success;
+    uint8_t special;
     uint16_t i, j;
     if (useProgMem) {
         progBuffer = (uint8_t *)malloc(8); // assume 8-byte blocks, realloc later if necessary
@@ -3200,70 +3221,81 @@ bool MPU9150::writeDMPConfigurationSet(const uint8_t *data, uint16_t dataSize, b
     // config set data is a long string of blocks with the following structure:
     // [bank] [offset] [length] [byte[0], byte[1], ..., byte[length]]
     uint8_t bank, offset, length;
-    for (i = 0; i < dataSize;) {
-        if (useProgMem) {
-            bank = pgm_read_byte(data + i++);
-            offset = pgm_read_byte(data + i++);
-            length = pgm_read_byte(data + i++);
-        } else {
-            bank = data[i++];
-            offset = data[i++];
-            length = data[i++];
-        }
-
-        // write data or perform special action
-        if (length > 0) {
-            // regular block of data to write
-            /*Serial.print("Writing config block to bank ");
-            Serial.print(bank);
-            Serial.print(", offset ");
-            Serial.print(offset);
-            Serial.print(", length=");
-            Serial.println(length);*/
+    if ( ( progBuffer != NULL ) || ( !useProgMem ) )
+    {
+        for (i = 0; i < dataSize;) {
             if (useProgMem) {
-                if (sizeof(progBuffer) < length) progBuffer = (uint8_t *)realloc(progBuffer, length);
-                for (j = 0; j < length; j++) progBuffer[j] = pgm_read_byte(data + i + j);
+                bank = pgm_read_byte(data + i++);
+                offset = pgm_read_byte(data + i++);
+                length = pgm_read_byte(data + i++);
             } else {
-                progBuffer = (uint8_t *)data + i;
+                bank = data[i++];
+                offset = data[i++];
+                length = data[i++];
             }
-            success = writeMemoryBlock(progBuffer, length, bank, offset, true);
-            i += length;
-        } else {
-            // special instruction
-            // NOTE: this kind of behavior (what and when to do certain things)
-            // is totally undocumented. This code is in here based on observed
-            // behavior only, and exactly why (or even whether) it has to be here
-            // is anybody's guess for now.
-            if (useProgMem) {
-                special = pgm_read_byte(data + i++);
+    
+            // write data or perform special action
+            if (length > 0) {
+                // regular block of data to write
+                /*Serial.print("Writing config block to bank ");
+                Serial.print(bank);
+                Serial.print(", offset ");
+                Serial.print(offset);
+                Serial.print(", length=");
+                Serial.println(length);*/
+                if (useProgMem) {
+                    if (sizeof(progBuffer) < length) progBuffer = (uint8_t *)realloc(progBuffer, length);
+                    for (j = 0; j < length; j++) progBuffer[j] = pgm_read_byte(data + i + j);
+                } else {
+                    progBuffer = (uint8_t *)data + i;
+                }
+                success = writeMemoryBlock(progBuffer, length, bank, offset, true);
+                i += length;
             } else {
-                special = data[i++];
+                // special instruction
+                // NOTE: this kind of behavior (what and when to do certain things)
+                // is totally undocumented. This code is in here based on observed
+                // behavior only, and exactly why (or even whether) it has to be here
+                // is anybody's guess for now.
+                if (useProgMem) {
+                    special = pgm_read_byte(data + i++);
+                } else {
+                    special = data[i++];
+                }
+                /*Serial.print("Special command code ");
+                Serial.print(special, HEX);
+                Serial.println(" found...");*/
+                if (special == 0x01) {
+                    // enable DMP-related interrupts
+                    
+                    //setIntZeroMotionEnabled(true);
+                    //setIntFIFOBufferOverflowEnabled(true);
+                    //setIntDMPEnabled(true);
+                    I2Cdev::writeByte(devAddr, MPU9150_RA_INT_ENABLE, 0x32);  // single operation
+    
+                    success = true;
+                } else {
+                    // unknown special command
+                    success = false;
+                }
             }
-            /*Serial.print("Special command code ");
-            Serial.print(special, HEX);
-            Serial.println(" found...");*/
-            if (special == 0x01) {
-                // enable DMP-related interrupts
-                
-                //setIntZeroMotionEnabled(true);
-                //setIntFIFOBufferOverflowEnabled(true);
-                //setIntDMPEnabled(true);
-                I2Cdev::writeByte(devAddr, MPU9150_RA_INT_ENABLE, 0x32);  // single operation
-
-                success = true;
-            } else {
-                // unknown special command
-                success = false;
+            
+            if (!success) {
+                result = false; // uh oh
+                break;
             }
-        }
-        
-        if (!success) {
-            if (useProgMem) free(progBuffer);
-            return false; // uh oh
         }
     }
-    if (useProgMem) free(progBuffer);
-    return true;
+    else
+    {
+        result = false;
+    }
+        
+    if ( useProgMem && ( progBuffer != NULL ) )
+    {
+        free(progBuffer);
+    }
+    return result;
 }
 /* writeProgDMPConfigurationSet
  * @param data

@@ -29,7 +29,8 @@
  */
 void MagModel::MagModelSetParams( float Latitude, float Logitude, float HieghtAboveGround, int Day, int Month, int Year )
 {
-    MAGtype_MagneticModel * MagneticModels[1], *TimedMagneticModel;
+    MAGtype_MagneticModel * MagneticModels[1];
+    MAGtype_MagneticModel *TimedMagneticModel = NULL;
     MAGtype_Ellipsoid Ellip;
     MAGtype_CoordSpherical CoordSpherical;
     MAGtype_CoordGeodetic CoordGeodetic;

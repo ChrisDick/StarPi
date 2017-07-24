@@ -34,6 +34,7 @@ HMC5843 Magnetomometer;
 #include "HMC5883L.h"
 HMC5883L Magnetomometer;
 #elif defined MPU9150_MAGNETOMETER
+#error todo MPU9150 has function named getHeading
 #include "MPU9150.h"
 MPU9150 Magnetomometer;
 #elif defined LSM303DLHC_MAGNETOMETER
@@ -42,6 +43,21 @@ LSM303DLHC_Mag Magnetomometer;
 #else
 #error no magnetometer defined - please edit your config.h file.
 #endif
+
+static float b[] = {1,  -1.4, 1};
+ static float a[] = {1, -1.3, 0.5};
+ static float Xv1m1 = 0, Xv2m1 = 0, Yv1m1 = 0, Yv2m1 = 0, Zv1m1 = 0, Zv2m1 = 0, v1m, v2m;
+
+
+ static float iirfilter(float x1, float v1m1, float v2m1) {
+    float y1 = 0;
+    y1 = (b[0] * x1 + v1m1) / a[0];
+    v1m = (b[1] * x1 + v2m1) - a[1] * y1;
+    v2m = b[2] * x1 - a[2] * y1;
+    v1m1 = v1m;
+    v2m1 = v2m;
+    return y1;
+ }
 
 
 HalMagnetometer HalMagnetometer::Magneto;
@@ -82,20 +98,20 @@ bool HalMagnetometer::HalMagnetometerInit( void )
  */
 void HalMagnetometer::Run( void )
 {
-    FilterX[FilterCount] = (float)GetXRawHeading();
-    FilterY[FilterCount] = (float)GetYRawHeading();
-    FilterZ[FilterCount] = (float)GetZRawHeading();
+    int16_t X = 0;
+    int16_t Y = 0;
+    int16_t Z = 0;
     
-    FilterX[4] = (FilterX[0] + FilterX[1] + FilterX[2] + FilterX[3])/4;
-    FilterY[4] = (FilterY[0] + FilterY[1] + FilterY[2] + FilterY[3])/4;
-    FilterZ[4] = (FilterZ[0] + FilterZ[1] + FilterZ[2] + FilterZ[3])/4;
-    
-    FilterCount++;
-    if (FilterCount == 4)
-    {
-        FilterCount = 0;  
-    }
+    X = GetXRawHeading();
+    Y = GetYRawHeading();
+    Z = GetZRawHeading();
+
+    FilterX[4] = iirfilter(((float)X), Xv1m1, Xv2m1);
+    FilterY[4] = iirfilter(((float)Y), Yv1m1, Yv2m1);
+    FilterZ[4] = iirfilter(((float)Z), Zv1m1, Zv2m1);
+ 
 }
+
 /* Access to the Magnetometer data.
  */
 void HalMagnetometer::HalMagnetometerGetAll( float* Mx, float* My, float* Mz )

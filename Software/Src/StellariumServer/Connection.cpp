@@ -25,7 +25,7 @@
 #include "Connection.hpp"
 #include "Server.hpp"
 #include <math.h>
-#include "LogFile.hpp"
+//#include "LogFile.hpp"
 #include <iostream>
 #include <iomanip>
 using namespace std;
@@ -45,7 +45,7 @@ Connection::Connection( Server &server, SOCKET Fd ) : Socket( server, Fd )
  * A get function for the difference in server times
  * @return int64_t the difference in times
  */
-int64_t const Connection::GetServerMinusClientTime(void) 
+int64_t Connection::GetServerMinusClientTime(void) 
 {
     return ServerMinusClientTime;
 }
@@ -56,19 +56,19 @@ int64_t const Connection::GetServerMinusClientTime(void)
 void Connection::PerformReading( void )
 {
     const uint16_t ToRead = ReadBuff + sizeof(ReadBuff) - ReadBuffEnd;
-    const uint16_t Rc = readNonblocking(ReadBuffEnd, ToRead);
+    const int16_t Rc = readNonblocking(ReadBuffEnd, ToRead);
     if (Rc < 0)
     {
         if (ERRNO == ECONNRESET)
         {
-			*log_file << Now() << "Connection::performReading: "
-			                      "client has closed the connection" << endl;
+			//*log_file << Now() << "Connection::performReading: "
+			//                      "client has closed the connection" << endl;
             HangUp();
         } 
         else if (ERRNO != EINTR && ERRNO != EAGAIN)
         {
-			*log_file << Now() << "Connection::performReading: readNonblocking failed: "
-			                   << STRERROR(ERRNO) << endl;
+			//*log_file << Now() << "Connection::performReading: readNonblocking failed: "
+			//                   << STRERROR(ERRNO) << endl;
             HangUp();
         }
     } 
@@ -76,8 +76,8 @@ void Connection::PerformReading( void )
     {
         if (IsTcpConnection())
         {
-			*log_file << Now() << "Connection::performReading: "
-			                      "client has closed the connection" << endl;
+			//*log_file << Now() << "Connection::performReading: "
+			//                     "client has closed the connection" << endl;
             HangUp();
         }
     }
@@ -111,8 +111,8 @@ void Connection::PerformWriting( void )
     {
         if (ERRNO != EINTR && ERRNO != EAGAIN)
         {
-			*log_file << Now() << "Connection::performWriting: writeNonblocking failed: "
-			                   << STRERROR(ERRNO) << endl;
+			//*log_file << Now() << "Connection::performWriting: writeNonblocking failed: "
+			//                   << STRERROR(ERRNO) << endl;
         HangUp();
         }
     }
@@ -190,8 +190,8 @@ void Connection::DataReceived( const uint8_t* &BufferPtr, const uint8_t *ReadBuf
 
         if ( ( Size > (int16_t)sizeof(ReadBuff) ) || ( Size < 4 ) )
         {
-			*log_file << Now() << "Connection::dataReceived: "
-		                              "bad packet size: " << Size << endl;
+			//*log_file << Now() << "Connection::dataReceived: "
+		    //                          "bad packet size: " << Size << endl;
             HangUp();
             return;
         }
@@ -209,8 +209,8 @@ void Connection::DataReceived( const uint8_t* &BufferPtr, const uint8_t *ReadBuf
             {
                 if (Size < 12)
                 {
-					*log_file << Now() << "Connection::dataReceived: "
-					                      "type 0: bad packet size: " << Size << endl;
+					//*log_file << Now() << "Connection::dataReceived: "
+					//                      "type 0: bad packet size: " << Size << endl;
                     HangUp();
                     return;
                 }
@@ -241,11 +241,11 @@ void Connection::DataReceived( const uint8_t* &BufferPtr, const uint8_t *ReadBuf
             default:
             {
                 //No other types of commands are acceptable at the moment
-				*log_file << Now()
-				          << "Connection::dataReceived: "
-				             "ignoring unknown packet, type: "
-				          << type
-				          << endl;
+				//*log_file << Now()
+				//          << "Connection::dataReceived: "
+				//             "ignoring unknown packet, type: "
+				//          << type
+				//          << endl;
                 break;
             }
         }  
@@ -301,9 +301,9 @@ void Connection::SendPosition( uint32_t RAInt, int32_t DecInt, int32_t Status )
         }
         else
         {
-			*log_file << Now() << "Connection::sendPosition: "
-			                      "communication is too slow, I will ignore this command"
-			                   << endl;
+			//*log_file << Now() << "Connection::sendPosition: "
+			//                      "communication is too slow, I will ignore this command"
+			//                   << endl;
         }
     }
 }

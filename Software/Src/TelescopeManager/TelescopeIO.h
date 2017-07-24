@@ -61,13 +61,13 @@ typedef enum
     //GPSLONM,
     //GPSLONS,
     //GPSHIEGHT,
-    //WEBLATD,
-    //WEBLATM,
-    //WEBLATS,
-    //WEBLONH,
-    //WEBLONM,
-    //WEBLONS,
-    //WEBHIEGHT,
+    WEBLATD,
+    WEBLATM,
+    WEBLATS,
+    WEBLONH,
+    WEBLONM,
+    WEBLONS,
+    WEBHIEGHT,
     DEBUG,
     NUMBEROFDATA      // this line must always be last in the enum
 } DATAID_T;
@@ -76,6 +76,7 @@ typedef enum
 {
     DEFAULT,
     WEBSITE,
+	NO_OF_SOURCES
 } SOURCE_T;
 
 /** TelescopeIO
