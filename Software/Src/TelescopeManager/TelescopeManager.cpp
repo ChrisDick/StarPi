@@ -59,6 +59,9 @@ void TelescopeManager::TelescopeManagerInit()
 */
 void TelescopeManager::Run()
 {
+    /*
+        starpi variables
+    */
     CC_ANGLES_T Angles;
     struct tm * gmt;
     uint16_t Year = 0;
@@ -70,6 +73,14 @@ void TelescopeManager::Run()
     float HeadingDegrees = 0;
     float HieghtAboveGround = 0;
     float UnixTime = 0;
+    SOURCE_T Source = DEFAULT; 
+    timeval SysTime;
+    CC_TIME_T Longitude;
+    CC_TIME_T Latitude;
+    /*
+        iau SOFA variables
+    */
+    
     /*
         Grab any messages for the Telescope
     */
@@ -84,10 +95,6 @@ void TelescopeManager::Run()
     float Pitch = TelescopeOrientation::Orient.TelescopeOrientationGetPitch();
     float PitchDegrees = (180*(Pitch/M_PI));
     float Heading = TelescopeOrientation::Orient.TelescopeOrientationGetHeading();
-    SOURCE_T Source = DEFAULT; 
-    timeval SysTime;
-    CC_TIME_T Longitude;
-    CC_TIME_T Latitude;
     
     gettimeofday(&SysTime, NULL);
     TelescopeIO::TeleIO.TelescopeIOGetValue( LOCSOURCE, &Source);
@@ -191,6 +198,7 @@ void TelescopeManager::Run()
     Angles.Azimuth = Heading + ((MagneticDeclination/180)*M_PI); // ToDo make this come from magmodel in radians?
     Angles.Altitude = Pitch;
     Calculator.EquitorialToCelestrial( &Angles, UnixTime );
+    iau_calc(&Angles, UnixTime);
     RightAscension = Angles.RightAscension;
     Declination = Angles.Declination;
     
@@ -249,6 +257,15 @@ void TelescopeManager::GetRaDec ( double* Ra, double* Dec )
     *Ra = RightAscension;
     *Dec = Declination;
 }
+
+
+static void iau_calc( CC_ANGLES_T* Angles, float UnixTime);
+{
+    
+}
+    
+
+
 
 #if 0
 void TelescopeManager::testCalculator ( void )
