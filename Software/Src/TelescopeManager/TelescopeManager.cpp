@@ -25,6 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "TelescopeIO.h"
 #include "HalGps.h"
 #include "MagModel.h"
+#include "erfa.h"
 
 #include "TelescopeManager.h"
 
@@ -77,10 +78,6 @@ void TelescopeManager::Run()
     timeval SysTime;
     CC_TIME_T Longitude;
     CC_TIME_T Latitude;
-    /*
-        iau SOFA variables
-    */
-    
     /*
         Grab any messages for the Telescope
     */
@@ -198,9 +195,41 @@ void TelescopeManager::Run()
     Angles.Azimuth = Heading + ((MagneticDeclination/180)*M_PI); // ToDo make this come from magmodel in radians?
     Angles.Altitude = Pitch;
     Calculator.EquitorialToCelestrial( &Angles, UnixTime );
-    iau_calc(&Angles, UnixTime);
     RightAscension = Angles.RightAscension;
     Declination = Angles.Declination;
+
+    erfa era; 
+    double azRadians;
+    double zenRadians;
+    double raRadians;
+    double decRadians;
+    int res; 
+    /* time variables */
+    time_t now_time; 
+    struct tm now_tm; 
+    /* Atoc13 function params */
+    double utc1, utc2; 
+    double xp = 0.0;
+    double yp = 0.0;
+    double dut1 = 0.0;
+    double phpa = 0.0;
+    double tc = 0.0;
+    double rh = 0.0;
+    double wl = 0.0;
+    /* get the current time */
+    now_time = time(NULL); 
+    gmtime_r(&now_time, &now_tm); 
+    /* calculate utc as two part value */
+    res = era.Dtf2d("UTC", 
+        now_tm.tm_year + 1900, now_tm.tm_mon + 1, now_tm.tm_mday, 
+        now_tm.tm_hour, now_tm.tm_min, now_tm.tm_sec, 
+        &utc1, &utc2); 
+    /* convert az/zen to ra/dec */
+    res = era.Atoc13("A", Angles.Azimuth, ((90.0f * ERFA_DD2R) - Angles.Altitude),
+        utc1, utc2, dut1,
+        (-1*Angles.LongitudeWest), Angles.Latitude, (HieghtAboveGround*1000), xp, yp,
+        phpa, tc, rh, wl,
+        &RightAscension, &Declination);
     
     /*
         Update Data
@@ -257,15 +286,6 @@ void TelescopeManager::GetRaDec ( double* Ra, double* Dec )
     *Ra = RightAscension;
     *Dec = Declination;
 }
-
-
-static void iau_calc( CC_ANGLES_T* Angles, float UnixTime);
-{
-    
-}
-    
-
-
 
 #if 0
 void TelescopeManager::testCalculator ( void )

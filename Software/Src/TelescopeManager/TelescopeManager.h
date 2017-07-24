@@ -65,8 +65,6 @@ class TelescopeManager : public Runnable
         static bool HeadingCorrected;  
         static double TargetRightAscension;   /**< Target right ascension */
         static double TargetDeclination;      /**< Target declination */
-        
-        static void iau_calc( CC_ANGLES_T* Angles, float UnixTime);
 };
 
 #endif /* TELESCOPE_MANAGER_H */
