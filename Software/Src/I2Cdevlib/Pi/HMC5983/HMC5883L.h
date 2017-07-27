@@ -123,7 +123,7 @@ class HMC5883L {
  * after initialization, especially the gain settings if you happen to be seeing
  * a lot of -4096 values (see the datasheet for mor information).
  */
-        void Initialize();
+        void initialize();
 /** Verify the I2C connection.
  * Make sure the device is connected and responds as expected.
  * @return True if connection is valid, false otherwise
@@ -278,22 +278,22 @@ class HMC5883L {
  * @param z 16-bit signed integer container for Z-axis heading
  * @see HMC5883L_RA_DATAX_H
  */
-        void GetHeading(int16_t *x, int16_t *y, int16_t *z);
+        void getHeading(int16_t *x, int16_t *y, int16_t *z);
 /** Get X-axis heading measurement.
  * @return 16-bit signed integer with X-axis heading
  * @see HMC5883L_RA_DATAX_H
  */
-        int16_t GetHeadingX();
+        int16_t getHeadingX();
 /** Get Y-axis heading measurement.
  * @return 16-bit signed integer with Y-axis heading
  * @see HMC5883L_RA_DATAY_H
  */
-        int16_t GetHeadingY();
+        int16_t getHeadingY();
 /** Get Z-axis heading measurement.
  * @return 16-bit signed integer with Z-axis heading
  * @see HMC5883L_RA_DATAZ_H
  */
-        int16_t GetHeadingZ();
+        int16_t getHeadingZ();
 
         // STATUS register
 /** Get data output register lock status.

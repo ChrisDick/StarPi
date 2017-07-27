@@ -58,7 +58,7 @@ HMC5883L::HMC5883L(uint8_t address) {
  * after initialization, especially the gain settings if you happen to be seeing
  * a lot of -4096 values (see the datasheet for mor information).
  */
-void HMC5883L::Initialize() {
+void HMC5883L::initialize() {
     // write CONFIG_A register
     I2Cdev::writeByte(devAddr, HMC5883L_RA_CONFIG_A,
         (HMC5883L_AVERAGING_8 << (HMC5883L_CRA_AVERAGE_BIT - HMC5883L_CRA_AVERAGE_LENGTH + 1)) |
@@ -267,7 +267,7 @@ void HMC5883L::setMode(uint8_t newMode) {
  * @param z 16-bit signed integer container for Z-axis heading
  * @see HMC5883L_RA_DATAX_H
  */
-void HMC5883L::GetHeading(int16_t *x, int16_t *y, int16_t *z) {
+void HMC5883L::getHeading(int16_t *x, int16_t *y, int16_t *z) {
     I2Cdev::readBytes(devAddr, HMC5883L_RA_DATAX_H, 6, buffer);
     if (mode == HMC5883L_MODE_SINGLE) I2Cdev::writeByte(devAddr, HMC5883L_RA_MODE, HMC5883L_MODE_SINGLE << (HMC5883L_MODEREG_BIT - HMC5883L_MODEREG_LENGTH + 1));
     *x = (((int16_t)buffer[0]) << 8) | buffer[1];
@@ -278,7 +278,7 @@ void HMC5883L::GetHeading(int16_t *x, int16_t *y, int16_t *z) {
  * @return 16-bit signed integer with X-axis heading
  * @see HMC5883L_RA_DATAX_H
  */
-int16_t HMC5883L::GetHeadingX() {
+int16_t HMC5883L::getHeadingX() {
     // each axis read requires that ALL axis registers be read, even if only
     // one is used; this was not done ineffiently in the code by accident
     I2Cdev::readBytes(devAddr, HMC5883L_RA_DATAX_H, 6, buffer);
@@ -289,7 +289,7 @@ int16_t HMC5883L::GetHeadingX() {
  * @return 16-bit signed integer with Y-axis heading
  * @see HMC5883L_RA_DATAY_H
  */
-int16_t HMC5883L::GetHeadingY() {
+int16_t HMC5883L::getHeadingY() {
     // each axis read requires that ALL axis registers be read, even if only
     // one is used; this was not done ineffiently in the code by accident
     I2Cdev::readBytes(devAddr, HMC5883L_RA_DATAX_H, 6, buffer);
@@ -300,7 +300,7 @@ int16_t HMC5883L::GetHeadingY() {
  * @return 16-bit signed integer with Z-axis heading
  * @see HMC5883L_RA_DATAZ_H
  */
-int16_t HMC5883L::GetHeadingZ() {
+int16_t HMC5883L::getHeadingZ() {
     // each axis read requires that ALL axis registers be read, even if only
     // one is used; this was not done ineffiently in the code by accident
     I2Cdev::readBytes(devAddr, HMC5883L_RA_DATAX_H, 6, buffer);
