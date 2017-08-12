@@ -10,6 +10,7 @@
 #sudo raspi-config - serial - need to check this
 #reboot
 #git clone https://github.com/ChrisDick/StarPi
+# cd StarPi
 #chmod u+x install.sh
 #./install.sh
 # then go and make a nice cup of tea.
@@ -26,7 +27,7 @@ cd ./Software
 
 #Gps deamon
 wget http://git.savannah.gnu.org/cgit/gpsd.git/snapshot/gpsd-release-3.16.tar.gz
-tar -zxf  gpsd-master.tar.gz
+tar -zxf  gpsd-release-3.16.tar.gz
 rm gpsd-release-3.16.tar.gz
 cp -r gpsd-release-3.16/* ./Src/GPSD 
 rm -r gpsd-release-3.16
