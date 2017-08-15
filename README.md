@@ -6,51 +6,72 @@ StarPi is a Raspberry Pi based telescope server with interface to Stellarium.
  From a console do the following. 
  **Note:** do not use the gui raspi-config it doesn't have the option to enable hardware serial with console disabled.
  configure wifi
->sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
+'''
+sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
+'''
  add the following at the end
->network={
->      ssid="yourssid"
->      psk="yourpassword"
->}
+'''
+network={
+      ssid="yourssid"
+      psk="yourpassword"
+}
+'''
  save the config 
->sudo apt-get update
->sudo apt-get dist-upgrade
->sudo rpi-update
+'''
+sudo apt-get update
+sudo apt-get dist-upgrade
+sudo rpi-update
+'''
  for lite install git and wiringpi
->sudo apt-get install git-core
->git clone git://git.drogon.net/wiringPi
->cd ~/wiringPi
->./build
+'''
+sudo apt-get install git-core
+git clone git://git.drogon.net/wiringPi
+cd ~/wiringPi
+./build
+'''
  for both jessie variants
->sudo raspi-config 
+'''
+sudo raspi-config 
+'''
 -turn enable the camera, ssh, i2c 
 -disable the serial shell and enable the hardware serial
 -set the domain name and boot to cli
 -reduce the graphics memory
 -reboot
->git clone https://github.com/ChrisDick/StarPi
+'''
+git clone https://github.com/ChrisDick/StarPi
+'''
  edit any options in config.h to match your choice of sensors.
->cd ~/StarPi
->chmod u+x install.sh
->./install.sh
- then go and make a nice cup of tea. it'll take a little while.
+'''
+cd ~/StarPi
+chmod u+x install.sh
+./install.sh
+'''
+Then go and make a nice cup of tea. it'll take a little while.
 
 # Use
  over ssh: 
  Any of the following depending on how your run it. ( WMM.COF must be in directory StarPi is started from )
  start GPSD in it's own ssh session
  B+
->gpsd -D 5 -N -n /dev/ttyAMA0
+'''
+ gpsd -D 5 -N -n /dev/ttyAMA0
+'''
  on the zero (W)
->gpsd -D 5 -N -n /dev/serial0 
+'''
+gpsd -D 5 -N -n /dev/serial0 
+'''
  in another ssh session
  on it's own 
->cd ~/StarPi/Software
-
->./Out/StarPi 10001
- with website
->cd ~/StarPi/Software
->./websockets 1234 /Out/StarPi 10001
+'''
+cd ~/StarPi/Software
+./Out/StarPi 10001
+'''
+with website
+'''
+cd ~/StarPi/Software
+./websockets 1234 /Out/StarPi 10001
+'''
  
 # Design
 
