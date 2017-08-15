@@ -6,31 +6,31 @@ StarPi is a Raspberry Pi based telescope server with interface to Stellarium.
  From a console do the following. 
  **Note:** do not use the gui raspi-config it doesn't have the option to enable hardware serial with console disabled.
  configure wifi
-'''
+'''bash
 sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
 '''
  add the following at the end
-'''
+'''bash
 network={
       ssid="yourssid"
       psk="yourpassword"
 }
 '''
  save the config 
-'''
+'''bash
 sudo apt-get update
 sudo apt-get dist-upgrade
 sudo rpi-update
 '''
  for lite install git and wiringpi
-'''
+'''bash
 sudo apt-get install git-core
 git clone git://git.drogon.net/wiringPi
 cd ~/wiringPi
 ./build
 '''
  for both jessie variants
-'''
+'''bash
 sudo raspi-config 
 '''
 -turn enable the camera, ssh, i2c 
@@ -38,11 +38,11 @@ sudo raspi-config
 -set the domain name and boot to cli
 -reduce the graphics memory
 -reboot
-'''
+'''bash
 git clone https://github.com/ChrisDick/StarPi
 '''
  edit any options in config.h to match your choice of sensors.
-'''
+'''bash
 cd ~/StarPi
 chmod u+x install.sh
 ./install.sh
@@ -54,21 +54,21 @@ Then go and make a nice cup of tea. it'll take a little while.
  Any of the following depending on how your run it. ( WMM.COF must be in directory StarPi is started from )
  start GPSD in it's own ssh session
  B+
-'''
+'''bash
  gpsd -D 5 -N -n /dev/ttyAMA0
 '''
  on the zero (W)
-'''
+'''bash
 gpsd -D 5 -N -n /dev/serial0 
 '''
  in another ssh session
  on it's own 
-'''
+'''bash
 cd ~/StarPi/Software
 ./Out/StarPi 10001
 '''
 with website
-'''
+'''bash
 cd ~/StarPi/Software
 ./websockets 1234 /Out/StarPi 10001
 '''
