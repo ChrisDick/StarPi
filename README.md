@@ -1,5 +1,7 @@
 # StarPi
-StarPi is a Raspberry Pi based telescope server with interface to Stellarium.
+StarPi is a Raspberry Pi based telescope server with interface to Stellarium. It uses a tripple axis acellerometer and compass with GPS to calculate the position in the sky the telescope is pointing to.
+
+More details can be found at https://hackaday.io/project/10181-starpi
 
 # Installation
 
