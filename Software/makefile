@@ -30,6 +30,7 @@ CPPFILES := 		Src/Main.cpp \
 					Src/I2Cdevlib/Pi/HMC5883L/HMC5883L.cpp \
 					Src/I2Cdevlib/Pi/MPU6050/MPU6050.cpp \
 					Src/I2Cdevlib/Pi/MPU9150/MPU9150.cpp \
+					Src/I2Cdevlib/Pi/LSM303DLHC/LSM303DLHC.cpp \
 					Src/I2Cdevlib/Pi/I2Cdev/I2Cdev.cpp \
 					Src/StellariumServer/Connection.cpp \
 					Src/StellariumServer/Listener.cpp \

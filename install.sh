@@ -28,7 +28,8 @@
 #-reduce the graphics memory
 #-reboot
 #    git clone https://github.com/ChrisDick/StarPi
-# edit any options in config.h to match your choice of sensors.
+# edit any options in  to match your choice of sensors.
+#    nano StarPi\Software\Src\config.h
 #    cd ~/StarPi
 #    chmod u+x install.sh
 #    ./install.sh

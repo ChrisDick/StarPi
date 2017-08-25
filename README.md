@@ -5,47 +5,48 @@ More details can be found at https://hackaday.io/project/10181-starpi
 
 # Installation
 
- From a console do the following. 
+ From a console do the following: 
  **Note:** do not use the gui raspi-config it doesn't have the option to enable hardware serial with console disabled.
  configure wifi
 
     sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
 
 
- add the following at the end
+ add the following at the end:
 
      network={
           ssid="yourssid"
           psk="yourpassword"
     }
 
- save the config 
+ save the config. 
 
     sudo apt-get update
     sudo apt-get dist-upgrade
     sudo rpi-update
 
- for lite install git and wiringpi
+ for lite install git and wiringpi:
 
     sudo apt-get install git-core
     git clone git://git.drogon.net/wiringPi
     cd ~/wiringPi
     ./build
 
- for both jessie variants
+ for both jessie variants:
 
     sudo raspi-config 
 
-  turn enable the camera, ssh, i2c  
-  disable the serial shell and enable the hardware serial  
-  set the domain name and boot to cli  
-  reduce the graphics memory  
-  reboot  
+  turn enable the camera, ssh, i2c.  
+  disable the serial shell and enable the hardware serial.  
+  set the domain name and boot to cli.  
+  reduce the graphics memory.  
+  reboot.  
 
     git clone https://github.com/ChrisDick/StarPi
 
- edit any options in config.h to match your choice of sensors.
+  edit any options in  to match your choice of sensors and install.
 
+    nano StarPi/Software/Src/config.h
     cd ~/StarPi
     chmod u+x install.sh
     ./install.sh
