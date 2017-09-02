@@ -57,11 +57,6 @@ Then go and make a nice cup of tea. it'll take a little while.
   over ssh:  
   Any of the following depending on how your run it. ( WMM.COF must be in directory StarPi is started from )  
   start GPSD in it's own ssh session  
-  B+  
-
-    gpsd -D 5 -N -n /dev/ttyAMA0
-
-on the zero (W)
 
     gpsd -D 5 -N -n /dev/serial0 
 
@@ -71,7 +66,7 @@ on the zero (W)
     cd ~/StarPi/Software
     ./Out/StarPi 10001
 
-with website
+  with website
 
     cd ~/StarPi/Software
     ./websockets 1234 /Out/StarPi 10001
