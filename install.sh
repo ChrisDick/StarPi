@@ -71,19 +71,15 @@ cd ..
 
 #rpicam interface:
 git clone https://github.com/silvanmelchior/RPi_Cam_Web_Interface.git
-cd RPi_Cam_Web_Interface
-sudo ./install.sh q
-sudo mkdir /var/www/html/RPiCam
-sudo mv /var/www/html/!(RPiCam) /var/www/html/RPiCam
-sudo mkdir /var/www/html/StarPi
-sudo cp -ar /var/www/html/RPiCam/* /var/www/html/StarPi
-cd ..
-sudo cp -ar ./Website/* /var/www/html/StarPi
+sudo ./RPi_Cam_Web_Interface/install.sh q
+sudo mkdir /var/www/RPiCam
+sudo mv /var/www/html/* /var/www/RPiCam
+sudo mkdir /var/www/StarPi
+sudo cp -ar /var/www/RPiCam/* /var/www/StarPi
+sudo cp -ar ./Website/* /var/www/StarPi
 
 # ready after reboot
 sudo reboot
-
-
 
 #copy executables to somewhere in the PATH - may noy use due to WMM.COF
 #sudo cp ./Out/StarPi /usr/local/bin/StarPi
