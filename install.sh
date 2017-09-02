@@ -71,12 +71,14 @@ cd ..
 
 #rpicam interface:
 git clone https://github.com/silvanmelchior/RPi_Cam_Web_Interface.git
-sudo ./RPi_Cam_Web_Interface/install.sh q
-sudo mkdir /var/www/RPiCam
-sudo mv /var/www/html/* /var/www/RPiCam
-sudo mkdir /var/www/StarPi
-sudo cp -ar /var/www/RPiCam/* /var/www/StarPi
-sudo cp -ar ./Website/* /var/www/StarPi
+sudo ./RPi_Cam_Web_Interface/install.sh
+#sudo ./RPi_Cam_Web_Interface/install.sh q
+#sudo mkdir /var/www/RPiCam
+#sudo mv /var/www/html/* /var/www/RPiCam
+#sudo mkdir /var/www/StarPi
+#sudo cp -ar /var/www/RPiCam/* /var/www/StarPi
+#sudo cp -ar ./Website/* /var/www/StarPi
+sudo cp -ar ./Website/* /var/www/html
 
 # ready after reboot
 sudo reboot
