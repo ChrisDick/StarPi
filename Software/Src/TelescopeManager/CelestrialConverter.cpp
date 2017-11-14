@@ -96,7 +96,7 @@ void CelestrialConverter::EquitorialToCelestrial( CC_ANGLES_T* Angles, time_t Un
     }
     
     
-    Angles->LocalSiderealTime = CalculateLocalSiderealTime( UnixTime, Angles->LongitudeWest );
+    Angles->LocalSiderealTime = CalculateLocalSiderealTime( UnixTime, Angles->Longitude );
     /* 
         Format data for website. 
     */
@@ -122,7 +122,7 @@ void CelestrialConverter::EquitorialToCelestrial( CC_ANGLES_T* Angles, time_t Un
     double t2=cos(Angles->Azimuth)*sin( Angles->Latitude )-tan(Angles->Altitude)*cos( Angles->Latitude );
     Angles->HourAngle=atan2(t1,t2);
     Angles->HourAngle=Angles->HourAngle+M_PI;
-    Angles->LocalSiderealTime = CalculateLocalSiderealTime( UnixTime, Angles->LongitudeWest );
+    Angles->LocalSiderealTime = CalculateLocalSiderealTime( UnixTime, Angles->Longitude );
     Angles->RightAscension = Angles->LocalSiderealTime - Angles->HourAngle;  
 #endif
 }
@@ -143,16 +143,16 @@ void CelestrialConverter::CelestrialToEquitorial( CC_ANGLES_T* Angles, time_t Un
 
     sin ( Altitude ) = ( sin ( Observers Latitude ) * sin ( declination ) ) + ( cos ( Observers Latitude ) * cos ( declination ) * cos ( Hour Angle ) 
 */
-    Angles->LocalSiderealTime = CalculateLocalSiderealTime( UnixTime, Angles->LongitudeWest );
+    Angles->LocalSiderealTime = CalculateLocalSiderealTime( UnixTime, Angles->Longitude );
     UnDecimaliseTime( Angles->LocalSiderealTime, &Angles->LocalSiderealCCTime );
 
     Angles->HourAngle = Angles->LocalSiderealTime - Angles->RightAscension;
     
     
-    Angles->Azimuth = atan( sin ( Angles->HourAngle ) / ( ( cos ( Angles->HourAngle ) * sin ( Angles->LongitudeWest ) ) - ( tan ( Angles->Declination ) * cos ( Angles->LongitudeWest ) ) ) );
+    Angles->Azimuth = atan( sin ( Angles->HourAngle ) / ( ( cos ( Angles->HourAngle ) * sin ( Angles->Longitude ) ) - ( tan ( Angles->Declination ) * cos ( Angles->Longitude ) ) ) );
     
     
-    Angles->Altitude = asin( ( sin ( Angles->LongitudeWest ) * sin ( Angles->Declination ) ) + ( cos ( Angles->LongitudeWest ) * cos ( Angles->Declination ) * cos ( Angles->HourAngle ) ) );
+    Angles->Altitude = asin( ( sin ( Angles->Longitude ) * sin ( Angles->Declination ) ) + ( cos ( Angles->Longitude ) * cos ( Angles->Declination ) * cos ( Angles->HourAngle ) ) );
 
     Angles->Altitude = fmod( Angles->Altitude, ( 2 * M_PI ) );
     Angles->Azimuth = fmod( Angles->Azimuth, ( 2 * M_PI ) );
@@ -235,10 +235,10 @@ void CelestrialConverter::UnDecimaliseTime( double TimeDec, CC_TIME_T* Angle )
 /* CalculateLocalSiderealTime
  * calculate the Local sidereal time from the current time and location
  * @param GrenwichStandardTime current time 
- * @param LongitudeWest 
+ * @param Longitude
  * @return double time in radians.  
  */
-double CelestrialConverter::CalculateLocalSiderealTime( time_t UnixTime, double LongitudeWest )
+double CelestrialConverter::CalculateLocalSiderealTime( time_t UnixTime, double Longitude )
 {
     double Result = 0;
     double JulianDate = 0;
@@ -307,7 +307,7 @@ double CelestrialConverter::CalculateLocalSiderealTime( time_t UnixTime, double 
     /*
         Sidereal time is the corrected grenwich sidereal time less the longitude
     */
-    Result = GAST - LongitudeWest;
+    Result = GAST - Longitude;
     
     return Result;
 }

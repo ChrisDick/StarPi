@@ -511,7 +511,7 @@ union lsm303lhc_mag_mode_select_t
 
 typedef enum
 {
-    CONTINUOS,
+    CONTINUOUS,
     SINGLE,
     SLEEP,
 } lsm303lhc_mag_mode_t;
@@ -1292,11 +1292,13 @@ class LSM303DLHC_Mag {
  */
         void setMode( lsm303lhc_mag_mode_t Mode);
 
-/** get the mdoe of the measurment.
+/** get the mode of the measurment.
  * @return lsm303lhc_mag_mode_t the mode of measurement.
  */
         lsm303lhc_mag_mode_t getMode();
-
+ //todo doxygen header
+        void setDataRate( lsm303lhc_mag_data_rate_t rate );
+        lsm303lhc_mag_data_rate_t getDataRate( void );   
 /** get the data ready flag
  * @return bool the data ready flag
  */

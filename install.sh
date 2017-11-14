@@ -29,7 +29,7 @@
 #-reboot
 #    git clone https://github.com/ChrisDick/StarPi
 # edit any options in the config to match your choice of sensors.
-#    nano StarPi\Software\Src\Config.h
+#    nano StarPi/Software/Src/Config.h
 #    cd ~/StarPi
 #    chmod u+x install.sh
 #    ./install.sh
@@ -45,11 +45,12 @@
 #     ./Out/StarPi 10001
 # with website
 #     cd ~/StarPi/Software
-#     ./websockets 1234 /Out/StarPi 10001
+#     ./websocketd port=1234 Out/StarPi 10001
 
 #Assume we have a jessie based install
 sudo apt-get -y install scons libncurses5-dev python-dev pps-tools git-core python-smbus i2c-tools
 cd ./Software
+chmod u+x websocketd
 
 #Gps deamon:
 wget http://git.savannah.gnu.org/cgit/gpsd.git/snapshot/gpsd-release-3.16.tar.gz

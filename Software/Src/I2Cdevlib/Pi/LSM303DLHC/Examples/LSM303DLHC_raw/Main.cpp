@@ -37,7 +37,7 @@ THE SOFTWARE.
 // I2Cdev and HMC5883L must be installed as libraries, or else the .cpp/.h files
 // for both classes must be in the include path of your project
 //#include "I2Cdev.h"
-#include "HMC5883L.h"
+#include "LSM303DLHC.h"
 #include <math.h>
 // class default I2C address is 0x1E
 // specific I2C addresses may be passed as a parameter here
@@ -45,24 +45,24 @@ THE SOFTWARE.
 #include <iostream>
 using namespace std;
 
-  
-int main (int argscc, char** argsv)
+//int main (int argscc, char** argsv)
+int main(int argc, char *argv[])
 {
     int result = 0;
-    HMC5883L mag; 
+    LSM303DLHC_Mag mag;
     int16_t mx = 0; 
     int16_t my = 0; 
     int16_t mz = 0;
     bool test = false;
 
-    mag.Initialize();
+    mag.initialize();
     test = mag.testConnection() ;
     cout << test;
     cout << "\n\r";
-    mag.setMode(HMC5883L_MODE_CONTINUOUS);
+    mag.setMode(CONTINUOS);
     while (1)
     {
-        mag.GetHeading(&mx, &my, &mz);
+        mag.getHeading(&mx, &my, &mz);
         
         cout << "mx:";
         cout << mx;

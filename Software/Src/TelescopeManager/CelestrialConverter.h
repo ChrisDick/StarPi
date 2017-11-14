@@ -45,7 +45,7 @@ typedef struct {
  * All angles are in radians.
  */
 typedef struct {
-    double LongitudeWest;    /**< Longitude of current position.                                        */
+    double Longitude;    /**< Longitude of current position.                                        */
     double Latitude;         /**< Latitude of the current position.                                     */
     double Azimuth;          /**< Angle of Azimuth of the telescope.                                    */
     double Altitude;         /**< Angle of Altitude of the telescope.                                   */

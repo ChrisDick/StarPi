@@ -40,7 +40,7 @@ typedef enum
     STRING,
 } FORMAT_T;
 
-typedef struct 
+typedef struct
 {
     const char* Header;
     bool Web;
@@ -48,7 +48,7 @@ typedef struct
     char Data[DATALENGTH];
 } TELEDATA_T;
 
-static TELEDATA_T TelescopeData[NUMBEROFDATA] = 
+static TELEDATA_T TelescopeData[NUMBEROFDATA] =
 {
 /* Id              Header  Web  DataType Data                                            */
 /* EMPTY,     */ { "EMPT", false, STRING,   {0} }, /**< Unused slot - reserved (always 0)  */
@@ -149,7 +149,7 @@ bool TelescopeIO::TelescopeIOInit( void )
             {
                 sprintf ( TelescopeData[Id].Data, " %s", ((char*)Data) );
                 break;
-            }        
+            }
             default:
             {
                 // ignore it.
@@ -157,19 +157,19 @@ bool TelescopeIO::TelescopeIOInit( void )
        }
        Id++;
     }
-    
+
     return true;
 }
 
 
 
-/* Get any messages recieved from the websocket pass to handler 
+/* Get any messages recieved from the websocket pass to handler
  */
 void TelescopeIO::TelescopeIOWebRecieve( )
 {
     char RecievedMessage[DATALENGTH+HEADERLENGTH];
     while (true)
-    {    
+    {
         bool MessageAvailiable = false;
         MessageAvailiable = HalWebsocketd::Websocket.HalWebsocketdGetMessage( RecievedMessage );
         if (!MessageAvailiable)
@@ -186,7 +186,7 @@ void TelescopeIO::TelescopeIOWebRecieve( )
  */
 bool TelescopeIO::TelescopeIOUpdateData( DATAID_T Id, void* Data )
 {
-    char Message[DATALENGTH+HEADERLENGTH] = { 0u }; 
+    char Message[DATALENGTH+HEADERLENGTH] = { 0u };
     bool SendMessage = false;
     /*
         Format the data into a string
@@ -229,20 +229,20 @@ bool TelescopeIO::TelescopeIOUpdateData( DATAID_T Id, void* Data )
             sprintf ( TelescopeData[Id].Data, " %s", ((char*)Data) );
             SendMessage = true;
             break;
-        }        
+        }
         default:
         {
             // ignore it.
         }
    }
-   
+
    if ( SendMessage )
    {
         /*
             Add the header and send the message
         */
         strcat(Message, TelescopeData[Id].Header);
-        strcat(Message, TelescopeData[Id].Data); 
+        strcat(Message, TelescopeData[Id].Data);
         HalWebsocketd::Websocket.HalWebsocketdSendMessage(Message, Id );
    }
    return SendMessage;
@@ -257,13 +257,13 @@ void TelescopeIO::TelescopeIOHandleMessage( char* Message )
    {
         if ( strncmp (Message, TelescopeData[Id].Header, 4 ) == 0)
         {
-            char OutMessage[DATALENGTH+HEADERLENGTH] = {0};
+            //char OutMessage[DATALENGTH+HEADERLENGTH] = {0};
             strcpy(  TelescopeData[Id].Data, &Message[HEADERLENGTH] );
             //strcat(OutMessage, TelescopeData[Id].Header);
             //strcat(OutMessage, TelescopeData[Id].Data);
             //HalWebsocketd::Websocket.HalWebsocketdSendMessage(OutMessage, Id );
         }
-    }   
+    }
 }
 
 /* Gets the value from the string stored in the structure

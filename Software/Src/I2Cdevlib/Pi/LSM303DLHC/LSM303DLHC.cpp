@@ -1945,10 +1945,13 @@ LSM303DLHC_Mag::LSM303DLHC_Mag()
  */
 void LSM303DLHC_Mag::initialize()
 {
-    setGain( MAG_SCALE_1_9 );
-
-    //    LSM303_write(0x00, MR_REG_M);  // 0x00 = continouous conversion mode
-
+//    if ( testConnection() )
+    {
+        setGain( MAG_SCALE_1_9 );
+        setMode( CONTINUOUS );
+        setDataRate( RATE_220_0_HZ );
+        
+    }
 }
 
 /** Verify the I2C connection.
@@ -2030,6 +2033,7 @@ bool LSM303DLHC_Mag::getDataReady()
  */
 void LSM303DLHC_Mag::setUpdateLock( bool lock)
 {
+    (void)lock;//ToDo
 }
 
 /** Get the update lock flag.
@@ -2126,4 +2130,21 @@ uint8_t LSM303DLHC_Mag::getIDC()
 {
     I2Cdev::readByte( mag_devAddr, IRC_REG_M, buffer );
     return buffer[0];
+}
+
+lsm303lhc_mag_data_rate_t LSM303DLHC_Mag::getDataRate( void )
+{
+    lsm303lhc_mag_config_a_t Reg;
+    lsm303lhc_mag_data_rate_t result;
+    I2Cdev::readByte( mag_devAddr, MR_REG_M, &Reg.all );
+    result = (lsm303lhc_mag_data_rate_t)Reg.bits.DataRate;
+    return result;
+}
+
+void LSM303DLHC_Mag::setDataRate( lsm303lhc_mag_data_rate_t rate )
+{
+    lsm303lhc_mag_config_a_t Reg;
+    I2Cdev::readByte( mag_devAddr, MR_REG_M, &Reg.all );
+    Reg.bits.DataRate = rate;
+    I2Cdev::writeByte( mag_devAddr, MR_REG_M, Reg.all );
 }

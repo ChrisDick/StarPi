@@ -69,7 +69,7 @@ Then go and make a nice cup of tea. it'll take a little while.
   with website
 
     cd ~/StarPi/Software
-    ./websockets 1234 /Out/StarPi 10001
+    ./websocketd 1234 /Out/StarPi 10001
  
 # Design
 

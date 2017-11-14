@@ -61,7 +61,7 @@ void BMA150::initialize() {
  * @return True if connection is valid, false otherwise
  */
 bool BMA150::testConnection() {
-    return getDeviceID() == 0b010;
+    return getDeviceID() == 2u;
 }
 
 // CHIP_ID register

@@ -23,9 +23,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "HalAccelerometer.h"
 #include "Config.h"
 #include <math.h>
-#ifdef CALIBRATE_DEBUG
+#if ( defined CALIBRATE_MAG_DEBUG) || ( defined CALIBRATE_ACC_DEBUG )
 #include <stdio.h>
 #endif
+
 TelescopeOrientation TelescopeOrientation::Orient;
 
 /* TelescopeOrientation
@@ -41,6 +42,19 @@ bool TelescopeOrientation::TelescopeOrientationInit( void )
 {
     HalAccelerometer::Accelerometer.HalAccelerometerInit();
     HalMagnetometer::Magneto.HalMagnetometerInit();
+    MxMax = 0.0f;
+    MxMin = 0.0f;
+    MyMax = 0.0f;
+    MyMin = 0.0f;
+    MzMax = 0.0f;
+    MzMin = 0.0f;
+    AxMax = 0.0f;
+    AxMin = 0.0f;
+    AyMax = 0.0f;
+    AyMin = 0.0f;
+    AzMax = 0.0f;
+    AzMin = 0.0f;
+
     return true;
 }
 
@@ -52,12 +66,48 @@ void TelescopeOrientation::Run( void )
 {
     HalMagnetometer::Magneto.Run();
     HalAccelerometer::Accelerometer.Run();
-#ifdef CALIBRATE_DEBUG
-    float Mx, My, Mz;
+}
+
+/*
+ *
+ */
+void TelescopeOrientation::GetOrientation( float* Pitch, float* Roll, float* Heading )
+{
+    /* raw magneto values */
+    float Mx = 0.0f;
+    float My = 0.0f;
+    float Mz = 0.0f;
+    /* Raw Accel values */
+    float Ax = 0.0f;
+    float Ay = 0.0f;
+    float Az = 0.0f;
+    /* magneto values with offset */
+    float Mxo = 0.0f;
+    float Myo = 0.0f;
+    float Mzo = 0.0f;
+    /* Accel values with offset */
+    float Axo = 0.0f;
+    float Ayo = 0.0f;
+    float Azo = 0.0f;
+    /* Calculation variables */
+    float CosRoll = 0.0f;
+    float SinRoll = 0.0f;
+    float CosPitch = 0.0f;
+    float SinPitch = 0.0f;
+    float XComponent = 0.0f;
+    float YComponent = 0.0f;
+    
+    /*
+        get filtered sensor data
+    */
+    HalAccelerometer::Accelerometer.HalAccelerometerGetAll( &Ax, &Ay, &Az );
+    HalMagnetometer::Magneto.HalMagnetometerGetAll( &Mx, &My, &Mz );
+
+#ifdef CALIBRATE_MAG_DEBUG
     /*
        keep track of the Magnetometer calibration values
     */
-    HalMagnetometer::Magneto.HalMagnetometerGetAll( &Mx, &My, &Mz );
+
     if (Mx > MxMax)
     {
         MxMax = Mx;
@@ -82,27 +132,40 @@ void TelescopeOrientation::Run( void )
     {
         MzMin = Mz;
     }
-    printf ("MxMax: %f MxMin: %f  MyMax: %f  MyMin: %f  MzMax: %f  MzMin: %f  \n\r", MxMax, MxMin, MyMax, MyMin, MzMax, MzMin ); // debug
+    printf ("Mx: %f My:%f Mz:%f MxMax: %f MxMin: %f  MyMax: %f  MyMin: %f  MzMax: %f  MzMin: %f  \n\r", Mx, My, Mz, MxMax, MxMin, MyMax, MyMin, MzMax, MzMin ); // debug
 #endif
-}
-
-/*
- *
- */
-float TelescopeOrientation::TelescopeOrientationGetHeading( void )
-{
-    float heading = 0;
-    float XComponent = 0;
-    float YComponent = 0;
-    float Mx, My, Mz;
-    float Ax, Ay, Az, Axn, Azn;
-    float Mxo, Myo, Mzo; /* magneto values with offset */
+#ifdef CALIBRATE_ACC_DEBUG
     /*
-        get filtered sensor data
+       keep track of the Accelerometer calibration values
     */
-    HalAccelerometer::Accelerometer.HalAccelerometerGetAll( &Ax, &Ay, &Az );
-    HalMagnetometer::Magneto.HalMagnetometerGetAll( &Mx, &My, &Mz );
 
+    if (Ax > AxMax)
+    {
+        AxMax = Ax;
+    }
+    if (Ax < AxMin)
+    {
+        AxMin = Ax;
+    }
+    if (Ay > AyMax)
+    {
+        AyMax = Ay;
+    }
+    if (Ay < AyMin)
+    {
+        AyMin = Ay;
+    }
+    if (Az > AzMax)
+    {
+        AzMax = Az;
+    }
+    if (Az < AzMin)
+    {
+        AzMin = Az;
+    }
+    printf ("Ax: %f Ay:%f Az:%f AxMax: %f AxMin: %f  AyMax: %f  AyMin: %f  AzMax: %f  AzMin: %f  \n\r", Ax, Ay, Az, AxMax, AxMin, AyMax, AyMin, AzMax, AzMin ); // debug
+#endif
+    
     /*
         remove Hard Iron effects
     */
@@ -113,47 +176,57 @@ float TelescopeOrientation::TelescopeOrientationGetHeading( void )
     /*
         Normalise
     */
-    Mxo = Mxo / (CONFIG_MxMax - CONFIG_MX_OFFSET);
-    Myo = Myo / (CONFIG_MyMax - CONFIG_MY_OFFSET);
-    Mzo = Mzo / (CONFIG_MzMax - CONFIG_MZ_OFFSET);
-    Axn = Ax / ( sqrt((Ax*Ax) + (Az*Az)));
-    Azn = Az / ( sqrt((Ax*Ax) + (Az*Az)));
-    /*
-        Calculate heading
-    */
-    XComponent = (Mxo*Azn) + (Mzo*Axn) ;
-    YComponent = Myo;
-    heading = atan2(-YComponent,XComponent);
-    /*
-        heading must be between 0' and 360'
-    */
-    if (heading > (2*M_PI)) 
-    {
-        heading -= (2*M_PI);
-    }
-    if (heading < 0) 
-    {
-        heading += (2*M_PI);
-    }
-    /* 
-        need to invert the heading so east is +90'
-    */
-    return (heading);
-}
-
-
-/* Calculates the  Pitch
- * see http://www.st.com/web/en/resource/technical/document/application_note/CD00268887.pdf
- */
-float TelescopeOrientation::TelescopeOrientationGetPitch( void )
-{
-    float Pitch;
-    float Ax, Ay, Az;
-    HalAccelerometer::Accelerometer.HalAccelerometerGetAll( &Ax, &Ay, &Az );
+    Mxo = Mxo / (CONFIG_MXMAX - CONFIG_MX_OFFSET);
+    Myo = Myo / (CONFIG_MYMAX - CONFIG_MY_OFFSET);
+    Mzo = Mzo / (CONFIG_MZMAX - CONFIG_MZ_OFFSET);
+#ifdef CALC_DEBUG
+    printf ("Mxo: %f Myo: %f Mzo: %f ", Mxo, Myo, Mzo ); // debug
+#endif
+    
+    Axo = Ax / (CONFIG_AXMAX - CONFIG_AX_OFFSET);
+    Ayo = Ay / (CONFIG_AYMAX - CONFIG_AY_OFFSET);
+    Azo = Az / (CONFIG_AZMAX - CONFIG_AZ_OFFSET);
+#ifdef CALC_DEBUG
+    printf ("Axo: %f Ayo: %f Azo: %f ", Axo, Ayo, Azo ); // debug
+#endif
 
     /*
         Calculate Pitch
     */
-    Pitch = asin ( Ax / ( sqrt( (Ax*Ax) + (Ay*Ay) + ( Az*Az) ) ) );
-    return Pitch;
+    *Pitch = asin ( Axo / ( sqrt( (Axo*Axo) + (Ayo*Ayo) + ( Azo*Azo) ) ) );
+    CosPitch = cos(*Pitch);
+    SinPitch = sin(*Pitch);
+    
+    /*
+        Calculate Roll
+    */
+    *Roll = atan2( Ayo, Azo );
+    CosRoll = cos(*Roll);
+    SinRoll = sin(*Roll);
+    
+    /*
+        Calculate X and Y components then heading
+    */
+    XComponent = ( Mxo * CosPitch ) + ( Myo * SinRoll * SinPitch ) + ( Mzo * CosRoll * SinPitch );
+    YComponent = ( Mzo * SinRoll ) - ( Myo * CosRoll );
+    *Heading = atan2( YComponent , XComponent ); 
+
+    if (*Heading > (2*M_PI)) 
+    {
+        *Heading -= (2*M_PI);
+    }
+    if (*Heading < 0) 
+    {
+        *Heading += (2*M_PI);
+    }
+    /*
+        set values in manager
+    */
+    
+#ifdef CALC_DEBUG
+    printf ("heading %f ", *Heading);
+    printf ("roll %f ", *Roll);
+    printf ("pitch %f\n\r", *Pitch);
+#endif
 }
+

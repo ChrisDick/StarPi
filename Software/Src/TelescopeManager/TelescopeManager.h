@@ -30,9 +30,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 class TelescopeManager : public Runnable 
 {
-    
-        CelestrialConverter Calculator;
     public:
+	    CelestrialConverter Calculator;
     /** constructor
      */
         TelescopeManager();
@@ -62,7 +61,6 @@ class TelescopeManager : public Runnable
         
        // static void testCalculator ( void );
     private:
-        static bool HeadingCorrected;  
         static double TargetRightAscension;   /**< Target right ascension */
         static double TargetDeclination;      /**< Target declination */
 };

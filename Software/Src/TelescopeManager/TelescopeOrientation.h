@@ -43,12 +43,27 @@ class TelescopeOrientation: public Runnable {
     /** Get the heading of the Telescope
      * @return double heading 
      */
-        float TelescopeOrientationGetHeading( void );
+        void GetOrientation( float* Pitch, float* Roll, float* Heading );
     /** Get the Pitch of the Telescope
      */
-        float TelescopeOrientationGetPitch( void );
-        
         static TelescopeOrientation Orient;      /**< Only one is required */  
+    private:
+        
+    /** Calibration Values
+     */
+        float MxMax;
+        float MxMin;
+        float MyMax;
+        float MyMin;
+        float MzMax;
+        float MzMin;
+        float AxMax;
+        float AxMin;
+        float AyMax;
+        float AyMin;
+        float AzMax;
+        float AzMin;
+
 };
 
 #endif /* TELESCOPEORIENTATION_H */

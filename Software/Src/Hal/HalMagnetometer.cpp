@@ -45,8 +45,8 @@ LSM303DLHC_Mag Magnetomometer;
 #endif
 
 static float b[] = {1,  -1.4, 1};
- static float a[] = {1, -1.3, 0.5};
- static float Xv1m1 = 0, Xv2m1 = 0, Yv1m1 = 0, Yv2m1 = 0, Zv1m1 = 0, Zv2m1 = 0, v1m, v2m;
+static float a[] = {1, -1.3, 0.5};
+static float Xv1m1 = 0, Xv2m1 = 0, Yv1m1 = 0, Yv2m1 = 0, Zv1m1 = 0, Zv2m1 = 0, v1m, v2m;
 
 
  static float iirfilter(float x1, float v1m1, float v2m1) {

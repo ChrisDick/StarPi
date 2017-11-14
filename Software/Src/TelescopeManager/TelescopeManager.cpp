@@ -34,7 +34,7 @@ double TelescopeManager::RightAscension;         /**< Right ascension */
 double TelescopeManager::Declination;            /**< Declination */
 double TelescopeManager::TargetRightAscension;   /**< Target right ascension */
 double TelescopeManager::TargetDeclination;      /**< Target declination */
-bool TelescopeManager::HeadingCorrected;
+
 /* constructor
 */
 TelescopeManager::TelescopeManager()
@@ -45,14 +45,12 @@ TelescopeManager::TelescopeManager()
 */
 void TelescopeManager::TelescopeManagerInit()
 {
-    HeadingCorrected = false;
-    RightAscension = 0;
-    Declination = 0;
-    TargetRightAscension = 0;
-    TargetDeclination = 0;
+    RightAscension = 0.0f;
+    Declination = 0.0f;
+    TargetRightAscension = 0.0f;
+    TargetDeclination = 0.0f;
     TelescopeOrientation::Orient.TelescopeOrientationInit();
     HalGps::Gps.HalGpsInit();
-    
 }
 
 
@@ -63,25 +61,32 @@ void TelescopeManager::Run()
     /*
         starpi variables
     */
-    CC_ANGLES_T Angles;
-    struct tm * gmt;
-    uint16_t Year = 0;
-    float MagneticDeclination = 0;
+    time_t UnixTime = 0;
+    struct tm gmt;
+    float MagneticDeclination = 0.0f;
     MagModel MagCorrect;
-    float AzimuthDegrees = 0;
-    float LatitudeDegrees = 0;
-    float LongitudeDegrees = 0;
-    float HeadingDegrees = 0;
-    float HieghtAboveGround = 0;
-    float UnixTime = 0;
+    double Azimuth = 0.0;
+    double Longitude = 0.0;
+    double Latitude = 0.0;
+    float HieghtAboveGround = 0.0f;
+    float LatitudeDegrees = 0.0f;
+    float LongitudeDegrees = 0.0f;
     SOURCE_T Source = DEFAULT; 
+    float HeadingDegrees = 0.0f;
+    uint16_t Year = 0.0f;
+    float AzimuthDegrees = 0.0f;
     timeval SysTime;
-    CC_TIME_T Longitude;
-    CC_TIME_T Latitude;
-    /*
-        Grab any messages for the Telescope
-    */
-    TelescopeIO::TeleIO.TelescopeIOWebRecieve();
+    /* Atoc13 function params */
+    erfa era; 
+    int res; 
+    double utc1, utc2; 
+    double xp = 0.0;
+    double yp = 0.0;
+    double dut1 = 0.0;
+    double phpa = 0.0;
+    double tc = 0.0;
+    double rh = 0.0;
+    double wl = 0.0;
     /*
         Perfrom user tasks
     */
@@ -89,47 +94,28 @@ void TelescopeManager::Run()
     /*
         Get the Position, Orientation and time of the telescope
     */
-    float Pitch = TelescopeOrientation::Orient.TelescopeOrientationGetPitch();
-    float PitchDegrees = (180*(Pitch/M_PI));
-    float Heading = TelescopeOrientation::Orient.TelescopeOrientationGetHeading();
+    float Pitch = 0.0f;
+    float Heading = 0.0f;
+    float Roll = 0.0f;
+    TelescopeOrientation::Orient.GetOrientation( &Pitch, &Roll, &Heading );
+    float PitchDegrees = (180.0f*(Pitch/M_PI));
+    
     
     gettimeofday(&SysTime, NULL);
     TelescopeIO::TeleIO.TelescopeIOGetValue( LOCSOURCE, &Source);
-    if ( Source == WEBSITE )
-    {
-        float DecimalLogitude = 0;
-        float DecimalLatitude = 0;
-//        TelescopeIO::TeleIO.TelescopeIOGetValue( WEBLONH, &Longitude.Hours);
-//        TelescopeIO::TeleIO.TelescopeIOGetValue( WEBLONM, &Longitude.Minutes);
-//        TelescopeIO::TeleIO.TelescopeIOGetValue( WEBLONS, &Longitude.Seconds);
-//        TelescopeIO::TeleIO.TelescopeIOGetValue( WEBLATD, &Latitude.Hours);
-//        TelescopeIO::TeleIO.TelescopeIOGetValue( WEBLATM, &Latitude.Minutes);
-//        TelescopeIO::TeleIO.TelescopeIOGetValue( WEBLATS, &Latitude.Seconds);
-//        TelescopeIO::TeleIO.TelescopeIOGetValue( WEBHIEGHT, &HieghtAboveGround);
-        /*  
-            Convert to decimal
-        */
-//        DecimalLogitude = Calculator.ConvertTimeToAngle( Longitude );
-//        DecimalLatitude = Calculator.ConvertTimeToAngle( Latitude );
 
-            TelescopeIO::TeleIO.TelescopeIOGetValue( LATITUDE, &DecimalLatitude);
-            TelescopeIO::TeleIO.TelescopeIOGetValue( LONGITUDE, &DecimalLogitude);
+//    if ( Source == WEBSITE )
+//    {
+//        TelescopeIO::TeleIO.TelescopeIOGetValue( LATITUDE, &LatitudeDegrees);
+//        TelescopeIO::TeleIO.TelescopeIOGetValue( LONGITUDE, &LongitudeDegrees);
         /*
             Set values for calculation
         */
-        Angles.LongitudeWest = ( DecimalLogitude / 180 ) * M_PI;
-        Angles.Latitude = ( DecimalLatitude / 180 ) * M_PI;
-        UnixTime = SysTime.tv_sec;
-        /*
-            Update data
-        */
-        TelescopeIO::TeleIO.TelescopeIOUpdateData( HEIGHT, &HieghtAboveGround );
-        LatitudeDegrees = (180*(Angles.Latitude/M_PI));
-        TelescopeIO::TeleIO.TelescopeIOUpdateData( LATITUDE, &LatitudeDegrees );
-        LongitudeDegrees = (180*(Angles.LongitudeWest/M_PI));
-        TelescopeIO::TeleIO.TelescopeIOUpdateData( LONGITUDE, &LongitudeDegrees );
-    }
-    else
+//        Longitude = ( LongitudeDegrees / 180.0f ) * M_PI;
+//        Latitude = ( LatitudeDegrees / 180.0f ) * M_PI;
+//        UnixTime = SysTime.tv_sec;
+//    }
+//    else
     {
         if (HalGps::Gps.HalGpsGetFix())
         {
@@ -138,15 +124,15 @@ void TelescopeManager::Run()
             */
             UnixTime = HalGps::Gps.HalGpsGetTime();
             HieghtAboveGround = HalGps::Gps.HalGpsGetHeightInkm();
-            Angles.LongitudeWest = ( HalGps::Gps.HalGpsGetLongitude() / 180 ) * M_PI;
-            Angles.Latitude = ( HalGps::Gps.HalGpsGetLatitude() / 180 ) * M_PI;    
+            LatitudeDegrees = HalGps::Gps.HalGpsGetLatitude();
+            LongitudeDegrees = HalGps::Gps.HalGpsGetLongitude();
+            Longitude = ( LongitudeDegrees / 180.0f ) * M_PI;
+            Latitude = ( LatitudeDegrees / 180.0f ) * M_PI;    
             /*
                 Update data
             */
             TelescopeIO::TeleIO.TelescopeIOUpdateData( HEIGHT, &HieghtAboveGround );
-            LatitudeDegrees = (180*(Angles.Latitude/M_PI));
             TelescopeIO::TeleIO.TelescopeIOUpdateData( LATITUDE, &LatitudeDegrees );
-            LongitudeDegrees = (180*(Angles.LongitudeWest/M_PI));
             TelescopeIO::TeleIO.TelescopeIOUpdateData( LONGITUDE, &LongitudeDegrees );
             /*
                 Update system time from fix
@@ -156,116 +142,83 @@ void TelescopeManager::Run()
         else
         {
             /* use stored values */
-            float DecimalLogitude = 0;
-            float DecimalLatitude = 0;
-            TelescopeIO::TeleIO.TelescopeIOGetValue( LONGITUDE, &DecimalLogitude);
-            Angles.LongitudeWest = ( DecimalLogitude / 180 ) * M_PI;
-            TelescopeIO::TeleIO.TelescopeIOGetValue( LATITUDE, &DecimalLatitude);
-            Angles.Latitude = ( DecimalLatitude / 180 ) * M_PI;
+            TelescopeIO::TeleIO.TelescopeIOGetValue( LONGITUDE, &LongitudeDegrees);
+            Longitude = ( LongitudeDegrees / 180.0f ) * M_PI;
+            TelescopeIO::TeleIO.TelescopeIOGetValue( LATITUDE, &LatitudeDegrees);
+            Latitude = ( LatitudeDegrees / 180.0f ) * M_PI;
             TelescopeIO::TeleIO.TelescopeIOGetValue( HEIGHT, &HieghtAboveGround);
             UnixTime = SysTime.tv_sec;
         }
     }  
+//    LatitudeDegrees = 54.9482778;
+//    LongitudeDegrees = -1.68;
+            
     /*
         Convert Time to GMT
     */
-    time_t Time = (time_t)UnixTime;
-    gmt = gmtime ( &Time );
+    gmtime_r(&UnixTime, &gmt);
     /*
         get compensation for magnetic declination
-        ToDo only do this when the location updates from satellite lock or user input, need to improve Hal_Gps to do this
     */
-    if ( HalGps::Gps.HalGpsGetFix() || ( Source == WEBSITE ) )
+    if ( HalGps::Gps.HalGpsGetFix() )
     {
-        MagCorrect.MagModelSetParams( Angles.Latitude, Angles.LongitudeWest, HieghtAboveGround, gmt->tm_mday, (gmt->tm_mon + 1), (gmt->tm_year + 1900) );
+        MagCorrect.MagModelSetParams( Latitude, Longitude, HieghtAboveGround, gmt.tm_mday, (gmt.tm_mon + 1), (gmt.tm_year + 1900) );
         MagneticDeclination = MagCorrect.MagModelGetDeclination();
         TelescopeIO::TeleIO.TelescopeIOUpdateData( MAGDEC, &MagneticDeclination );
     }
-    else
-    {
-        /*
-            Get from Storage
-        */
-        TelescopeIO::TeleIO.TelescopeIOGetValue( MAGDEC, &MagneticDeclination );
-    }
     /*
-        Perfrom Calculation for Telescope position
+        Perform Calculation for Telescope position
     */
-    // ToDo + or - Mag dec?
-    Angles.Azimuth = Heading + ((MagneticDeclination/180)*M_PI); // ToDo make this come from magmodel in radians?
-    Angles.Altitude = Pitch;
-    Calculator.EquitorialToCelestrial( &Angles, UnixTime );
-    RightAscension = Angles.RightAscension;
-    Declination = Angles.Declination;
-
-    erfa era; 
-    double azRadians;
-    double zenRadians;
-    double raRadians;
-    double decRadians;
-    int res; 
-    /* time variables */
-    time_t now_time; 
-    struct tm now_tm; 
-    /* Atoc13 function params */
-    double utc1, utc2; 
-    double xp = 0.0;
-    double yp = 0.0;
-    double dut1 = 0.0;
-    double phpa = 0.0;
-    double tc = 0.0;
-    double rh = 0.0;
-    double wl = 0.0;
-    /* get the current time */
-    now_time = time(NULL); 
-    gmtime_r(&now_time, &now_tm); 
+    Azimuth = Heading + ((MagneticDeclination/180.0f)*M_PI); // ToDo make this come from magmodel in radians?
+     
     /* calculate utc as two part value */
     res = era.Dtf2d("UTC", 
-        now_tm.tm_year + 1900, now_tm.tm_mon + 1, now_tm.tm_mday, 
-        now_tm.tm_hour, now_tm.tm_min, now_tm.tm_sec, 
+        gmt.tm_year + 1900, gmt.tm_mon + 1, gmt.tm_mday, 
+        gmt.tm_hour, gmt.tm_min, gmt.tm_sec, 
         &utc1, &utc2); 
     /* convert az/zen to ra/dec */
-    res = era.Atoc13("A", Angles.Azimuth, ((90.0f * ERFA_DD2R) - Angles.Altitude),
+    res = era.Atoc13("A", Azimuth, ((90.0f * ERFA_DD2R) - Pitch),
         utc1, utc2, dut1,
-        (-1*Angles.LongitudeWest), Angles.Latitude, (HieghtAboveGround*1000), xp, yp,
+        Longitude, Latitude, (HieghtAboveGround*1000.0f), xp, yp,
         phpa, tc, rh, wl,
         &RightAscension, &Declination);
-    
+    (void)res; 
     /*
         Update Data
     */
-    Year = (gmt->tm_year + 1900 );
-    TelescopeIO::TeleIO.TelescopeIOUpdateData( GMTYEAR, &Year );
-    TelescopeIO::TeleIO.TelescopeIOUpdateData( GMTDAY, &gmt->tm_mday );
-    TelescopeIO::TeleIO.TelescopeIOUpdateData( GMTMON, &gmt->tm_mon );
-    TelescopeIO::TeleIO.TelescopeIOUpdateData( GMTHOUR, &gmt->tm_hour );
-    TelescopeIO::TeleIO.TelescopeIOUpdateData( GMTMIN, &gmt->tm_min );
-    TelescopeIO::TeleIO.TelescopeIOUpdateData( GMTSEC, &gmt->tm_sec );
-    TelescopeIO::TeleIO.TelescopeIOUpdateData( BST, &gmt->tm_isdst );
-    TelescopeIO::TeleIO.TelescopeIOUpdateData( UNIXTIME, &UnixTime );
 
-    HeadingDegrees = (180*(Heading/M_PI));
+    Year = (gmt.tm_year + 1900 );
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( GMTYEAR, &Year );
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( GMTDAY, &gmt.tm_mday );
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( GMTMON, &gmt.tm_mon );
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( GMTHOUR, &gmt.tm_hour );
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( GMTMIN, &gmt.tm_min );
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( GMTSEC, &gmt.tm_sec );
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( BST, &gmt.tm_isdst );
+    TelescopeIO::TeleIO.TelescopeIOUpdateData( UNIXTIME, &UnixTime );
+    HeadingDegrees = (180.0f*(Heading/M_PI));
     TelescopeIO::TeleIO.TelescopeIOUpdateData( MAGHEAD, &HeadingDegrees );
     TelescopeIO::TeleIO.TelescopeIOUpdateData( TRUEHEAD, &AzimuthDegrees );
 
 
     TelescopeIO::TeleIO.TelescopeIOUpdateData( ALTITUDE, &PitchDegrees );
-    AzimuthDegrees = (180*(Angles.Azimuth/M_PI));
+    AzimuthDegrees = (180.0f*(Azimuth/M_PI));
     TelescopeIO::TeleIO.TelescopeIOUpdateData( AZIMUTH, &AzimuthDegrees );
     
-    TelescopeIO::TeleIO.TelescopeIOUpdateData( LSTHOUR, &Angles.LocalSiderealCCTime.Hours );
-    TelescopeIO::TeleIO.TelescopeIOUpdateData( LSTMIN, &Angles.LocalSiderealCCTime.Minutes );
-    TelescopeIO::TeleIO.TelescopeIOUpdateData( LSTSEC, &Angles.LocalSiderealCCTime.Seconds );
+//    TelescopeIO::TeleIO.TelescopeIOUpdateData( LSTHOUR, &Angles.LocalSiderealCCTime.Hours );
+//    TelescopeIO::TeleIO.TelescopeIOUpdateData( LSTMIN, &Angles.LocalSiderealCCTime.Minutes );
+//    TelescopeIO::TeleIO.TelescopeIOUpdateData( LSTSEC, &Angles.LocalSiderealCCTime.Seconds );
 
     CC_TIME_T Temp;
-    Calculator.ConvertRadiansToTime( Angles.RightAscension, &Temp );
+    Calculator.ConvertRadiansToTime( RightAscension, &Temp );
     TelescopeIO::TeleIO.TelescopeIOUpdateData( RAHOURS, &Temp.Hours );
     TelescopeIO::TeleIO.TelescopeIOUpdateData( RAMIN, &Temp.Minutes );
     TelescopeIO::TeleIO.TelescopeIOUpdateData( RASEC, &Temp.Seconds );
-    Calculator.ConvertRadiansToDegrees( Angles.Declination, &Temp );
+    Calculator.ConvertRadiansToDegrees( Declination, &Temp );
     TelescopeIO::TeleIO.TelescopeIOUpdateData( DECHOURS, &Temp.Hours );
     TelescopeIO::TeleIO.TelescopeIOUpdateData( DECMIN, &Temp.Minutes );
     TelescopeIO::TeleIO.TelescopeIOUpdateData( DECSEC, &Temp.Seconds );
+
 }
 
 

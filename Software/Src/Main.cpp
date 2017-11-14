@@ -125,5 +125,5 @@ int main(int argc, char *argv[])
     {
         Scheduler.DispatchTasks();
     }
-
+    return error;
 }
