@@ -40,22 +40,22 @@ class HalGps: public Runnable
     /** Initialise the GPSD connection
      * @return bool Initialisation status  
      */
-        bool HalGpsInit( void );
+        bool Init( void );
     /** Runs the filter
      */
         void Run( void );
     /** Get the Latitude of the Telescope
      * @return double Latitude 
      */
-        double HalGpsGetLatitude( void );
+        double GetLatitude( void );
     /** Get the Latitude of the Telescope
      * @return double Longitude 
      */
-        double HalGpsGetLongitude( void );
+        double GetLongitude( void );
     /** Get the time in unix time
      * @return double time
      */
-        double HalGpsGetTime( void );
+        double GetTime( void );
     /** HalGpsGetMode
      *  Get the fix mode
      * 0 = invalid
@@ -69,26 +69,26 @@ class HalGps: public Runnable
      * 8 = Simulation mode
      * @return uint8_t Mode 
      */
-        uint8_t HalGpsGetMode( void );
+        uint8_t GetMode( void );
 
     /** HalGpsGetfix
      * Get the current fix status
      * @return bool fix 
      */
-        bool HalGpsGetFix( void );
+        bool GetFix( void );
     /** HalGpsGetNoOfSatellites
      * Get the number of satellites in view
      * @return uint8_t Number Of Satellites 
      */
-        uint8_t HalGpsGetNoOfSatellites( void );
+        uint8_t GetNoOfSatellites( void );
     /** Get the height above ground in meters
      * @return double Height
      */
-        double HalGpsGetHeight( void );
+        double GetHeight( void );
     /** Get the height above ground in kilometers.
      * @return double Height
      */    
-        double HalGpsGetHeightInkm( void );
+        double GetHeightInkm( void );
        
         static HalGps Gps;
         

@@ -39,12 +39,12 @@ class MagModel
      * @param Month - current month.
      * @param Year - current year.
      */
-        void MagModelSetParams( float Latitude, float Logitude, float HieghtAboveGround, int Day, int Month, int Year );
+        void SetParams( float Latitude, float Logitude, float HieghtAboveGround, int Day, int Month, int Year );
 
      /** Get Magnetic Declination at Location
       * @return float Magnetic Declination in degrees
       */
-        float MagModelGetDeclination( void );
+        float GetDeclination( void );
 
         MAGtype_GeoMagneticElements GeoMagneticElements; /**< storage for calculated params */ 
         MAGtype_GeoMagneticElements Errors; /**< storage for errors in calculations */

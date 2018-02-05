@@ -24,13 +24,18 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
+#include <math.h>
+#include <stdio.h> // for debug
 
 #include "ServerPi.h"
 #include "Socket.hpp" // GetNow
 #include "TelescopeManager.h"
-#include <math.h>
+#include "Config.h"
 
-#include <stdio.h> // for debug
+#ifdef TIMING
+#include "GPIO.h"
+#endif
+
 /* Constructor
 */
 ServerPi::ServerPi(int Port)
@@ -41,6 +46,7 @@ ServerPi::ServerPi(int Port)
     current_pos[1] = desired_pos[1] = 0.0;
     current_pos[2] = desired_pos[2] = 0.0;
 #endif
+
     next_pos_time = -0x8000000000000000LL;
 }
 
@@ -144,9 +150,17 @@ void ServerPi::SetRaDec (double Ra, double Dec )
 
 void ServerPi::Run( void )
 {
+    #ifdef TIMING
+    GPIO::gpio.SetPinState( SERVER_PI_PIN , true );
+    #endif
+
     TelescopeManager::GetRaDec( &RightAscension, &Declination );
     //SetRaDec( RightAscension, Declination );
     Step( 10000 );
+
+    #ifdef TIMING
+    GPIO::gpio.SetPinState( SERVER_PI_PIN , false );
+    #endif
 }
 
 /*

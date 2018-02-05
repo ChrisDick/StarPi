@@ -36,7 +36,7 @@ class TelescopeOrientation: public Runnable {
     /** Initialise the Orientation
      * @return bool Initialisation status  
      */
-        bool TelescopeOrientationInit( void );
+        bool Init( void );
     /** Runs the filter
      */
         void Run( void );

@@ -261,7 +261,7 @@ double CelestrialConverter::CalculateLocalSiderealTime( time_t UnixTime, double 
     /*
         ToDo move this to telescope manager
     */
-    TelescopeIO::TeleIO.TelescopeIOUpdateData( JULIANDATE, &JulianDate );
+    TelescopeIO::TeleIO.UpdateData( JULIANDATE, &JulianDate );
     /*
         Calculate the grenwich mean standard time
         GMST = 6.697374558 + 0.06570982441908 D0 + 1.00273790935 H + 0.000026 T2 

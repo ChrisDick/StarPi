@@ -28,6 +28,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <iostream>
 #include <sys/poll.h>
 #include <string.h>
+#include "Config.h"
+
+#ifdef TIMING
+#include "GPIO.h"
+#endif
+
 #include "HalWebsocketd.h"
 
 HalWebsocketd   HalWebsocketd::Websocket;
@@ -43,7 +49,7 @@ HalWebsocketd::HalWebsocketd( void )
  *  Initialise the GPSD connection
  * @return bool Initialisation status  
  */
-void HalWebsocketd::HalWebsocketdInit( void )
+void HalWebsocketd::Init( void )
 {
     /*
         reset all queues and the buffer
@@ -54,6 +60,12 @@ void HalWebsocketd::HalWebsocketdInit( void )
     OutputQueue.ReadIndex = 0;
     OutputQueue.WriteIndex = 0;
     OutputQueue.FillLevel = 0;
+    
+#ifdef TIMING
+    GPIO::gpio.SetupOutput( HAL_WEBSOCKETD_PIN );
+    GPIO::gpio.SetPullMode( HAL_WEBSOCKETD_PIN , PULL_UP );
+#endif
+
 }
 
 /* HalWebsocketdRun
@@ -61,17 +73,24 @@ void HalWebsocketd::HalWebsocketdInit( void )
  */
 void HalWebsocketd::Run( void )
 {    
+    #ifdef TIMING
+    GPIO::gpio.SetPinState( HAL_WEBSOCKETD_PIN , true );
+    #endif
+
     char OutputMessage[DATALENGTH+1] = { 0 };
     ThreadRun();
     /*
         Send a message if any are waiting
     */
-    if (!HalWebsocketdQueueEmpty(&OutputQueue))
+    if (!QueueEmpty(&OutputQueue))
     {
         //printf("FillLevel = %d ReadIndex = %d WriteIndex = %d\n", OutputQueue.FillLevel, OutputQueue.ReadIndex, OutputQueue.WriteIndex ); 
-        HalWebsocketdGetNextMessage( &OutputQueue, OutputMessage);
+        GetNextMessage( &OutputQueue, OutputMessage);
         puts( OutputMessage );   
     }
+    #ifdef TIMING
+    GPIO::gpio.SetPinState( HAL_WEBSOCKETD_PIN , false );
+    #endif
 }
 
 /* ThreadRun
@@ -95,7 +114,7 @@ void HalWebsocketd::ThreadRun( void )
             if ( InputMessage[BufferIndex] == '\n' )
             {
                 InputMessage[BufferIndex] = '\0';
-                HalWebsocketdAddMessage( &InputQueue, InputMessage, 0 );   
+                AddMessage( &InputQueue, InputMessage, 0 );   
                 BufferIndex = 0;
             }
             else
@@ -117,14 +136,14 @@ void HalWebsocketd::ThreadRun( void )
  * reads from the output queue.
  * @return bool_t if the message was added
  */
-bool HalWebsocketd::HalWebsocketdSendMessage( char* Message, uint8_t Id )
+bool HalWebsocketd::SendMessage( char* Message, uint8_t Id )
 {
     bool Result = false;
     /*
         check each queue location between read and write indecies
         and update if the message id already exists
     */
-    if (!HalWebsocketdQueueEmpty(&OutputQueue))
+    if (!QueueEmpty(&OutputQueue))
     {
         uint8_t Index = OutputQueue.ReadIndex;
         uint8_t I = 0;
@@ -150,11 +169,11 @@ bool HalWebsocketd::HalWebsocketdSendMessage( char* Message, uint8_t Id )
         to the queue
     */
     if (
-           (!HalWebsocketdQueueFull(&OutputQueue))
+           (!QueueFull(&OutputQueue))
         && ( !Result )
         )
     {
-        Result = HalWebsocketdAddMessage( &OutputQueue, Message, Id );
+        Result = AddMessage( &OutputQueue, Message, Id );
     }
     return Result;
 }
@@ -162,18 +181,18 @@ bool HalWebsocketd::HalWebsocketdSendMessage( char* Message, uint8_t Id )
 /* Get the next Message in the queue
  * 
  */
-bool HalWebsocketd::HalWebsocketdGetMessage( char* Message )
+bool HalWebsocketd::GetMessage( char* Message )
 {
     /*
         if the input queue isn't empty, return the next message
     */
-    return HalWebsocketdGetNextMessage( &InputQueue, Message );   
+    return GetNextMessage( &InputQueue, Message );   
 }
         
 /* Is the queue empty
  * @return bool_t true if empty
  */
-bool HalWebsocketd::HalWebsocketdQueueEmpty( MESSAGEQUEUE_T* Queue )  
+bool HalWebsocketd::QueueEmpty( MESSAGEQUEUE_T* Queue )  
 {
     bool Result = false;
     if ( Queue->FillLevel == 0)
@@ -187,7 +206,7 @@ bool HalWebsocketd::HalWebsocketdQueueEmpty( MESSAGEQUEUE_T* Queue )
 /* Is the queue full
  * @return bool_t true if full
  */
-bool HalWebsocketd::HalWebsocketdQueueFull( MESSAGEQUEUE_T* Queue )
+bool HalWebsocketd::QueueFull( MESSAGEQUEUE_T* Queue )
 {
     bool Result = false;
     if ( Queue->FillLevel == (QUEUESIZE))
@@ -200,10 +219,10 @@ bool HalWebsocketd::HalWebsocketdQueueFull( MESSAGEQUEUE_T* Queue )
 /* Get the next message
  * @return bool_t true if successful
  */
-bool HalWebsocketd::HalWebsocketdGetNextMessage( MESSAGEQUEUE_T* Queue, char* Message )    
+bool HalWebsocketd::GetNextMessage( MESSAGEQUEUE_T* Queue, char* Message )    
 {
     bool Result = false;
-    if (!HalWebsocketdQueueEmpty(Queue))
+    if (!QueueEmpty(Queue))
     {
         strcpy ( Message, Queue->Message[Queue->ReadIndex].Data);
         Queue->Message[Queue->ReadIndex].Id = 0; // todo - EMPTY(0) is currently at top of the enum, but this may change
@@ -225,10 +244,10 @@ bool HalWebsocketd::HalWebsocketdGetNextMessage( MESSAGEQUEUE_T* Queue, char* Me
 /* Add a message
  * @return bool_t true if successful
  */
-bool HalWebsocketd::HalWebsocketdAddMessage( MESSAGEQUEUE_T* Queue, char* Message, uint8_t Id )    
+bool HalWebsocketd::AddMessage( MESSAGEQUEUE_T* Queue, char* Message, uint8_t Id )    
 {
     bool Result = false;   
-    if (!HalWebsocketdQueueFull(Queue))
+    if (!QueueFull(Queue))
     {
         strcpy ( Queue->Message[Queue->WriteIndex].Data, Message );
         Queue->Message[Queue->WriteIndex].Id = Id;

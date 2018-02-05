@@ -39,10 +39,14 @@ CPPFILES := 		Src/Main.cpp \
 					Src/StellariumServer/ServerPi.cpp \
 					Src/TelescopeManager/TelescopeOrientation.cpp \
 					Src/TelescopeManager/TelescopeIO.cpp \
+					Src/TelescopeManager/TelescopeSocket.cpp \
 					Src/Hal/HalGps.cpp \
 					Src/Hal/HalAccelerometer.cpp \
 					Src/Hal/HalMagnetometer.cpp \
 					Src/Hal/HalWebsocketd.cpp \
+					Src/Hal/HalSocket.cpp \
+					Src/Drivers/GPIO.cpp \
+					Src/Drivers/LM29x.cpp \
 					Src/Scheduler/TTC_Sched.cpp \
 					Src/Scheduler/Runnable.cpp \
 					Src/TelescopeManager/TelescopeManager.cpp \

@@ -58,10 +58,9 @@ class HalWebsocketd: public Runnable
             uint8_t WriteIndex;              /**< Write location in queue */
             uint8_t FillLevel;               /**< Number of items currently queued */
         } MESSAGEQUEUE_T;
-    /** Initialise the GPSD connection
-     * @return bool Initialisation status  
+    /** Initialise the io  
      */
-        void HalWebsocketdInit( void );
+        void Init( void );
     /** Runs the filter
      */
         void Run( void );
@@ -74,11 +73,11 @@ class HalWebsocketd: public Runnable
      * @param Id identifier for the message.
      * @return bool true if item is successfully added to the queue
      */
-        bool HalWebsocketdSendMessage( char* Message, uint8_t Id );
+        bool SendMessage( char* Message, uint8_t Id );
     /** Get the next Message in the queue
      * @param Message pointer to the message to be altered or added to the send queue.
      */
-        bool HalWebsocketdGetMessage( char* Message );
+        bool GetMessage( char* Message );
 
         static HalWebsocketd Websocket; /**< We only want one object handling any stdio. */
         
@@ -86,25 +85,25 @@ class HalWebsocketd: public Runnable
      * @param Queue pointer to the queue to check
      * @return bool_t true if empty
      */
-        bool HalWebsocketdQueueEmpty( MESSAGEQUEUE_T* Queue );    
+        bool QueueEmpty( MESSAGEQUEUE_T* Queue );    
     /** Is the queue full
      * @param Queue pointer to the queue to check
      * @return bool_t true if full
      */
-        bool HalWebsocketdQueueFull( MESSAGEQUEUE_T* Queue );    
+        bool QueueFull( MESSAGEQUEUE_T* Queue );    
     /** Get the next message
      * @param Queue pointer to the queue to retrieve from
      * @param Message pointer to storage fro message
      * @return bool_t true if successful
      */
-        bool HalWebsocketdGetNextMessage( MESSAGEQUEUE_T* Queue, char* Message );   
+        bool GetNextMessage( MESSAGEQUEUE_T* Queue, char* Message );   
     /** Get the next message
      * @param Queue pointer to the queue to retrieve from
      * @param Message pointer to storage fro message
      * @param Id identifier for the message.
      * @return bool_t true if successful
      */
-        bool HalWebsocketdAddMessage( MESSAGEQUEUE_T* Queue, char* Message, uint8_t Id );
+        bool AddMessage( MESSAGEQUEUE_T* Queue, char* Message, uint8_t Id );
  
         private:
         MESSAGEQUEUE_T InputQueue;     /**< The Input queue  */

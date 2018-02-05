@@ -38,17 +38,21 @@ class HalMagnetometer: public Runnable {
     /** Initialise the Compass
      * @return bool Initialisation status  
      */
-        bool HalMagnetometerInit( void );
+        bool Init( void );
     /** Runs the filter
      */
         void Run( void );
     /** Access to the Magnetometer data.
      */
-        void HalMagnetometerGetAll( float* Mx, float* My, float* Mz );
+        void GetAll( float* Mx, float* My, float* Mz );
 
         static HalMagnetometer Magneto;
         
         private:
+    /** Get the raw heading of the Compass
+     * @void 
+     */
+        void GetRawData( int16_t* X, int16_t* Y, int16_t* Z );
     /** Get the raw X heading of the Compass
      * @return int16_t heading 
      */

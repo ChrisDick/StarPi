@@ -46,18 +46,15 @@ LSM303DLHC_Mag Magnetomometer;
 
 static float b[] = {1,  -1.4, 1};
 static float a[] = {1, -1.3, 0.5};
-static float Xv1m1 = 0, Xv2m1 = 0, Yv1m1 = 0, Yv2m1 = 0, Zv1m1 = 0, Zv2m1 = 0, v1m, v2m;
 
 
- static float iirfilter(float x1, float v1m1, float v2m1) {
+static float iirfilter(float x1, float* v1m1, float* v2m1) {
     float y1 = 0;
-    y1 = (b[0] * x1 + v1m1) / a[0];
-    v1m = (b[1] * x1 + v2m1) - a[1] * y1;
-    v2m = b[2] * x1 - a[2] * y1;
-    v1m1 = v1m;
-    v2m1 = v2m;
+    y1 = ( ( b[0] * x1 ) + *v1m1) / a[0];
+    *v1m1 = ( ( b[1] * x1 ) + *v2m1 ) - ( a[1] * y1 );
+    *v2m1 = ( b[2] * x1 ) - ( a[2] * y1 );
     return y1;
- }
+}
 
 
 HalMagnetometer HalMagnetometer::Magneto;
@@ -73,7 +70,7 @@ HalMagnetometer::HalMagnetometer( void )
  *  Initialise the Magnetomometer
  * @return bool Initialisation status  
  */
-bool HalMagnetometer::HalMagnetometerInit( void )
+bool HalMagnetometer::Init( void )
 {
     Magnetomometer.initialize();
     FilterCount = 0; 
@@ -101,24 +98,92 @@ void HalMagnetometer::Run( void )
     int16_t X = 0;
     int16_t Y = 0;
     int16_t Z = 0;
+    static float Xv1m1 = 0, Xv2m1 = 0, Yv1m1 = 0, Yv2m1 = 0, Zv1m1 = 0, Zv2m1 = 0;
     
-    X = GetXRawHeading();
-    Y = GetYRawHeading();
-    Z = GetZRawHeading();
+    //X = GetXRawHeading();
+    //Y = GetYRawHeading();
+    //Z = GetZRawHeading();
 
-    FilterX[4] = iirfilter(((float)X), Xv1m1, Xv2m1);
-    FilterY[4] = iirfilter(((float)Y), Yv1m1, Yv2m1);
-    FilterZ[4] = iirfilter(((float)Z), Zv1m1, Zv2m1);
+    GetRawData( &X, &Y, &Z );
+    
+    FilterX[4] = iirfilter(((float)X), &Xv1m1, &Xv2m1);
+    FilterY[4] = iirfilter(((float)Y), &Yv1m1, &Yv2m1);
+    FilterZ[4] = iirfilter(((float)Z), &Zv1m1, &Zv2m1);
  
 }
 
 /* Access to the Magnetometer data.
  */
-void HalMagnetometer::HalMagnetometerGetAll( float* Mx, float* My, float* Mz )
+void HalMagnetometer::GetAll( float* Mx, float* My, float* Mz )
 {
     *Mx = FilterX[4];
     *My = FilterY[4];
     *Mz = FilterZ[4];
+}
+
+/* Get the raw value of the Accelerometer
+ * This function reads 6 bytes at once over the I2C 
+ * instead of 3 transactions.
+ * @return int16_t X axis value
+ */
+void HalMagnetometer::GetRawData( int16_t* X, int16_t* Y, int16_t* Z )
+{
+    /*
+        get raw data
+    */
+    int16_t XRaw = 0;
+    int16_t YRaw = 0;
+    int16_t ZRaw = 0;
+    
+    Magnetomometer.getHeading( &XRaw, &YRaw, &ZRaw);
+    
+#ifdef OBJECTIVE_END_ACCEL_X_PLUS    
+    *X = XRaw;
+#elif defined OBJECTIVE_END_ACCEL_X_MINUS
+    *X = 0 - XRaw;
+#elif defined OBJECTIVE_END_ACCEL_Y_PLUS    
+    *X = YRaw;
+#elif defined OBJECTIVE_END_ACCEL_Y_MINUS
+    *X = 0 - YRaw;
+#elif defined OBJECTIVE_END_ACCEL_Z_PLUS    
+    *X = ZRaw;
+#elif defined OBJECTIVE_END_ACCEL_Z_MINUS
+    *X = 0 - ZRaw;
+#else
+    #error y axis not defined
+#endif
+
+#ifdef TELESCOPE_RIGHT_ACCEL_X_PLUS
+    *Y = XRaw;
+#elif defined TELESCOPE_RIGHT_ACCEL_X_MINUS
+    *Y = 0 - XRaw;
+#elif defined TELESCOPE_RIGHT_ACCEL_Y_PLUS
+    *Y = YRaw;
+#elif defined TELESCOPE_RIGHT_ACCEL_Y_MINUS
+    *Y = 0 - YRaw;
+#elif defined TELESCOPE_RIGHT_ACCEL_Z_PLUS
+    *Y = ZRaw;
+#elif defined TELESCOPE_RIGHT_ACCEL_Z_MINUS
+    *Y = 0 - ZRaw;
+#else
+    #error y axis not defined
+#endif
+
+#ifdef UP_ACCEL_X_PLUS
+    *Z = XRaw;
+#elif defined UP_ACCEL_X_MINUS
+    *Z = 0 - XRaw;
+#elif defined UP_ACCEL_Y_PLUS
+    *Z = YRaw;
+#elif defined UP_ACCEL_Y_MINUS
+    *Z = 0 - YRaw;
+#elif defined UP_ACCEL_Z_PLUS
+    *Z = ZRaw;
+#elif defined UP_ACCEL_Z_MINUS
+    *Z = 0 - ZRaw;
+#else
+    #error z axis not defined
+#endif
 }
 
 

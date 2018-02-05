@@ -54,6 +54,7 @@ typedef enum
     DECSEC,     //Temp.Seconds
     JULIANDATE, // Julian Data
     LOCSOURCE,  // the source of gps data, default 
+    GPSMODE,    //GPS fix mode
     //GPSLATD,
     //GPSLATM,
     //GPSLATS,
@@ -93,24 +94,24 @@ class TelescopeIO
     /** Initialise the Orientation
      * @return bool Initialisation status  
      */
-        bool TelescopeIOInit( void );
+        bool Init( void );
     /** Get any messages recieved from the websocket pass to handler 
      */
-        void TelescopeIOWebRecieve( void );
+        void WebRecieve( void );
     /** Get the heading of the Telescope
      * @param Id The id of the data to update
      * @param Data The new data to update
      */
-        bool TelescopeIOUpdateData(  DATAID_T Id, void* Data );
+        bool UpdateData(  DATAID_T Id, void* Data );
     /** Removes the data string and stores it.
      * @param Message tHE MESSAGE TO BE HANDELED.
      */
-        void TelescopeIOHandleMessage( char* Message );
+        void HandleMessage( char* Message );
     /** Gets the value from the string stored in the structure
      * @param Id The id of the data to get.
      * @param Data pointer to get the data to.
      */
-        void TelescopeIOGetValue( DATAID_T Id, void* Data );
+        void GetValue( DATAID_T Id, void* Data );
         
         static TelescopeIO TeleIO;
         

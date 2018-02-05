@@ -18,13 +18,18 @@ You should have received a copy of the GNU Lesser General Public
 License along with this library; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
+#include <math.h>
 #include "TelescopeOrientation.h"
 #include "HalMagnetometer.h"
 #include "HalAccelerometer.h"
 #include "Config.h"
-#include <math.h>
+
 #if ( defined CALIBRATE_MAG_DEBUG) || ( defined CALIBRATE_ACC_DEBUG )
 #include <stdio.h>
+#endif
+
+#ifdef TIMING
+#include "GPIO.h"
 #endif
 
 TelescopeOrientation TelescopeOrientation::Orient;
@@ -38,10 +43,10 @@ TelescopeOrientation::TelescopeOrientation( void )
 
 /* initialise the sensors used
  */
-bool TelescopeOrientation::TelescopeOrientationInit( void )
+bool TelescopeOrientation::Init( void )
 {
-    HalAccelerometer::Accelerometer.HalAccelerometerInit();
-    HalMagnetometer::Magneto.HalMagnetometerInit();
+    HalAccelerometer::Accelerometer.Init();
+    HalMagnetometer::Magneto.Init();
     MxMax = 0.0f;
     MxMin = 0.0f;
     MyMax = 0.0f;
@@ -55,6 +60,11 @@ bool TelescopeOrientation::TelescopeOrientationInit( void )
     AzMax = 0.0f;
     AzMin = 0.0f;
 
+#ifdef TIMING
+    GPIO::gpio.SetupOutput( TELESCOPE_ORIENTATION_PIN );
+    GPIO::gpio.SetPullMode( TELESCOPE_ORIENTATION_PIN , PULL_UP );
+#endif
+
     return true;
 }
 
@@ -64,8 +74,16 @@ bool TelescopeOrientation::TelescopeOrientationInit( void )
  */
 void TelescopeOrientation::Run( void )
 {
+    #ifdef TIMING
+    GPIO::gpio.SetPinState( TELESCOPE_ORIENTATION_PIN , true );
+    #endif
+
     HalMagnetometer::Magneto.Run();
     HalAccelerometer::Accelerometer.Run();
+
+    #ifdef TIMING
+    GPIO::gpio.SetPinState( TELESCOPE_ORIENTATION_PIN , false );
+    #endif
 }
 
 /*
@@ -100,8 +118,8 @@ void TelescopeOrientation::GetOrientation( float* Pitch, float* Roll, float* Hea
     /*
         get filtered sensor data
     */
-    HalAccelerometer::Accelerometer.HalAccelerometerGetAll( &Ax, &Ay, &Az );
-    HalMagnetometer::Magneto.HalMagnetometerGetAll( &Mx, &My, &Mz );
+    HalAccelerometer::Accelerometer.GetAll( &Ax, &Ay, &Az );
+    HalMagnetometer::Magneto.GetAll( &Mx, &My, &Mz );
 
 #ifdef CALIBRATE_MAG_DEBUG
     /*
@@ -219,9 +237,6 @@ void TelescopeOrientation::GetOrientation( float* Pitch, float* Roll, float* Hea
     {
         *Heading += (2*M_PI);
     }
-    /*
-        set values in manager
-    */
     
 #ifdef CALC_DEBUG
     printf ("heading %f ", *Heading);

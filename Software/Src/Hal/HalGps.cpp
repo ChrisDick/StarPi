@@ -22,6 +22,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "HalGps.h"
 #include "Config.h"
 
+#ifdef TIMING
+#include "GPIO.h"
+#endif
+
 HalGps   HalGps::Gps;
 double   HalGps::Longitude;          /**< longitude of the telescope       */
 double   HalGps::Latitude;           /**< latitude of the telescope        */
@@ -45,11 +49,16 @@ HalGps::HalGps( void )
  *  Initialise the GPSD connection
  * @return bool Initialisation status  
  */
-bool HalGps::HalGpsInit( void )
+bool HalGps::Init( void )
 {
     bool result;
  
     result = ( gps_ptr->stream(WATCH_ENABLE|WATCH_JSON) != NULL);
+
+#ifdef TIMING
+    GPIO::gpio.SetupOutput( HAL_GPS_PIN );
+    GPIO::gpio.SetPullMode( HAL_GPS_PIN , PULL_UP );
+#endif
 
     return result;
 }
@@ -58,10 +67,13 @@ bool HalGps::HalGpsInit( void )
  *  Check for any new data and update time and location
  */
 void HalGps::Run( void )
-{    
-/*
-   Check to see if there is new data, then update if it's relevent.
-*/
+{
+    #ifdef TIMING
+    GPIO::gpio.SetPinState( HAL_GPS_PIN , true );
+    #endif
+    /*
+    Check to see if there is new data, then update if it's relevent.
+    */
     struct gps_data_t* NewGpsData;
 
     if (gps_ptr->waiting(20))
@@ -91,13 +103,16 @@ void HalGps::Run( void )
         }
     }
     }
+    #ifdef TIMING
+    GPIO::gpio.SetPinState( HAL_GPS_PIN , false );
+    #endif
 }
 
 /* HalGpsGetHeading
  *  Get the Latitude of the Telescope
  * @return double Latitude 
  */
-double HalGps::HalGpsGetLatitude( void )
+double HalGps::GetLatitude( void )
 {
     return Latitude;
 }
@@ -106,7 +121,7 @@ double HalGps::HalGpsGetLatitude( void )
  *  Get the Longitude of the Telescope
  * @return double Longitude 
  */
-double HalGps::HalGpsGetLongitude( void )
+double HalGps::GetLongitude( void )
 {
     return Longitude;
 }
@@ -115,7 +130,7 @@ double HalGps::HalGpsGetLongitude( void )
  *  Get the current Time
  * @return double Time 
  */
-double HalGps::HalGpsGetTime( void )
+double HalGps::GetTime( void )
 {
     return Time;
 }
@@ -133,7 +148,7 @@ double HalGps::HalGpsGetTime( void )
  * 8 = Simulation mode
  * @return uint8_t Mode 
  */
-uint8_t HalGps::HalGpsGetMode( void )
+uint8_t HalGps::GetMode( void )
 {
     return Mode;
 }
@@ -142,17 +157,17 @@ uint8_t HalGps::HalGpsGetMode( void )
  *  Get the current fix status
  * @return bool fix 
  */
-bool HalGps::HalGpsGetFix( void )
+bool HalGps::GetFix( void )
 {
     /* ToDo: does this need to include more modes? */
-    return ( Mode == 3 ) ;
+    return ( ( Mode == 3 ) || ( Mode == 2 ) );
 }
 
 /* HalGpsGetNoOfSatellites
  *  Get the number of satellites in view
  * @return uint8_t Number Of Satellites 
  */
-uint8_t HalGps::HalGpsGetNoOfSatellites( void )
+uint8_t HalGps::GetNoOfSatellites( void )
 {
     return NumberOfSatellites;
 }
@@ -161,7 +176,7 @@ uint8_t HalGps::HalGpsGetNoOfSatellites( void )
  *  Get the current Height in kilometers
  * @return double Hieght 
  */
-double HalGps::HalGpsGetHeight( void )
+double HalGps::GetHeight( void )
 {
     return Height;
 }
@@ -170,7 +185,7 @@ double HalGps::HalGpsGetHeight( void )
  *  Get the current Height in kilometers
  * @return double Hieght 
  */
-double HalGps::HalGpsGetHeightInkm( void )
+double HalGps::GetHeightInkm( void )
 {
     return (Height/1000.0);
 }

@@ -125,7 +125,18 @@
 #define MOTOR_TWO LM29X2
 
 
-
+/*
+    Timing defines
+*/
+#if 0
+#include "GPIO.h"
+#define TIMING
+#define TELESCOPE_MANAGER_PIN      BCM_GPIO16
+#define TELESCOPE_ORIENTATION_PIN  BCM_GPIO19
+#define HAL_WEBSOCKETD_PIN         BCM_GPIO20
+#define HAL_GPS_PIN                BCM_GPIO13
+#define SERVER_PI_PIN              BCM_GPIO26
+#endif /* end of timing defines #if 0 */
 
 
 

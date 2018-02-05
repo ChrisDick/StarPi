@@ -27,7 +27,7 @@
  * @param Month - current month.
  * @param Year - current year.
  */
-void MagModel::MagModelSetParams( float Latitude, float Logitude, float HieghtAboveGround, int Day, int Month, int Year )
+void MagModel::SetParams( float Latitude, float Logitude, float HieghtAboveGround, int Day, int Month, int Year )
 {
     MAGtype_MagneticModel * MagneticModels[1];
     MAGtype_MagneticModel *TimedMagneticModel = NULL;
@@ -91,7 +91,7 @@ void MagModel::MagModelSetParams( float Latitude, float Logitude, float HieghtAb
 /* Get Magnetic Declination at Location
 * @return float Magnetic Declination in degrees
 */
-float MagModel::MagModelGetDeclination( void )
+float MagModel::GetDeclination( void )
 {
     return GeoMagneticElements.Decl;
 }

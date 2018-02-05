@@ -22,12 +22,19 @@
 #include <stdio.h>
 #include "ServerPi.h"
 #include "HalWebsocketd.h"
+#include "HalSocket.h"
 #include "HalGps.h"
 #include "TelescopeOrientation.h"
 #include "TelescopeManager.h"
+#include "TelescopeSocket.h"
 #include "TTC_Sched_Pi_Impl.h"
+#include "Config.h"
 #include <iostream>
 using namespace std;
+
+#ifdef TIMING
+#include "GPIO.h"
+#endif
 
 
 static volatile bool continue_looping = true;
@@ -79,22 +86,31 @@ int main(int argc, char *argv[])
     TTC_Sched_Pi_Impl   Scheduler;
     ServerPi PiServer( Port );
     
-    TelescopeManager::Telescope.TelescopeManagerInit(); 
-    
+#ifdef TIMING
+    GPIO::gpio.Init();
+    GPIO::gpio.SetupOutput( SERVER_PI_PIN );
+    GPIO::gpio.SetPullMode( SERVER_PI_PIN , PULL_UP );
+#endif
+
+    TelescopeManager::Telescope.Init(); 
     Scheduler.Init();   // call first to reset task table and configure timer.
     //printf ("scheduler initialised.\n");
        
     TelescopeOrientation::Orient.SetDelay(0); 
     TelescopeOrientation::Orient.SetPeriod(4); // run every 4 ticks (1 tick == 500us).
     
-    HalWebsocketd::Websocket.HalWebsocketdInit();
+    HalWebsocketd::Websocket.Init();
     HalWebsocketd::Websocket.SetDelay(0); 
     HalWebsocketd::Websocket.SetPeriod(10);
- 
-    HalGps::Gps.SetDelay(1); // run one tick after telescope mgr run.
+
+    HalSocket::Socket.Init( 9999, &TelescopeSocket::TeleSocket.SocketCallback );
+    HalSocket::Socket.SetDelay(1); 
+    HalSocket::Socket.SetPeriod(50);
+
+    HalGps::Gps.SetDelay(0); // run one tick after telescope mgr run.
     HalGps::Gps.SetPeriod(400); // run every 200ms.
         
-    TelescopeManager::Telescope.SetDelay(0); 
+    TelescopeManager::Telescope.SetDelay(1); 
     TelescopeManager::Telescope.SetPeriod(10);
     
     PiServer.SetDelay(1);
@@ -111,7 +127,8 @@ int main(int argc, char *argv[])
     //printf ("tasks added = %d.\n", error);
     error = Scheduler.AddTask(&TelescopeManager::Telescope);
     //printf ("tasks added = %d.\n", error);
-    error = Scheduler.AddTask(&HalWebsocketd::Websocket);
+//    error = Scheduler.AddTask(&HalWebsocketd::Websocket);
+    error = Scheduler.AddTask(&HalSocket::Socket);
     //printf ("tasks added = %d.\n", error);
     //error =   Scheduler.AddTask(&Runs);
     //printf ("tasks added = %d.\n", error);
