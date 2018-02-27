@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #ifndef HALGPS_H
 #define HALGPS_H
 
+#include <sys/time.h>
 #include <stdint.h>
 #include "Runnable.h"
 #include "libgpsmm.h"
@@ -53,9 +54,9 @@ class HalGps: public Runnable
      */
         double GetLongitude( void );
     /** Get the time in unix time
-     * @return double time
+     * @return time_t time
      */
-        double GetTime( void );
+        time_t GetTime( void );
     /** HalGpsGetMode
      *  Get the fix mode
      * 0 = invalid
@@ -95,7 +96,7 @@ class HalGps: public Runnable
         private:
         static double Longitude;           /**< longitude of the telescope */
         static double Latitude;            /**< latitude of the telescope */
-        static double Time;                /**< latest time */
+        static time_t Time;                /**< latest time */
         static double Height;              /**< height above sea level of the gps */
         static uint8_t Mode;               /**< fix mode                         */
         static uint8_t NumberOfSatellites; /**< the number of satellites in view */

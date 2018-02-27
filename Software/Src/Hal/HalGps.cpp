@@ -29,7 +29,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 HalGps   HalGps::Gps;
 double   HalGps::Longitude;          /**< longitude of the telescope       */
 double   HalGps::Latitude;           /**< latitude of the telescope        */
-double   HalGps::Time;               /**< latest time                      */
+time_t   HalGps::Time;               /**< latest time                      */
 double   HalGps::Height;             /**< current height of the Gps        */
 uint8_t  HalGps::Mode;               /**< fix mode                         */
 uint8_t  HalGps::NumberOfSatellites; /**< the number of satellites in view */
@@ -130,7 +130,7 @@ double HalGps::GetLongitude( void )
  *  Get the current Time
  * @return double Time 
  */
-double HalGps::GetTime( void )
+time_t HalGps::GetTime( void )
 {
     return Time;
 }

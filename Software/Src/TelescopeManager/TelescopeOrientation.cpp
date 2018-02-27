@@ -59,6 +59,14 @@ bool TelescopeOrientation::Init( void )
     AyMin = 0.0f;
     AzMax = 0.0f;
     AzMin = 0.0f;
+        /* raw magneto values */
+    Mx = 0.0f;
+    My = 0.0f;
+    Mz = 0.0f;
+    /* Raw Accel values */
+    Ax = 0.0f;
+    Ay = 0.0f;
+    Az = 0.0f;
 
 #ifdef TIMING
     GPIO::gpio.SetupOutput( TELESCOPE_ORIENTATION_PIN );
@@ -91,14 +99,7 @@ void TelescopeOrientation::Run( void )
  */
 void TelescopeOrientation::GetOrientation( float* Pitch, float* Roll, float* Heading )
 {
-    /* raw magneto values */
-    float Mx = 0.0f;
-    float My = 0.0f;
-    float Mz = 0.0f;
-    /* Raw Accel values */
-    float Ax = 0.0f;
-    float Ay = 0.0f;
-    float Az = 0.0f;
+
     /* magneto values with offset */
     float Mxo = 0.0f;
     float Myo = 0.0f;
@@ -121,7 +122,6 @@ void TelescopeOrientation::GetOrientation( float* Pitch, float* Roll, float* Hea
     HalAccelerometer::Accelerometer.GetAll( &Ax, &Ay, &Az );
     HalMagnetometer::Magneto.GetAll( &Mx, &My, &Mz );
 
-#ifdef CALIBRATE_MAG_DEBUG
     /*
        keep track of the Magnetometer calibration values
     */
@@ -150,9 +150,9 @@ void TelescopeOrientation::GetOrientation( float* Pitch, float* Roll, float* Hea
     {
         MzMin = Mz;
     }
+#ifdef CALIBRATE_MAG_DEBUG
     printf ("Mx: %f My:%f Mz:%f MxMax: %f MxMin: %f  MyMax: %f  MyMin: %f  MzMax: %f  MzMin: %f  \n\r", Mx, My, Mz, MxMax, MxMin, MyMax, MyMin, MzMax, MzMin ); // debug
 #endif
-#ifdef CALIBRATE_ACC_DEBUG
     /*
        keep track of the Accelerometer calibration values
     */
@@ -181,6 +181,7 @@ void TelescopeOrientation::GetOrientation( float* Pitch, float* Roll, float* Hea
     {
         AzMin = Az;
     }
+#ifdef CALIBRATE_ACC_DEBUG
     printf ("Ax: %f Ay:%f Az:%f AxMax: %f AxMin: %f  AyMax: %f  AyMin: %f  AzMax: %f  AzMin: %f  \n\r", Ax, Ay, Az, AxMax, AxMin, AyMax, AyMin, AzMax, AzMin ); // debug
 #endif
     
@@ -245,3 +246,113 @@ void TelescopeOrientation::GetOrientation( float* Pitch, float* Roll, float* Hea
 #endif
 }
 
+/* Ax getter
+ */
+float TelescopeOrientation::GetAx( void )
+{
+    return Ax;
+}
+/* Ay getter
+ */
+float TelescopeOrientation::GetAy( void )
+{
+    return Ay;
+}
+/* Az getter
+ */
+float TelescopeOrientation::GetAz( void )
+{
+    return Az;
+}
+/* AxMin getter
+ */
+float TelescopeOrientation::GetAxMin( void )
+{
+    return AxMin;
+}
+/* AyMin getter
+ */
+float TelescopeOrientation::GetAyMin( void )
+{
+    return AyMin;
+}
+/* AzMin getter
+ */
+float TelescopeOrientation::GetAzMin( void )
+{
+    return AzMin;
+}
+/* AxMax getter
+ */
+float TelescopeOrientation::GetAxMax( void )
+{
+    return AxMax;
+}
+/* AyMax getter
+ */
+float TelescopeOrientation::GetAyMax( void )
+{
+    return AyMax;
+}
+/* AzMax getter
+ */
+float TelescopeOrientation::GetAzMax( void )
+{
+    return AzMax;
+}
+
+
+/* Mx getter
+ */
+float TelescopeOrientation::GetMx( void )
+{
+    return Mx;
+}
+/* My getter
+ */
+float TelescopeOrientation::GetMy( void )
+{
+    return My;
+}
+/* Mz getter
+ */
+float TelescopeOrientation::GetMz( void )
+{
+    return Mz;
+}
+/* MxMim getter
+ */
+float TelescopeOrientation::GetMxMin( void )
+{
+    return MxMin;
+}
+/* MyMin getter
+ */
+float TelescopeOrientation::GetMyMin( void )
+{
+    return MyMin;
+}
+/* MzMin getter
+ */
+float TelescopeOrientation::GetMzMin( void )
+{
+    return MzMin;
+}
+/* MxMax getter
+ */
+float TelescopeOrientation::GetMxMax( void )
+{
+    return MxMax;
+}
+/* MyMax getter
+ */
+float TelescopeOrientation::GetMyMax( void )
+{
+    return MyMax;
+}
+/* MzMax getter
+ */
+float TelescopeOrientation::GetMzMax( void )
+{
+    return MzMax;
+}

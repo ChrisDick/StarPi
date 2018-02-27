@@ -324,6 +324,20 @@ void TelescopeManager::GetRaDec ( double* Ra, double* Dec )
     *Dec = Declination;
 }
 
+/* Export the RightAscension
+ */
+float TelescopeManager::GetRightAscension( void )
+{
+    return (float)RightAscension;
+}
+
+/* Export the Declination
+ */
+float TelescopeManager::GetDeclination( void )
+{
+    return (float)Declination;
+}
+
 /* Export the MagneticDeclination
  */
 float TelescopeManager::GetMagneticDeclination( void )
@@ -520,7 +534,20 @@ bool TelescopeManager::GetBST( void )
 {
     return gmt.tm_isdst;
 }
+#if 0
 
+
+
+GpsLatitudeHoursHandler
+GpsLatitudeMinutesHandler
+GpsLatitudeSecondsHandler
+GpsLongitudeHoursHandler
+GpsLongitudeMinutesHandler
+GpsLongitudeSecondsHandler
+LocalSidrealTimeHourHandler
+LocalSidrealTimeMinHandler
+LocalSidrealTimeSecHandler
+#endif
 
 #if 0
 void TelescopeManager::testCalculator ( void )

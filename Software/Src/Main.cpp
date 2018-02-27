@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
     HalSocket::Socket.SetPeriod(50);
 
     HalGps::Gps.SetDelay(0); // run one tick after telescope mgr run.
-    HalGps::Gps.SetPeriod(400); // run every 200ms.
+    HalGps::Gps.SetPeriod(100); // run every 200ms.
         
     TelescopeManager::Telescope.SetDelay(1); 
     TelescopeManager::Telescope.SetPeriod(10);

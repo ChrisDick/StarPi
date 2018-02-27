@@ -58,6 +58,12 @@ class TelescopeManager : public Runnable
     /** Export the RightAscension and Declination
      */
         static void GetRaDec ( double* Ra, double* Dec );
+    /* Export the RightAscension
+     */
+        float GetRightAscension( void );
+    /* Export the Declination
+     */
+        float GetDeclination( void );
     /** Export the MagneticDeclination
      */
         float GetMagneticDeclination( void );

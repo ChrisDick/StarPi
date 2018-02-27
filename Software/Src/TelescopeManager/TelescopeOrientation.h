@@ -44,11 +44,73 @@ class TelescopeOrientation: public Runnable {
      * @return double heading 
      */
         void GetOrientation( float* Pitch, float* Roll, float* Heading );
-    /** Get the Pitch of the Telescope
+    
+    /** Ax getter
      */
+        float GetAx( void );
+    /** Ay getter
+     */
+        float GetAy( void );
+    /** Az getter    
+     */
+        float GetAz( void );
+    /** AxMin getter
+     */
+        float GetAxMin( void );
+    /** AyMin getter
+     */
+        float GetAyMin( void );
+    /** AzMin getter
+     */
+        float GetAzMin( void );
+    /** AxMax getter
+     */
+        float GetAxMax( void );
+    /** AyMax getter
+     */
+        float GetAyMax( void );
+    /** AzMax getter
+     */
+        float GetAzMax( void );
+    /** Mx getter
+     */
+        float GetMx( void );
+    /** My getter
+     */
+        float GetMy( void );
+    /** Mz getter
+     */
+        float GetMz( void );
+    /** MxMim getter
+     */
+        float GetMxMin( void );
+    /** MyMin getter
+     */
+        float GetMyMin( void );
+    /** MzMin getter
+     */
+        float GetMzMin( void );
+    /** MxMax getter
+     */
+        float GetMxMax( void );
+    /** MyMax getter
+     */
+        float GetMyMax( void );
+    /** Az getter
+     */
+        float GetMzMax( void );
+
         static TelescopeOrientation Orient;      /**< Only one is required */  
     private:
-        
+       
+    /** raw magneto values */
+        float Mx;
+        float My;
+        float Mz;
+    /** Raw Accel values */
+        float Ax;
+        float Ay;
+        float Az;       
     /** Calibration Values
      */
         float MxMax;
