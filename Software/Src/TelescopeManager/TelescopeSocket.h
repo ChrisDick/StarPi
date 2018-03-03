@@ -26,192 +26,204 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 typedef struct
 {
     const char Header[5];
-    void (*handler)( char* );
+    uint8_t (*handler)( char* );
 } TELEDATA_T;
 
 
 class TelescopeSocket 
 {
     public:
-    /* Constructor
+    /** Constructor
      */
         TelescopeSocket();
-    /* callback to handle which message has been sent
+    /** callback to handle which message has been sent
      */
         static void SocketCallback ( char* Buffer );
     /** only one instance of this class is required.
      */
         static TelescopeSocket TeleSocket;
 
-        static TELEDATA_T TelescopeData[57];
-    /* Handler for RightAscension
+        static TELEDATA_T TelescopeData[60];
+    /** Handler for an multiple message
      */
-        static void RightAscensionHandler( char* Buffer );
-    /* Handler for Declination
+        static uint8_t MultiHandler( char* Buffer );
+    /** Handler for RightAscension
      */
-        static void DeclinationHandler( char* Buffer );
-    /* Handler for TargetRightAscension
+        static uint8_t RightAscensionHandler( char* Buffer );
+    /** Handler for Declination
      */
-        static void TargetRightAscensionHandler( char* Buffer );
-    /* Handler for TargetDeclination
+        static uint8_t DeclinationHandler( char* Buffer );
+    /** Handler for TargetRightAscension
      */
-        static void TargetDeclinationHandler( char* Buffer );
-    /* Handler for UnixTime
+        static uint8_t TargetRightAscensionHandler( char* Buffer );
+    /** Handler for TargetDeclination
      */
-        static void UnixTimeHandler( char* Buffer );
-    /* Handler for GreenwichMeanTime
+        static uint8_t TargetDeclinationHandler( char* Buffer );
+    /** Handler for UnixTime
      */
-        static void GreenwichMeanTimeDayHandler( char* Buffer );
-    /* Handler for GreenwichMeanTimeMon
+        static uint8_t UnixTimeHandler( char* Buffer );
+    /** Handler for GreenwichMeanTime
      */
-        static void GreenwichMeanTimeMonHandler( char* Buffer );
-    /* Handler for GreenwichMeanTimeYear
+        static uint8_t GreenwichMeanTimeDayHandler( char* Buffer );
+    /** Handler for GreenwichMeanTimeMon
      */
-        static void GreenwichMeanTimeYearHandler( char* Buffer );
-    /* Handler for GreenwichMeanTimeHour
+        static uint8_t GreenwichMeanTimeMonHandler( char* Buffer );
+    /** Handler for GreenwichMeanTimeYear
      */
-        static void GreenwichMeanTimeHourHandler( char* Buffer );
-    /* Handler for GreenwichMeanTimeMin
+        static uint8_t GreenwichMeanTimeYearHandler( char* Buffer );
+    /** Handler for GreenwichMeanTimeHour
      */
-        static void GreenwichMeanTimeMinHandler( char* Buffer );
-    /* Handler for GreenwichMeanTimeSec
+        static uint8_t GreenwichMeanTimeHourHandler( char* Buffer );
+    /** Handler for GreenwichMeanTimeMin
      */
-        static void GreenwichMeanTimeSecHandler( char* Buffer );
-    /* Handler for BritishStandardTime
+        static uint8_t GreenwichMeanTimeMinHandler( char* Buffer );
+    /** Handler for GreenwichMeanTimeSec
      */
-        static void BritishStandardTimeHandler( char* Buffer );
-    /* Handler for Roll
+        static uint8_t GreenwichMeanTimeSecHandler( char* Buffer );
+    /** Handler for BritishStandardTime
      */
-        static void RollHandler( char* Buffer );
-    /* Handler for Altitude/Pitch
+        static uint8_t BritishStandardTimeHandler( char* Buffer );
+    /** Handler for Roll
      */
-        static void AltitudeHandler( char* Buffer );
-    /* Handler for AzimuthHandler
+        static uint8_t RollHandler( char* Buffer );
+    /** Handler for Altitude/Pitch
      */
-        static void AzimuthHandler( char* Buffer );
-    /* Handler for MagneticHeading
+        static uint8_t AltitudeHandler( char* Buffer );
+    /** Handler for AzimuthHandler
      */
-        static void MagneticHeadingHandler( char* Buffer );
-    /* Handler for MagneticDeclination
+        static uint8_t AzimuthHandler( char* Buffer );
+    /** Handler for MagneticHeading
      */
-        static void MagneticDeclinationHandler( char* Buffer );
-    /* Handler for HieghtAboveGround
+        static uint8_t MagneticHeadingHandler( char* Buffer );
+    /** Handler for MagneticDeclination
      */
-        static void HieghtAboveGroundHandler( char* Buffer );
-    /* Handler for LocalSidrealTimeHour
+        static uint8_t MagneticDeclinationHandler( char* Buffer );
+    /** Handler for HieghtAboveGround
      */
-        static void LocalSidrealTimeHourHandler( char* Buffer );
-    /* Handler for LocalSidrealTimeMin
+        static uint8_t HieghtAboveGroundHandler( char* Buffer );
+    /** Handler for LocalSidrealTimeHour
      */
-        static void LocalSidrealTimeMinHandler( char* Buffer );
-    /* Handler for LocalSidrealTimeSec
+        static uint8_t LocalSidrealTimeHourHandler( char* Buffer );
+    /** Handler for LocalSidrealTimeMin
      */
-        static void LocalSidrealTimeSecHandler( char* Buffer );
-    /* Handler for RightAscensionHours
+        static uint8_t LocalSidrealTimeMinHandler( char* Buffer );
+    /** Handler for LocalSidrealTimeSec
      */
-        static void RightAscensionHoursHandler( char* Buffer );
-    /* Handler for RightAscensionMin
+        static uint8_t LocalSidrealTimeSecHandler( char* Buffer );
+    /** Handler for RightAscensionHours
      */
-        static void RightAscensionMinHandler( char* Buffer );
-    /* Handler for RightAscensionSec
+        static uint8_t RightAscensionHoursHandler( char* Buffer );
+    /** Handler for RightAscensionMin
      */
-        static void RightAscensionSecHandler( char* Buffer );
-    /* Handler for DeclinationHours
+        static uint8_t RightAscensionMinHandler( char* Buffer );
+    /** Handler for RightAscensionSec
      */
-        static void DeclinationHoursHandler( char* Buffer );
-    /* Handler for DeclinationMinutes
+        static uint8_t RightAscensionSecHandler( char* Buffer );
+    /** Handler for DeclinationHours
      */
-        static void DeclinationMinutesHandler( char* Buffer );
-    /* Handler for DeclinationSeconds
+        static uint8_t DeclinationHoursHandler( char* Buffer );
+    /** Handler for DeclinationMinutes
      */
-        static void DeclinationSecondsHandler( char* Buffer );
-    /* Handler for Juliandate
+        static uint8_t DeclinationMinutesHandler( char* Buffer );
+    /** Handler for DeclinationSeconds
      */
-        static void JuliandateHandler( char* Buffer );
-    /* Handler for Gpsmode
+        static uint8_t DeclinationSecondsHandler( char* Buffer );
+    /** Handler for Juliandate
      */
-        static void GpsmodeHandler( char* Buffer );
-    /* Handler for Latitude
+        static uint8_t JuliandateHandler( char* Buffer );
+    /** Handler for Gpsmode
      */
-        static void LatitudeHandler( char* Buffer );
-    /* Handler for LongitudeHandler
+        static uint8_t GpsmodeHandler( char* Buffer );
+    /** Handler for Latitude
      */
-        static void LongitudeHandler( char* Buffer );
-    /* Handler for latitude hours  
+        static uint8_t LatitudeHandler( char* Buffer );
+    /** Handler for LongitudeHandler
      */
-        static void GpsLatitudeHoursHandler( char* Buffer );
-    /* Handler for GpsLatitudeMinutes
+        static uint8_t LongitudeHandler( char* Buffer );
+    /** Handler for latitude hours  
      */
-        static void GpsLatitudeMinutesHandler( char* Buffer );
-    /* Handler for GpsLatitudeSeconds
+        static uint8_t GpsLatitudeHoursHandler( char* Buffer );
+    /** Handler for GpsLatitudeMinutes
      */
-        static void GpsLatitudeSecondsHandler( char* Buffer );
-    /* Handler for GpsLongitudeHours
+        static uint8_t GpsLatitudeMinutesHandler( char* Buffer );
+    /** Handler for GpsLatitudeSeconds
      */
-        static void GpsLongitudeHoursHandler( char* Buffer );
-    /* Handler for GpsLongitudeMinutes
+        static uint8_t GpsLatitudeSecondsHandler( char* Buffer );
+    /** Handler for GpsLongitudeHours
      */
-        static void GpsLongitudeMinutesHandler( char* Buffer );
-    /* Handler for GpsLongitudeMinutes
+        static uint8_t GpsLongitudeHoursHandler( char* Buffer );
+    /** Handler for GpsLongitudeMinutes
      */
-        static void GpsLongitudeSecondsHandler( char* Buffer );
-    /* Handler for RawAccelerometerX
+        static uint8_t GpsLongitudeMinutesHandler( char* Buffer );
+    /** Handler for GpsLongitudeMinutes
      */
-        static void RawAccelerometerXHandler( char* Buffer );
-    /* Handler for RawAccelerometerY
+        static uint8_t GpsLongitudeSecondsHandler( char* Buffer );
+    /** Handler for RawAccelerometerX
      */
-        static void RawAccelerometerYHandler( char* Buffer );
-    /* Handler for RawAccelerometerZ
+        static uint8_t RawAccelerometerXHandler( char* Buffer );
+    /** Handler for RawAccelerometerY
      */
-        static void RawAccelerometerZHandler( char* Buffer );
-    /* Handler for MinAccelerometerX
+        static uint8_t RawAccelerometerYHandler( char* Buffer );
+    /** Handler for RawAccelerometerZ
      */
-        static void MinAccelerometerXHandler( char* Buffer );
-    /* Handler for MinAccelerometerY
+        static uint8_t RawAccelerometerZHandler( char* Buffer );
+    /** Handler for MinAccelerometerX
      */
-        static void MinAccelerometerYHandler( char* Buffer );
-    /* Handler for MinAccelerometerZHandler
+        static uint8_t MinAccelerometerXHandler( char* Buffer );
+    /** Handler for MinAccelerometerY
      */
-        static void MinAccelerometerZHandler( char* Buffer );
-    /* Handler for MaxAccelerometerX
+        static uint8_t MinAccelerometerYHandler( char* Buffer );
+    /** Handler for MinAccelerometerZHandler
      */
-        static void MaxAccelerometerXHandler( char* Buffer );
-    /* Handler for MaxAccelerometerY
+        static uint8_t MinAccelerometerZHandler( char* Buffer );
+    /** Handler for MaxAccelerometerX
      */
-        static void MaxAccelerometerYHandler( char* Buffer );
-    /* Handler for MaxAccelerometerZ
+        static uint8_t MaxAccelerometerXHandler( char* Buffer );
+    /** Handler for MaxAccelerometerY
      */
-        static void MaxAccelerometerZHandler( char* Buffer );
-    /* Handler for RawMagnetometerX
+        static uint8_t MaxAccelerometerYHandler( char* Buffer );
+    /** Handler for MaxAccelerometerZ
      */
-        static void RawMagnetometerXHandler( char* Buffer );
-    /* Handler for RawMagnetometerY
+        static uint8_t MaxAccelerometerZHandler( char* Buffer );
+    /** Handler for RawMagnetometerX
      */
-        static void RawMagnetometerYHandler( char* Buffer );
-    /* Handler for RawMagnetometerZ
+        static uint8_t RawMagnetometerXHandler( char* Buffer );
+    /** Handler for RawMagnetometerY
      */
-        static void RawMagnetometerZHandler( char* Buffer );
-    /* Handler for MinMagnetometerX
+        static uint8_t RawMagnetometerYHandler( char* Buffer );
+    /** Handler for RawMagnetometerZ
      */
-        static void MinMagnetometerXHandler( char* Buffer );
-    /* Handler for MinMagnetometerY
+        static uint8_t RawMagnetometerZHandler( char* Buffer );
+    /** Handler for MinMagnetometerX
      */
-        static void MinMagnetometerYHandler( char* Buffer );
-    /* Handler for MinMagnetometerZHandler
+        static uint8_t MinMagnetometerXHandler( char* Buffer );
+    /** Handler for MinMagnetometerY
      */
-        static void MinMagnetometerZHandler( char* Buffer );
-    /* Handler for MaxMagnetometerX
+        static uint8_t MinMagnetometerYHandler( char* Buffer );
+    /** Handler for MinMagnetometerZHandler
      */
-        static void MaxMagnetometerXHandler( char* Buffer );
-    /* Handler for MaxMagnetometerY
+        static uint8_t MinMagnetometerZHandler( char* Buffer );
+    /** Handler for MaxMagnetometerX
      */
-        static void MaxMagnetometerYHandler( char* Buffer );
-    /* Handler for MaxMagnetometerZ
+        static uint8_t MaxMagnetometerXHandler( char* Buffer );
+    /** Handler for MaxMagnetometerY
      */
-        static void MaxMagnetometerZHandler( char* Buffer );
-    /* Handler for an unknown message
+        static uint8_t MaxMagnetometerYHandler( char* Buffer );
+    /** Handler for MaxMagnetometerZ
      */
-        static void DefaultHandler( char* Buffer );
+        static uint8_t MaxMagnetometerZHandler( char* Buffer );
+    /** Handler for Calibration Enable
+     */
+        static uint8_t CalibrationEnableHandler( char* Buffer );
+    /** Handler for Magnetic Offset
+     */
+        static uint8_t MagneticOffsetHandler( char* Buffer );
+    /** Handler for Accel Offset
+     */
+        static uint8_t AccelOffsetHandler( char* Buffer );
+    /** Handler for an unknown message
+     */
+        static uint8_t DefaultHandler( char* Buffer );
         
     private:
 

@@ -27,12 +27,14 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "TelescopeSocket.h"
 TelescopeSocket TelescopeSocket::TeleSocket;
 
-
-
-TELEDATA_T TelescopeSocket::TelescopeData[57] =
+#define BUFFER_SIZE 50
+/*
+    Command table - Each callback must update the return buffer and return how much data has been added.
+*/
+TELEDATA_T TelescopeSocket::TelescopeData[60] =
 {
 /* Id                     Header  Handler                                                                      */
-/* Multi Item            */ { "MULT", &DefaultHandler               }, /**< any debug string                   */
+/* Multi Item            */ { "MULT", &MultiHandler                 }, /**< any debug string                   */
 /* RightAscension        */ { "RA  ", &RightAscensionHandler        }, /**< Target Declination                 */
 /* Declination           */ { "DEC ", &DeclinationHandler           }, /**< Target Declination                 */
 /* TargetRightAscension  */ { "TRA ", &TargetRightAscensionHandler  }, /**< Target Declination                 */
@@ -64,30 +66,33 @@ TELEDATA_T TelescopeSocket::TelescopeData[57] =
 /* Gpsmode               */ { "GPSM", &GpsmodeHandler               }, /**< Gps Fix Mode                       */
 /* Latitude              */ { "Lati", &LatitudeHandler              }, /**< (180*(Angles.Latitude/M_PI))       */
 /* Longitude             */ { "Long", &LongitudeHandler             }, /**< (180*(Angles.LongitudeWest/M_PI))  */
-/* GpsLatitudeHours      */ { "GLAD", &GpsLatitudeHoursHandler      }, /**< Gps source latitude degrees        */
+/* GpsLatitudeHours      */ { "GLAH", &GpsLatitudeHoursHandler      }, /**< Gps source latitude degrees        */
 /* GpsLatitudeMinutes    */ { "GLAm", &GpsLatitudeMinutesHandler    }, /**< Gps source latitude minutes        */
 /* GpsLatitudeSeconds    */ { "GLAS", &GpsLatitudeSecondsHandler    }, /**< Gps source latitude seconds        */
 /* GpsLongitudeHours     */ { "GLOH", &GpsLongitudeHoursHandler     }, /**< Gps source longitude hours         */
 /* GpsLongitudeMinutes   */ { "GLOm", &GpsLongitudeMinutesHandler   }, /**< Gps source longitude minutes       */
 /* GpsLongitudeSeconds   */ { "GLOS", &GpsLongitudeSecondsHandler   }, /**< Gps source longitude seconds       */
-/* RawAccelerometerX     */ { "RwAx", &RawAccelerometerXHandler     }, /**<                                    */
-/* RawAccelerometerY     */ { "RwAy", &RawAccelerometerYHandler     }, /**<                                    */
-/* RawAccelerometerZ     */ { "RwAz", &RawAccelerometerZHandler     }, /**<                                    */
-/* MinAccelerometerX     */ { "MiAx", &MinAccelerometerXHandler     }, /**<                                    */
-/* MinAccelerometerY     */ { "MiAy", &MinAccelerometerYHandler     }, /**<                                    */
-/* MinAccelerometerZ     */ { "MiAz", &MinAccelerometerZHandler     }, /**<                                    */
-/* MaxAccelerometerX     */ { "MaAx", &MaxAccelerometerXHandler     }, /**<                                    */
-/* MaxAccelerometerY     */ { "MaAy", &MaxAccelerometerYHandler     }, /**<                                    */
-/* MaxAccelerometerZ     */ { "MaAz", &MaxAccelerometerZHandler     }, /**<                                    */
-/* RawMagnetometerX      */ { "RwMx", &RawMagnetometerXHandler      }, /**<                                    */
-/* RawMagnetometerY      */ { "RwMy", &RawMagnetometerYHandler      }, /**<                                    */
-/* RawMagnetometerZ      */ { "RwMz", &RawMagnetometerZHandler      }, /**<                                    */
-/* MinMagnetometerX      */ { "MiMx", &MinMagnetometerXHandler      }, /**<                                    */
-/* MinMagnetometerY      */ { "MiMy", &MinMagnetometerYHandler      }, /**<                                    */
-/* MinMagnetometerZ      */ { "MiMz", &MinMagnetometerZHandler      }, /**<                                    */
-/* MaxMagnetometerX      */ { "MaMx", &MaxMagnetometerXHandler      }, /**<                                    */
-/* MaxMagnetometerY      */ { "MaMy", &MaxMagnetometerYHandler      }, /**<                                    */
-/* MaxMagnetometerZ      */ { "MaMz", &MaxMagnetometerZHandler      }, /**<                                    */
+/* RawAccelerometerX     */ { "RwAx", &RawAccelerometerXHandler     }, /**< Raw data from the Accelerometer    */
+/* RawAccelerometerY     */ { "RwAy", &RawAccelerometerYHandler     }, /**< Raw data from the Accelerometer    */
+/* RawAccelerometerZ     */ { "RwAz", &RawAccelerometerZHandler     }, /**< Raw data from the Accelerometer    */
+/* MinAccelerometerX     */ { "MiAx", &MinAccelerometerXHandler     }, /**< Min data from the Accelerometer    */
+/* MinAccelerometerY     */ { "MiAy", &MinAccelerometerYHandler     }, /**< Min data from the Accelerometer    */
+/* MinAccelerometerZ     */ { "MiAz", &MinAccelerometerZHandler     }, /**< Min data from the Accelerometer    */
+/* MaxAccelerometerX     */ { "MaAx", &MaxAccelerometerXHandler     }, /**< Max data from the Accelerometer    */
+/* MaxAccelerometerY     */ { "MaAy", &MaxAccelerometerYHandler     }, /**< Max data from the Accelerometer    */
+/* MaxAccelerometerZ     */ { "MaAz", &MaxAccelerometerZHandler     }, /**< Max data from the Accelerometer    */
+/* RawMagnetometerX      */ { "RwMx", &RawMagnetometerXHandler      }, /**< Raw data from the Magnetometer     */
+/* RawMagnetometerY      */ { "RwMy", &RawMagnetometerYHandler      }, /**< Raw data from the Magnetometer     */
+/* RawMagnetometerZ      */ { "RwMz", &RawMagnetometerZHandler      }, /**< Raw data from the Magnetometer     */
+/* MinMagnetometerX      */ { "MiMx", &MinMagnetometerXHandler      }, /**< Min data from the Magnetometer     */
+/* MinMagnetometerY      */ { "MiMy", &MinMagnetometerYHandler      }, /**< Min data from the Magnetometer     */
+/* MinMagnetometerZ      */ { "MiMz", &MinMagnetometerZHandler      }, /**< Min data from the Magnetometer     */
+/* MaxMagnetometerX      */ { "MaMx", &MaxMagnetometerXHandler      }, /**< Max data from the Magnetometer     */
+/* MaxMagnetometerY      */ { "MaMy", &MaxMagnetometerYHandler      }, /**< Max data from the Magnetometer     */
+/* MaxMagnetometerZ      */ { "MaMz", &MaxMagnetometerZHandler      }, /**< Max data from the Magnetometer     */
+/* Calibration Enable    */ { "CALE", &CalibrationEnableHandler     }, /**< Calibration enable                 */
+/* MagneticOffset        */ { "MAGO", &MagneticOffsetHandler        }, /**< user offset to Azimuth             */
+/* AccelOffset           */ { "ACCO", &AccelOffsetHandler           }, /**< user offsset to Altitude           */
 /* Default               */ { "DFLT", &DefaultHandler               }, /**< any debug string                   */
 };
 
@@ -102,8 +107,8 @@ TelescopeSocket::TelescopeSocket()
  */
 void TelescopeSocket::SocketCallback ( char* Buffer )
 {
-    uint8_t Id = 0;
-    for ( Id = 0; Id < NUMBER_OF_HANDLERS; Id++ )
+    uint8_t Id = 0u;
+    for ( Id = 0u; Id < NUMBER_OF_HANDLERS; Id++ )
     {
         if ( strncmp ( Buffer, TelescopeData[Id].Header, 4 ) == 0)
         {
@@ -114,453 +119,668 @@ void TelescopeSocket::SocketCallback ( char* Buffer )
     {
         Id = NUMBER_OF_HANDLERS - 1;
     }
-    TelescopeData[Id].handler(  Buffer );
+    (void)TelescopeData[Id].handler(  Buffer );
+}
+
+
+/* Handler for an multiple message
+ */
+uint8_t TelescopeSocket::MultiHandler( char* Buffer )
+{
+//    printf(" Multi handler ");
+    char ReturnBuffer[BUFFER_SIZE];
+    uint8_t ReturnIndex = 0u;
+    uint8_t Id = 0u;
+    /*
+       we need to iterate through the received string and pick out each command
+    */
+    bool looking = true;
+    /* we can ignore the "MULT" command */
+    uint8_t Index = sizeof( TelescopeData[0].Header );
+    while ( looking )
+    {
+        /* look for a matching command */
+        for ( Id = 0u; Id < NUMBER_OF_HANDLERS; Id++ )
+        {
+            if ( strncmp ( &Buffer[Index], TelescopeData[Id].Header, 4 ) == 0)
+            {
+                break;
+            }
+        }
+        /* if no handler is found stop looking */
+        if (Id >= NUMBER_OF_HANDLERS )
+        {
+            looking = false;
+            /* If this was the first time call the default callback */
+            if( Index == sizeof( TelescopeData[0].Header ) )
+            {
+                ReturnIndex += TelescopeData[(NUMBER_OF_HANDLERS - 1)].handler( &ReturnBuffer[ReturnIndex] );
+            }
+        }
+        else
+        {
+            /* copy the command to the return buffer in case it's a setter */
+            strncpy( &ReturnBuffer[ReturnIndex], &Buffer[Index], strcspn( &Buffer[Index], "#" ) );
+            /* call the callback */
+            ReturnIndex += TelescopeData[Id].handler( &ReturnBuffer[ReturnIndex] );
+            /* increase the index to the next command, including the # */
+            Index += strcspn( &Buffer[Index], "#" ) + 1u; 
+        }
+        if ( ReturnIndex >= BUFFER_SIZE - sizeof( TelescopeData[0].Header ) )
+        {
+            looking = false;
+        }
+    }
+    /* check for too much data */
+    if ( ReturnIndex < BUFFER_SIZE - sizeof( TelescopeData[0].Header )  )
+    {
+        strncpy ( &Buffer[sizeof( TelescopeData[0].Header )], ReturnBuffer, ReturnIndex );
+    }
+    else
+    {
+        sprintf( &Buffer[sizeof( TelescopeData[0].Header )], "Not Supported#" );
+    }
+    return ReturnIndex;
 }
 
 /* Handler for TargetRightAscension
  */
-void TelescopeSocket::RightAscensionHandler( char* Buffer )
+uint8_t TelescopeSocket::RightAscensionHandler( char* Buffer )
 {
-    printf(" RightAscensionHandler ");
-    sprintf( Buffer, "RA  =%f#", (float)TelescopeManager::Telescope.TelescopeManager::GetRightAscension( ));   
+//    printf(" RightAscensionHandler ");
+    sprintf( Buffer, "RA  =%f.2#", (float)TelescopeManager::Telescope.TelescopeManager::GetRightAscension( ));   
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for TargetDeclination
  */
-void TelescopeSocket::DeclinationHandler( char* Buffer )
+uint8_t TelescopeSocket::DeclinationHandler( char* Buffer )
 {
-    printf(" DeclinationHandler ");
+//    printf(" DeclinationHandler ");
     sprintf( Buffer, "DEC =%f#", (float)TelescopeManager::Telescope.TelescopeManager::GetDeclination( ));   
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for TargetRightAscension
  */
-void TelescopeSocket::TargetRightAscensionHandler( char* Buffer )
+uint8_t TelescopeSocket::TargetRightAscensionHandler( char* Buffer )
 {
-    printf(" TargetRightAscensionHandler ");
+//    printf(" TargetRightAscensionHandler ");
     sprintf( Buffer, "TRA =%f#", (float)TelescopeManager::Telescope.TelescopeManager::GetRightAscension( ));   
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for TargetDeclination
  */
-void TelescopeSocket::TargetDeclinationHandler( char* Buffer )
+uint8_t TelescopeSocket::TargetDeclinationHandler( char* Buffer )
 {
-    printf(" TargetDeclinationHandler ");
+//    printf(" TargetDeclinationHandler ");
     sprintf( Buffer, "TDEC=%f#", (float)TelescopeManager::Telescope.TelescopeManager::GetDeclination( ));   
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for UnixTime
  */
-void TelescopeSocket::UnixTimeHandler( char* Buffer )
+uint8_t TelescopeSocket::UnixTimeHandler( char* Buffer )
 {
-    printf(" UnixTimeHandler ");
+//    printf(" UnixTimeHandler ");
     sprintf( Buffer, "Unix=%d#", (int32_t)TelescopeManager::Telescope.TelescopeManager::GetUnixTime( ));   
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for GreenwichMeanTime
  */
-void TelescopeSocket::GreenwichMeanTimeDayHandler( char* Buffer )
+uint8_t TelescopeSocket::GreenwichMeanTimeDayHandler( char* Buffer )
 {
-    printf(" GreenwichMeanTimeDayHandler ");
+//    printf(" GreenwichMeanTimeDayHandler ");
     sprintf( Buffer, "GMTD=%d#", TelescopeManager::Telescope.TelescopeManager::GetDay( ));     
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for GreenwichMeanTimeMon
  */
-void TelescopeSocket::GreenwichMeanTimeMonHandler( char* Buffer )
+uint8_t TelescopeSocket::GreenwichMeanTimeMonHandler( char* Buffer )
 {
-    printf(" GreenwichMeanTimeMonHandler ");
+//    printf(" GreenwichMeanTimeMonHandler ");
     sprintf( Buffer, "GMTM=%d#", TelescopeManager::Telescope.TelescopeManager::GetMonth( ));     
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for GreenwichMeanTimeYear
  */
-void TelescopeSocket::GreenwichMeanTimeYearHandler( char* Buffer )
+uint8_t TelescopeSocket::GreenwichMeanTimeYearHandler( char* Buffer )
 {
-    printf(" GreenwichMeanTimeYearHandler ");
+//    printf(" GreenwichMeanTimeYearHandler ");
     sprintf( Buffer, "GMTY=%d#", TelescopeManager::Telescope.TelescopeManager::GetYear( ));     
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for GreenwichMeanTimeHour
  */
-void TelescopeSocket::GreenwichMeanTimeHourHandler( char* Buffer )
+uint8_t TelescopeSocket::GreenwichMeanTimeHourHandler( char* Buffer )
 {
-    printf(" GreenwichMeanTimeHourHandler ");
+//    printf(" GreenwichMeanTimeHourHandler ");
     sprintf( Buffer, "GMTH=%d#", TelescopeManager::Telescope.TelescopeManager::GetHour( ));     
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for GreenwichMeanTimeMin
  */
-void TelescopeSocket::GreenwichMeanTimeMinHandler( char* Buffer )
+uint8_t TelescopeSocket::GreenwichMeanTimeMinHandler( char* Buffer )
 {
-    printf(" GreenwichMeanTimeMinHandler ");
+//    printf(" GreenwichMeanTimeMinHandler ");
     sprintf( Buffer, "GMTm=%d#", TelescopeManager::Telescope.TelescopeManager::GetMinute( ));     
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for GreenwichMeanTimeSec
  */
-void TelescopeSocket::GreenwichMeanTimeSecHandler( char* Buffer )
+uint8_t TelescopeSocket::GreenwichMeanTimeSecHandler( char* Buffer )
 {
-    printf(" GreenwichMeanTimeSecHandler ");
+//    printf(" GreenwichMeanTimeSecHandler ");
     sprintf( Buffer, "GMTS=%d#", TelescopeManager::Telescope.TelescopeManager::GetSecond( ));     
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for BritishStandardTime
  */
-void TelescopeSocket::BritishStandardTimeHandler( char* Buffer )
+uint8_t TelescopeSocket::BritishStandardTimeHandler( char* Buffer )
 {
-    printf(" BritishStandardTimeHandler ");
+//    printf(" BritishStandardTimeHandler ");
     sprintf( Buffer, "BST =%d#", (uint8_t)TelescopeManager::Telescope.TelescopeManager::GetBST( )); 
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for Roll
  */
-void TelescopeSocket::RollHandler( char* Buffer )
+uint8_t TelescopeSocket::RollHandler( char* Buffer )
 {
-    printf(" RollHandler ");
+//    printf(" RollHandler ");
     sprintf( Buffer, "Roll=%f#", TelescopeManager::Telescope.GetRoll( ));
+    return ( strcspn (Buffer, "#") + 1u );
 }
 /* Handler for Altitude/Pitch
  */
-void TelescopeSocket::AltitudeHandler( char* Buffer )
+uint8_t TelescopeSocket::AltitudeHandler( char* Buffer )
 {
-    printf(" AltitudeHandler ");
+//    printf(" AltitudeHandler ");
     sprintf( Buffer, "Pitc=%f#", TelescopeManager::Telescope.GetPitchDegrees( ));    
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for AzimuthHandler
  */
-void TelescopeSocket::AzimuthHandler( char* Buffer )
+uint8_t TelescopeSocket::AzimuthHandler( char* Buffer )
 {
-    printf(" AzimuthHandler ");
+//    printf(" AzimuthHandler ");
     sprintf( Buffer, "Azim=%f#", (float)TelescopeManager::Telescope.GetAzimuthDegrees( ));
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for MagneticHeading in degrees
  */
-void TelescopeSocket::MagneticHeadingHandler( char* Buffer )
+uint8_t TelescopeSocket::MagneticHeadingHandler( char* Buffer )
 {
-    printf(" MagneticHeadingHandler ");
+//    printf(" MagneticHeadingHandler ");
     sprintf( Buffer, "MagH=%f#", TelescopeManager::Telescope.GetHeadingDegrees( ));
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for MagneticDeclination
  */
-void TelescopeSocket::MagneticDeclinationHandler( char* Buffer )
+uint8_t TelescopeSocket::MagneticDeclinationHandler( char* Buffer )
 {
-    printf(" MagneticDeclinationHandler ");
+//    printf(" MagneticDeclinationHandler ");
     sprintf( Buffer, "MagD=%f#", TelescopeManager::Telescope.GetMagneticDeclination( ));
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for HieghtAboveGround
  */
-void TelescopeSocket::HieghtAboveGroundHandler( char* Buffer )
+uint8_t TelescopeSocket::HieghtAboveGroundHandler( char* Buffer )
 {
-    printf(" HieghtAboveGroundHandler ");
+//    printf(" HieghtAboveGroundHandler ");
     sprintf( Buffer, "High=%f#", TelescopeManager::Telescope.GetHieghtAboveGround( ));
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for RightAscensionHours
  */
-void TelescopeSocket::RightAscensionHoursHandler( char* Buffer )
+uint8_t TelescopeSocket::RightAscensionHoursHandler( char* Buffer )
 {
-    printf(" RightAscensionHoursHandler ");
-    sprintf( Buffer, "RAH =%d#", TelescopeManager::Telescope.TelescopeManager::GetRightAscensionHours( ));     
+//    printf(" RightAscensionHoursHandler ");
+    sprintf( Buffer, "RAH =%d#", TelescopeManager::Telescope.GetRightAscensionHours( ));     
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for RightAscensionMin
  */
-void TelescopeSocket::RightAscensionMinHandler( char* Buffer )
+uint8_t TelescopeSocket::RightAscensionMinHandler( char* Buffer )
 {
-    printf(" RightAscensionMinHandler ");
-    sprintf( Buffer, "RAm =%d#", TelescopeManager::Telescope.TelescopeManager::GetRightAscensionMinutes( ));     
+//    printf(" RightAscensionMinHandler ");
+    sprintf( Buffer, "RAm =%d#", TelescopeManager::Telescope.GetRightAscensionMinutes( ));     
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for RightAscensionSec
  */
-void TelescopeSocket::RightAscensionSecHandler( char* Buffer )
+uint8_t TelescopeSocket::RightAscensionSecHandler( char* Buffer )
 {
-    printf(" RightAscensionSecHandler ");
-    sprintf( Buffer, "RAS =%d#", TelescopeManager::Telescope.TelescopeManager::GetRightAscensionSeconds( ));     
+//    printf(" RightAscensionSecHandler ");
+    sprintf( Buffer, "RAS =%d#", TelescopeManager::Telescope.GetRightAscensionSeconds( ));     
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for DeclinationHours
  */
-void TelescopeSocket::DeclinationHoursHandler( char* Buffer )
+uint8_t TelescopeSocket::DeclinationHoursHandler( char* Buffer )
 {
-    printf(" DeclinationHoursHandler ");
+//    printf(" DeclinationHoursHandler ");
     sprintf( Buffer, "DECH=%d#", TelescopeManager::Telescope.TelescopeManager::GetDeclinationHours( ));     
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for DeclinationMinutes
  */
-void TelescopeSocket::DeclinationMinutesHandler( char* Buffer )
+uint8_t TelescopeSocket::DeclinationMinutesHandler( char* Buffer )
 {
-    printf(" DeclinationMinutesHandler ");
+//    printf(" DeclinationMinutesHandler ");
     sprintf( Buffer, "DECm=%d#", TelescopeManager::Telescope.TelescopeManager::GetDeclinationMinutes( ));     
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for DeclinationSeconds
  */
-void TelescopeSocket::DeclinationSecondsHandler( char* Buffer )
+uint8_t TelescopeSocket::DeclinationSecondsHandler( char* Buffer )
 {
-    printf(" DeclinationSecondsHandler ");
+//    printf(" DeclinationSecondsHandler ");
     sprintf( Buffer, "DECS=%d#", TelescopeManager::Telescope.TelescopeManager::GetDeclinationSeconds( ));     
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for Juliandate
  */
-void TelescopeSocket::JuliandateHandler( char* Buffer )
+uint8_t TelescopeSocket::JuliandateHandler( char* Buffer )
 {
-    printf(" JuliandateHandler ");
+//    printf(" JuliandateHandler ");
     DefaultHandler( Buffer );
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for Gpsmode
  */
-void TelescopeSocket::GpsmodeHandler( char* Buffer )
+uint8_t TelescopeSocket::GpsmodeHandler( char* Buffer )
 {
-    printf(" GpsmodeHandler ");
+//    printf(" GpsmodeHandler ");
     sprintf( Buffer, "GPSM=%d#", TelescopeManager::Telescope.TelescopeManager::Getmode( ));     
+    return ( strcspn (Buffer, "#") + 1u );
 }
 /* Handler for Latitude
  */
-void TelescopeSocket::LatitudeHandler( char* Buffer )
+uint8_t TelescopeSocket::LatitudeHandler( char* Buffer )
 {
-    printf(" LatitudeHandler ");
+//    printf(" LatitudeHandler ");
     sprintf( Buffer, "Lati=%f#", (float)TelescopeManager::Telescope.GetLatitudeDegrees( ));
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for LongitudeHandler
  */
-void TelescopeSocket::LongitudeHandler( char* Buffer )
+uint8_t TelescopeSocket::LongitudeHandler( char* Buffer )
 {
-    printf(" LongitudeHandler ");
+//    printf(" LongitudeHandler ");
     sprintf( Buffer, "Long=%f#", (float)TelescopeManager::Telescope.GetLongitudeDegrees( ));
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for latitude hours  
  */
-void TelescopeSocket::GpsLatitudeHoursHandler( char* Buffer )
+uint8_t TelescopeSocket::GpsLatitudeHoursHandler( char* Buffer )
 {
-//        float TelescopeManager::GetLatitudeDegrees( void );
-    
-    printf(" GpsLatitudeHoursHandler ");
-    DefaultHandler( Buffer );
+//    printf(" GpsLatitudeHoursHandler ");
+    sprintf( Buffer, "GLAH=%d#", TelescopeManager::Telescope.GetLatitudeHours( ));
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for GpsLatitudeMinutes
  */
-void TelescopeSocket::GpsLatitudeMinutesHandler( char* Buffer )
+uint8_t TelescopeSocket::GpsLatitudeMinutesHandler( char* Buffer )
 {
-    printf(" GpsLatitudeMinutesHandler ");
-    DefaultHandler( Buffer );
+//    printf(" GpsLatitudeMinutesHandler ");
+    sprintf( Buffer, "GLAm=%d#", TelescopeManager::Telescope.GetLatitudeMinutes( ));
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for GpsLatitudeSeconds
  */
-void TelescopeSocket::GpsLatitudeSecondsHandler( char* Buffer )
+uint8_t TelescopeSocket::GpsLatitudeSecondsHandler( char* Buffer )
 {
-    printf(" GpsLatitudeSecondsHandler ");
-    DefaultHandler( Buffer );
+//    printf(" GpsLatitudeSecondsHandler ");
+    sprintf( Buffer, "GLAS=%d#", TelescopeManager::Telescope.GetLatitudeSeconds( ));
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for GpsLongitudeHours
  */
-void TelescopeSocket::GpsLongitudeHoursHandler( char* Buffer )
+uint8_t TelescopeSocket::GpsLongitudeHoursHandler( char* Buffer )
 {
-//        float TelescopeManager::GetLongitudeDegrees( void );
-    printf(" GpsLongitudeHoursHandler ");
-    DefaultHandler( Buffer );
-    
+//    printf(" GpsLongitudeHoursHandler ");
+    sprintf( Buffer, "GLOH=%d#", TelescopeManager::Telescope.GetLongitudeHours( ));
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for GpsLongitudeMinutes
  */
-void TelescopeSocket::GpsLongitudeMinutesHandler( char* Buffer )
+uint8_t TelescopeSocket::GpsLongitudeMinutesHandler( char* Buffer )
 {
-    printf(" GpsLongitudeMinutesHandler ");
-    DefaultHandler( Buffer );
+//    printf(" GpsLongitudeMinutesHandler ");
+    sprintf( Buffer, "GLOm=%d#", TelescopeManager::Telescope.GetLongitudeMinutes( ));
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for GpsLongitudeMinutes
  */
-void TelescopeSocket::GpsLongitudeSecondsHandler( char* Buffer )
+uint8_t TelescopeSocket::GpsLongitudeSecondsHandler( char* Buffer )
 {
-    printf(" GpsLongitudeSecondsHandler ");
-    DefaultHandler( Buffer );
+//    printf(" GpsLongitudeSecondsHandler ");
+    sprintf( Buffer, "GLOS=%d#", TelescopeManager::Telescope.GetLongitudeSeconds( ));
+    return ( strcspn (Buffer, "#") + 1u );
 }
 /* Handler for LocalSidrealTimeHour
  */
-void TelescopeSocket::LocalSidrealTimeHourHandler( char* Buffer )
+uint8_t TelescopeSocket::LocalSidrealTimeHourHandler( char* Buffer )
 {
-    printf(" LocalSidrealTimeHourHandler ");
+//    printf(" LocalSidrealTimeHourHandler ");
     DefaultHandler( Buffer );
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for LocalSidrealTimeMin
  */
-void TelescopeSocket::LocalSidrealTimeMinHandler( char* Buffer )
+uint8_t TelescopeSocket::LocalSidrealTimeMinHandler( char* Buffer )
 {
-    printf(" LocalSidrealTimeMinHandler ");
+//    printf(" LocalSidrealTimeMinHandler ");
     DefaultHandler( Buffer );
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for LocalSidrealTimeSec
  */
-void TelescopeSocket::LocalSidrealTimeSecHandler( char* Buffer )
+uint8_t TelescopeSocket::LocalSidrealTimeSecHandler( char* Buffer )
 {
-    printf(" LocalSidrealTimeSecHandler ");
+//    printf(" LocalSidrealTimeSecHandler ");
     DefaultHandler( Buffer );
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for RawAccelerometerX
  */
-void TelescopeSocket::RawAccelerometerXHandler( char* Buffer )
+uint8_t TelescopeSocket::RawAccelerometerXHandler( char* Buffer )
 {
-    printf(" RawAccelerometerXHandler ");
+//    printf(" RawAccelerometerXHandler ");
     sprintf( Buffer, "RwAx=%f#", TelescopeOrientation::Orient.GetAx());
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for RawAccelerometerY
  */
-void TelescopeSocket::RawAccelerometerYHandler( char* Buffer )
+uint8_t TelescopeSocket::RawAccelerometerYHandler( char* Buffer )
 {
-    printf(" RawAccelerometerYHandler ");
+//    printf(" RawAccelerometerYHandler ");
     sprintf( Buffer, "RwAy=%f#", TelescopeOrientation::Orient.GetAy());
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for RawAccelerometerZ
  */
-void TelescopeSocket::RawAccelerometerZHandler( char* Buffer )
+uint8_t TelescopeSocket::RawAccelerometerZHandler( char* Buffer )
 {
-    printf(" RawAccelerometerZHandler ");
+//    printf(" RawAccelerometerZHandler ");
     sprintf( Buffer, "RwAz=%f#", TelescopeOrientation::Orient.GetAz());
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for MinAccelerometerX
  */
-void TelescopeSocket::MinAccelerometerXHandler( char* Buffer )
+uint8_t TelescopeSocket::MinAccelerometerXHandler( char* Buffer )
 {
-    printf(" MinAccelerometerXHandler ");
+//    printf(" MinAccelerometerXHandler ");
+    if ( strncmp( Buffer, "MiAxReset", 9 ) == 0 )
+    {
+        TelescopeOrientation::Orient.ResetAxMin();
+    }
     sprintf( Buffer, "MiAx=%f#", TelescopeOrientation::Orient.GetAxMin());
+    return ( strcspn (Buffer, "#") + 1u );
 }
 /* Handler for MinAccelerometerY
  */
-void TelescopeSocket::MinAccelerometerYHandler( char* Buffer )
+uint8_t TelescopeSocket::MinAccelerometerYHandler( char* Buffer )
 {
-    printf(" MinAccelerometerYHandler ");
+//    printf(" MinAccelerometerYHandler ");
+    if ( strncmp( Buffer, "MiAyReset", 9 ) == 0 )
+    {
+        TelescopeOrientation::Orient.ResetAyMin();
+    }
     sprintf( Buffer, "MiAy=%f#", TelescopeOrientation::Orient.GetAyMin());
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for MinAccelerometerZHandler
  */
-void TelescopeSocket::MinAccelerometerZHandler( char* Buffer )
+uint8_t TelescopeSocket::MinAccelerometerZHandler( char* Buffer )
 {
-    printf(" MinAccelerometerZHandler ");
+//    printf(" MinAccelerometerZHandler ");
+    if ( strncmp( Buffer, "MiAzReset", 9 ) == 0 )
+    {
+        TelescopeOrientation::Orient.ResetAzMin();
+    }
     sprintf( Buffer, "MiAz=%f#", TelescopeOrientation::Orient.GetAzMin());
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for MaxAccelerometerX
  */
-void TelescopeSocket::MaxAccelerometerXHandler( char* Buffer )
+uint8_t TelescopeSocket::MaxAccelerometerXHandler( char* Buffer )
 {
-    printf(" MaxAccelerometerXHandler ");
+//    printf(" MaxAccelerometerXHandler ");
+    if ( strncmp( Buffer, "MaAxReset", 9 ) == 0 )
+    {
+        TelescopeOrientation::Orient.ResetAxMax();
+    }
     sprintf( Buffer, "MaAx=%f#", TelescopeOrientation::Orient.GetAxMax());
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for MaxAccelerometerY
  */
-void TelescopeSocket::MaxAccelerometerYHandler( char* Buffer )
+uint8_t TelescopeSocket::MaxAccelerometerYHandler( char* Buffer )
 {
-    printf(" MaxAccelerometerYHandler ");
+//    printf(" MaxAccelerometerYHandler ");
+    if ( strncmp( Buffer, "MaAyReset", 9 ) == 0 )
+    {
+        TelescopeOrientation::Orient.ResetAyMax();
+    }
     sprintf( Buffer, "MaAy=%f#", TelescopeOrientation::Orient.GetAyMax());
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for MaxAccelerometerZ
  */
-void TelescopeSocket::MaxAccelerometerZHandler( char* Buffer )
+uint8_t TelescopeSocket::MaxAccelerometerZHandler( char* Buffer )
 {
-    printf(" MaxAccelerometerZHandler ");
+//    printf(" MaxAccelerometerZHandler ");
+    if ( strncmp( Buffer, "MaAzReset", 9 ) == 0 )
+    {
+        TelescopeOrientation::Orient.ResetAzMax();
+    }
     sprintf( Buffer, "MaAz=%f#", TelescopeOrientation::Orient.GetAzMax());
+    return ( strcspn (Buffer, "#") + 1u );
 }
 /* Handler for RawMagnetometerX
  */
-void TelescopeSocket::RawMagnetometerXHandler( char* Buffer )
+uint8_t TelescopeSocket::RawMagnetometerXHandler( char* Buffer )
 {
-    printf(" RawMagnetometerXHandler ");
+//    printf(" RawMagnetometerXHandler ");
     sprintf( Buffer, "RwMx=%f#", TelescopeOrientation::Orient.GetMx());
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for RawMagnetometerY
  */
-void TelescopeSocket::RawMagnetometerYHandler( char* Buffer )
+uint8_t TelescopeSocket::RawMagnetometerYHandler( char* Buffer )
 {
-    printf(" RawMagnetometerYHandler ");
+//    printf(" RawMagnetometerYHandler ");
     sprintf( Buffer, "RwMy=%f#", TelescopeOrientation::Orient.GetMy());
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for RawMagnetometerZ
  */
-void TelescopeSocket::RawMagnetometerZHandler( char* Buffer )
+uint8_t TelescopeSocket::RawMagnetometerZHandler( char* Buffer )
 {
-    printf(" RawMagnetometerZHandler ");
+//    printf(" RawMagnetometerZHandler ");
     sprintf( Buffer, "RwMz=%f#", TelescopeOrientation::Orient.GetMz());
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for MinMagnetometerX
  */
-void TelescopeSocket::MinMagnetometerXHandler( char* Buffer )
+uint8_t TelescopeSocket::MinMagnetometerXHandler( char* Buffer )
 {
-    printf(" MinMagnetometerXHandler ");
+//    printf(" MinMagnetometerXHandler ");
+    if ( strncmp( Buffer, "MiMxReset", 9 ) == 0 )
+    {
+        TelescopeOrientation::Orient.ResetMxMin();
+    }
     sprintf( Buffer, "MiMx=%f#", TelescopeOrientation::Orient.GetMxMin());
+    return ( strcspn (Buffer, "#") + 1u );
 }
 /* Handler for MinMagnetometerY
  */
-void TelescopeSocket::MinMagnetometerYHandler( char* Buffer )
+uint8_t TelescopeSocket::MinMagnetometerYHandler( char* Buffer )
 {
-    printf(" MinMagnetometerYHandler ");
+//    printf(" MinMagnetometerYHandler ");
+    if ( strncmp( Buffer, "MiMyReset", 9 ) == 0 )
+    {
+        TelescopeOrientation::Orient.ResetMyMin();
+    }
     sprintf( Buffer, "MiMy=%f#", TelescopeOrientation::Orient.GetMyMin());
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for MinMagnetometerZHandler
  */
-void TelescopeSocket::MinMagnetometerZHandler( char* Buffer )
+uint8_t TelescopeSocket::MinMagnetometerZHandler( char* Buffer )
 {
-    printf(" MinMagnetometerZHandler ");
+//    printf(" MinMagnetometerZHandler ");
+    if ( strncmp( Buffer, "MiMzReset", 9 ) == 0 )
+    {
+        TelescopeOrientation::Orient.ResetMzMin();
+    }
     sprintf( Buffer, "MiMz=%f#", TelescopeOrientation::Orient.GetMzMin());
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for MaxMagnetometerX
  */
-void TelescopeSocket::MaxMagnetometerXHandler( char* Buffer )
+uint8_t TelescopeSocket::MaxMagnetometerXHandler( char* Buffer )
 {
-    printf(" MaxMagnetometerXHandler ");
+//    printf(" MaxMagnetometerXHandler ");
+    if ( strncmp( Buffer, "MaMxReset", 9 ) == 0 )
+    {
+        TelescopeOrientation::Orient.ResetMxMax();
+    }
     sprintf( Buffer, "MaMx=%f#", TelescopeOrientation::Orient.GetMxMax());
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for MaxMagnetometerY
  */
-void TelescopeSocket::MaxMagnetometerYHandler( char* Buffer )
+uint8_t TelescopeSocket::MaxMagnetometerYHandler( char* Buffer )
 {
-    printf(" MaxMagnetometerYHandler ");
+//    printf(" MaxMagnetometerYHandler ");
+    if ( strncmp( Buffer, "MaMyReset", 9 ) == 0 )
+    {
+        TelescopeOrientation::Orient.ResetMyMax();
+    }
     sprintf( Buffer, "MaMy=%f#", TelescopeOrientation::Orient.GetMyMax());
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for MaxMagnetometerZ
  */
-void TelescopeSocket::MaxMagnetometerZHandler( char* Buffer )
+uint8_t TelescopeSocket::MaxMagnetometerZHandler( char* Buffer )
 {
-    printf(" MaxMagnetometerZHandler ");
+//    printf(" MaxMagnetometerZHandler ");
+    if ( strncmp( Buffer, "MaMzReset", 9 ) == 0 )
+    {
+        TelescopeOrientation::Orient.ResetMzMax();
+    }
     sprintf( Buffer, "MaMz=%f#", TelescopeOrientation::Orient.GetMzMax());
+    return ( strcspn (Buffer, "#") + 1u );
+}
+
+/* Handler for Calibration Enable
+ */
+uint8_t TelescopeSocket::CalibrationEnableHandler( char* Buffer )
+{
+//    printf(" CalibrationEnableHandler ");
+    if ( strncmp( Buffer, "CALE=Enable", 11 ) == 0 )
+    {
+        sprintf( Buffer, "CALE=%s#", "Enabled");
+        TelescopeOrientation::Orient.EnableCalibration(true);
+    }
+    else
+    {
+        sprintf( Buffer, "CALE=%s#", "Disabled");
+        TelescopeOrientation::Orient.EnableCalibration(false);
+    }
+    return ( strcspn (Buffer, "#") + 1u );
+}
+
+/* Handler for Magnetic Offset
+ */
+uint8_t TelescopeSocket::MagneticOffsetHandler( char* Buffer )
+{
+//    printf(" MagneticOffsetHandler ");
+    if ( strncmp( Buffer, "MAGO=", 5 ) == 0 )
+    {
+        float Offset = 0.0f;
+        scanf( Buffer, "MAGO=%f#", Offset );
+        TelescopeManager::Telescope.SetMagneticOffset( Offset );
+        sprintf( Buffer, "MAGO=%f#", TelescopeManager::Telescope.GetMagneticOffset());
+    }
+    else
+    {
+        sprintf( Buffer, "MAGO=%f#", TelescopeManager::Telescope.GetMagneticOffset());
+    }
+    return ( strcspn (Buffer, "#") + 1u );
+}
+
+/* Handler for Accel Offset
+ */
+uint8_t TelescopeSocket::AccelOffsetHandler( char* Buffer )
+{
+//    printf(" AccelOffsetHandler ");
+    if ( strncmp( Buffer, "ACCO=", 5 ) == 0 )
+    {
+        float Offset = 0.0f;
+        scanf( Buffer, "ACCO=%f#", Offset );
+        TelescopeManager::Telescope.SetMagneticOffset( Offset );
+        sprintf( Buffer, "ACCO=%f#", TelescopeManager::Telescope.GetAccelOffset());
+    }
+    else
+    {
+        sprintf( Buffer, "ACCO=%f#", TelescopeManager::Telescope.GetAccelOffset());
+    }    
+    return ( strcspn (Buffer, "#") + 1u );
 }
 
 /* Handler for an unknown message
  */
-void TelescopeSocket::DefaultHandler( char* Buffer )
+uint8_t TelescopeSocket::DefaultHandler( char* Buffer )
 {
-    printf(" default handler ");
+//    printf(" default handler ");
     sprintf( Buffer, "Not Supported#" );
+    return ( strcspn (Buffer, "#") + 1u );
 }
-
-

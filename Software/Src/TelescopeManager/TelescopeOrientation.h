@@ -44,7 +44,10 @@ class TelescopeOrientation: public Runnable {
      * @return double heading 
      */
         void GetOrientation( float* Pitch, float* Roll, float* Heading );
-    
+    /** EnableCalibration
+     * @Param Enable or disable calibration 
+     */
+        void EnableCalibration ( bool Enable );
     /** Ax getter
      */
         float GetAx( void );
@@ -72,6 +75,24 @@ class TelescopeOrientation: public Runnable {
     /** AzMax getter
      */
         float GetAzMax( void );
+    /** AxMin Reset
+     */
+        void ResetAxMin( void );
+    /** AyMin Reset
+     */
+        void ResetAyMin( void );
+    /** AzMin Reset
+     */
+        void ResetAzMin( void );
+    /** AxMax Reset
+     */
+        void ResetAxMax( void );
+    /** AyMax Reset
+     */
+        void ResetAyMax( void );
+    /** AzMax Reset
+     */
+        void ResetAzMax( void );
     /** Mx getter
      */
         float GetMx( void );
@@ -99,10 +120,31 @@ class TelescopeOrientation: public Runnable {
     /** Az getter
      */
         float GetMzMax( void );
+    /** MxMin Reset
+     */
+        void ResetMxMin( void );
+    /** MyMin Reset
+     */
+        void ResetMyMin( void );
+    /** MzMin Reset
+     */
+        void ResetMzMin( void );
+    /** MxMax Reset
+     */
+        void ResetMxMax( void );
+    /** MyMax Reset
+     */
+        void ResetMyMax( void );
+    /** MzMax Reset
+     */
+        void ResetMzMax( void );
 
         static TelescopeOrientation Orient;      /**< Only one is required */  
     private:
-       
+    /** Calibration
+     */
+        void Calibration( void );
+        bool Calibrating;
     /** raw magneto values */
         float Mx;
         float My;

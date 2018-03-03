@@ -24,7 +24,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <sys/time.h>
 #include <stdint.h>
 #include "Runnable.h"
-//#include "CelestrialConverter.h"
 
 /** TelescopeManager
  * Class to manage the functionality of the telescope.
@@ -32,8 +31,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 class TelescopeManager : public Runnable 
 {
     public:
-       // CelestrialConverter Calculator;
-
     /** constructor
      */
         TelescopeManager();
@@ -50,10 +47,6 @@ class TelescopeManager : public Runnable
      * @param Dec     
      */
         static void SetGotoTarget(double Ra, double Dec);
-
-    /**
-     */
-        static char* SocketCallback ( char* Buffer );
 
     /** Export the RightAscension and Declination
      */
@@ -112,6 +105,24 @@ class TelescopeManager : public Runnable
     /** Export the RightAscensionSeconds
      */
         int8_t GetRightAscensionSeconds( void );
+    /** Export the LatitudeHours
+     */
+        int8_t GetLatitudeHours( void );
+    /** Export the LatitudeMinutes
+     */
+        int8_t GetLatitudeMinutes( void );
+    /** Export the LatitudeSeconds
+     */
+        int8_t GetLatitudeSeconds( void );
+    /** Export the LongitudeHours
+     */
+        int8_t GetLongitudeHours( void );
+    /** Export the LongitudeMinutes
+     */
+        int8_t GetLongitudeMinutes( void );
+    /** Export the LongitudeSeconds
+     */
+        int8_t GetLongitudeSeconds( void );
     /** Export the mode
      */
         int8_t Getmode( void );
@@ -145,14 +156,25 @@ class TelescopeManager : public Runnable
     /** Export the Second
      */
         uint16_t GetSecond( void );
-    /** Export the british summer time
+    /** Export the British summer time
      */
         bool GetBST( void );
+    /** set the offset for the Azimuth
+     */
+        void SetMagneticOffset( float Offset );
+    /** get the offset for the Azimuth
+     */
+        float GetMagneticOffset( void );
+    /** set the offset for the Altitude
+     */
+        void SetAccelOffset( float Offset );
+    /** set the offset for the Altitude
+     */
+        float GetAccelOffset( void );
     /** only one instance of this class is required.
      */
         static TelescopeManager Telescope;
         
-       // static void testCalculator ( void );
     private:
         static double RightAscension;         /**< Right ascension */
         static double Declination;            /**< Declination */
@@ -174,6 +196,12 @@ class TelescopeManager : public Runnable
         static int8_t RightAscensionHours;
         static int8_t RightAscensionMinutes;
         static int8_t RightAscensionSeconds;
+        static int8_t LongitudeHours;
+        static int8_t LongitudeMinutes;
+        static int8_t LongitudeSeconds;
+        static int8_t LatitudeHours;
+        static int8_t LatitudeMinutes;
+        static int8_t LatitudeSeconds;
         static uint8_t mode;
         static float AzimuthDegrees;
         static struct tm gmt;
@@ -181,7 +209,8 @@ class TelescopeManager : public Runnable
         static float Heading;
         static float Roll;
         static float PitchDegrees;
-
+        static float MagneticOffset;
+        static float AccelOffset;
 };
 
 #endif /* TELESCOPE_MANAGER_H */
