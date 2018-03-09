@@ -21,7 +21,6 @@
 #include <string.h>
 #include <stdio.h>
 #include "ServerPi.h"
-#include "HalWebsocketd.h"
 #include "HalSocket.h"
 #include "HalGps.h"
 #include "TelescopeOrientation.h"
@@ -47,8 +46,7 @@ static void signal_handler(int signum)
         case SIGQUIT:
         case SIGTERM:
         {
-           continue_looping = false;
-
+            continue_looping = false;
             printf ("End.\n");
             break;
         } 
@@ -95,21 +93,17 @@ int main(int argc, char *argv[])
     TelescopeManager::Telescope.Init(); 
     Scheduler.Init();   // call first to reset task table and configure timer.
     //printf ("scheduler initialised.\n");
-       
+    
     TelescopeOrientation::Orient.SetDelay(0); 
     TelescopeOrientation::Orient.SetPeriod(4); // run every 4 ticks (1 tick == 500us).
     
-    HalWebsocketd::Websocket.Init();
-    HalWebsocketd::Websocket.SetDelay(0); 
-    HalWebsocketd::Websocket.SetPeriod(10);
-
     HalSocket::Socket.Init( 9999, &TelescopeSocket::TeleSocket.SocketCallback );
     HalSocket::Socket.SetDelay(1); 
     HalSocket::Socket.SetPeriod(50);
 
     HalGps::Gps.SetDelay(0); // run one tick after telescope mgr run.
     HalGps::Gps.SetPeriod(100); // run every 200ms.
-        
+    
     TelescopeManager::Telescope.SetDelay(1); 
     TelescopeManager::Telescope.SetPeriod(10);
     
@@ -127,14 +121,12 @@ int main(int argc, char *argv[])
     //printf ("tasks added = %d.\n", error);
     error = Scheduler.AddTask(&TelescopeManager::Telescope);
     //printf ("tasks added = %d.\n", error);
-//    error = Scheduler.AddTask(&HalWebsocketd::Websocket);
     error = Scheduler.AddTask(&HalSocket::Socket);
     //printf ("tasks added = %d.\n", error);
     //error =   Scheduler.AddTask(&Runs);
     //printf ("tasks added = %d.\n", error);
     
     Scheduler.Start();
-
     //printf ("scheduler started.\n");
     
     /* Do busy work. */

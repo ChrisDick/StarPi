@@ -48,18 +48,18 @@ bool TelescopeOrientation::Init( void )
     HalAccelerometer::Accelerometer.Init();
     HalMagnetometer::Magneto.Init();
     Calibrating = false;
-    MxMax = 0.0f;
-    MxMin = 0.0f;
-    MyMax = 0.0f;
-    MyMin = 0.0f;
-    MzMax = 0.0f;
-    MzMin = 0.0f;
-    AxMax = 0.0f;
-    AxMin = 0.0f;
-    AyMax = 0.0f;
-    AyMin = 0.0f;
-    AzMax = 0.0f;
-    AzMin = 0.0f;
+    MxMax = CONFIG_MXMAX;
+    MxMin = CONFIG_MXMIN;
+    MyMax = CONFIG_MYMAX;
+    MyMin = CONFIG_MYMIN;
+    MzMax = CONFIG_MZMAX;
+    MzMin = CONFIG_MZMIN;
+    AxMax = CONFIG_AXMAX;
+    AxMin = CONFIG_AXMIN;
+    AyMax = CONFIG_AYMAX;
+    AyMin = CONFIG_AYMIN;
+    AzMax = CONFIG_AZMAX;
+    AzMin = CONFIG_AZMIN;
         /* raw magneto values */
     Mx = 0.0f;
     My = 0.0f;
@@ -125,21 +125,21 @@ void TelescopeOrientation::GetOrientation( float* Pitch, float* Roll, float* Hea
         Calibration();
     }
     /* remove Hard Iron effects */
-    Mxo = Mx - CONFIG_MX_OFFSET;
-    Myo = My - CONFIG_MY_OFFSET;
-    Mzo = Mz - CONFIG_MZ_OFFSET;
+    Mxo = Mx - ((MxMin + MxMax)/2.0);
+    Myo = My - ((MyMin + MyMax)/2.0);
+    Mzo = Mz - ((MzMin + MzMax)/2.0);
     
     /* Normalise */
-    Mxo = Mxo / (CONFIG_MXMAX - CONFIG_MX_OFFSET);
-    Myo = Myo / (CONFIG_MYMAX - CONFIG_MY_OFFSET);
-    Mzo = Mzo / (CONFIG_MZMAX - CONFIG_MZ_OFFSET);
+    Mxo = Mxo / (((MxMin + MxMax)/2.0));
+    Myo = Myo / (((MyMin + MyMax)/2.0));
+    Mzo = Mzo / (MzMax - ((MzMin + MzMax)/2.0));
 #ifdef CALC_DEBUG
     printf ("Mxo: %f Myo: %f Mzo: %f ", Mxo, Myo, Mzo ); // debug
 #endif
     
-    Axo = Ax / (CONFIG_AXMAX - CONFIG_AX_OFFSET);
-    Ayo = Ay / (CONFIG_AYMAX - CONFIG_AY_OFFSET);
-    Azo = Az / (CONFIG_AZMAX - CONFIG_AZ_OFFSET);
+    Axo = Ax / (AxMax - ((AxMin + AxMax)/2.0));
+    Ayo = Ay / (AyMax - ((AyMin + AyMax)/2.0));
+    Azo = Az / (AzMax - ((AzMin + AzMax)/2.0));
 #ifdef CALC_DEBUG
     printf ("Axo: %f Ayo: %f Azo: %f ", Axo, Ayo, Azo ); // debug
 #endif
@@ -159,6 +159,10 @@ void TelescopeOrientation::GetOrientation( float* Pitch, float* Roll, float* Hea
     YComponent = ( Mzo * SinRoll ) - ( Myo * CosRoll );
     *Heading = atan2( YComponent , XComponent ); 
 
+    *Pitch += (M_PI * ( AccelOffset / 180.0f ));
+    *Heading += (M_PI * ( MagneticOffset / 180.0f )); 
+
+    
     if (*Heading > (2*M_PI)) 
     {
         *Heading -= (2*M_PI);
@@ -434,3 +438,30 @@ void TelescopeOrientation::ResetMzMax( void )
     MzMax = 0.0f;
 }
 
+
+/* set the offset for the Azimuth
+ */
+void TelescopeOrientation::SetMagneticOffset( float Offset )
+{
+    MagneticOffset = Offset;
+}
+
+/* get the offset for the Azimuth
+ */
+float TelescopeOrientation::GetMagneticOffset( void )
+{
+    return MagneticOffset;
+}
+/* set the offset for the Altitude
+ */
+void TelescopeOrientation::SetAccelOffset( float Offset )
+{
+    AccelOffset = Offset;
+}
+
+/* set the offset for the Altitude
+ */
+float TelescopeOrientation::GetAccelOffset( void )
+{
+    return AccelOffset;
+}

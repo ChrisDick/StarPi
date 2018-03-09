@@ -138,13 +138,28 @@ class TelescopeOrientation: public Runnable {
     /** MzMax Reset
      */
         void ResetMzMax( void );
+    /** set the offset for the Azimuth
+     */
+        void SetMagneticOffset( float Offset );
+    /** get the offset for the Azimuth
+     */
+        float GetMagneticOffset( void );
+    /** set the offset for the Altitude
+     */
+        void SetAccelOffset( float Offset );
+    /** set the offset for the Altitude
+     */
+        float GetAccelOffset( void );
 
         static TelescopeOrientation Orient;      /**< Only one is required */  
     private:
     /** Calibration
      */
         void Calibration( void );
-        bool Calibrating;
+        bool Calibrating;        
+        float MagneticOffset;
+        float AccelOffset;
+
     /** raw magneto values */
         float Mx;
         float My;

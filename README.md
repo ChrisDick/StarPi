@@ -1,5 +1,5 @@
 # StarPi
-StarPi is a Raspberry Pi based telescope server with interface to Stellarium. It uses a tripple axis acellerometer and compass with GPS to calculate the position in the sky the telescope is pointing to.
+StarPi is a Raspberry Pi based telescope server with interface to Stellarium. It uses a triple axis accelerometer and compass with GPS to calculate the position in the sky the telescope is pointing to.
 
 More details can be found at https://hackaday.io/project/10181-starpi
 
@@ -19,28 +19,32 @@ More details can be found at https://hackaday.io/project/10181-starpi
           psk="yourpassword"
     }
 
- save the config. 
-
-    sudo apt-get update
-    sudo apt-get dist-upgrade
-    sudo rpi-update
-
- for lite install git and wiringpi:
-
-    sudo apt-get install git-core
-    git clone git://git.drogon.net/wiringPi
-    cd ~/wiringPi
-    ./build
-
- for both jessie variants:
+ save the config then configure the Pi:
 
     sudo raspi-config 
 
-  turn enable the camera, ssh, i2c.  
+  Enable ssh and i2c.  
   disable the serial shell and enable the hardware serial.  
   set the domain name and boot to cli.  
   reduce the graphics memory.  
   reboot.  
+ 
+ Get the most recent version. 
+
+    sudo apt-get update
+    sudo apt-get dist-upgrade
+    sudo rpi-update
+    sudo reboot
+    
+ for Jessie lite install git and wiringpi:
+
+    sudo apt-get -y install git-core
+    git clone git://git.drogon.net/wiringPi
+    cd ~/wiringPi
+    ./build
+    cd ..
+    
+ for both Jessie variants:
 
     git clone https://github.com/ChrisDick/StarPi
 
@@ -61,15 +65,10 @@ Then go and make a nice cup of tea. it'll take a little while.
     gpsd -D 5 -N -n /dev/serial0 
 
   in another ssh session  
-  on it's own 
 
     cd ~/StarPi/Software
     ./Out/StarPi 10001
 
-  with website
-
-    cd ~/StarPi/Software
-    ./websocketd 1234 /Out/StarPi 10001
  
 # Design
 

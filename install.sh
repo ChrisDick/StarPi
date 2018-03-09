@@ -22,14 +22,14 @@
 #    ./build
 # for both jessie variants
 #    sudo raspi-config
-#-turn enable the camera, ssh, i2c
+#-enable ssh and i2c
 #-disable the serial shell and enable the hardware serial
 #-set the domain name and boot to cli
 #-reduce the graphics memory
 #-reboot
 #    git clone https://github.com/ChrisDick/StarPi
 # edit any options in the config to match your choice of sensors.
-#    nano StarPi/Software/Src/Config.h
+#    nano StarPi\Software\Src\Config.h
 #    cd ~/StarPi
 #    chmod u+x install.sh
 #    ./install.sh
@@ -40,17 +40,12 @@
 # start GPSD in it's own ssh session
 #     gpsd -D 5 -N -n /dev/serial0
 # in another ssh session
-# on it's own
 #     cd ~/StarPi/Software
 #     ./Out/StarPi 10001
-# with website
-#     cd ~/StarPi/Software
-#     ./websocketd port=1234 Out/StarPi 10001
 
 #Assume we have a jessie based install
 sudo apt-get -y install scons libncurses5-dev python-dev pps-tools git-core python-smbus i2c-tools
 cd ./Software
-chmod u+x websocketd
 
 #Gps deamon:
 wget http://git.savannah.gnu.org/cgit/gpsd.git/snapshot/gpsd-release-3.16.tar.gz
@@ -68,24 +63,7 @@ sudo ldconfig
 #StarPi:
 cd ./../..
 make
-cd ..
-
-#rpicam interface:
-git clone https://github.com/silvanmelchior/RPi_Cam_Web_Interface.git
-sudo ./RPi_Cam_Web_Interface/install.sh
-#sudo ./RPi_Cam_Web_Interface/install.sh q
-#sudo mkdir /var/www/RPiCam
-#sudo mv /var/www/html/* /var/www/RPiCam
-#sudo mkdir /var/www/StarPi
-#sudo cp -ar /var/www/RPiCam/* /var/www/StarPi
-#sudo cp -ar ./Website/* /var/www/StarPi
-sudo cp -ar ./Website/* /var/www/html
 
 # ready after reboot
 sudo reboot
 
-#copy executables to somewhere in the PATH - may noy use due to WMM.COF
-#sudo cp ./Out/StarPi /usr/local/bin/StarPi
-#sudo cp  websocketd /usr/local/bin/websocketd
-#sudo chmod u+x /usr/local/bin/websocketd
-#sudo cp WMM.COF /usr/local/bin/WMM.COF

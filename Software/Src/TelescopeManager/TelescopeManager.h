@@ -159,18 +159,6 @@ class TelescopeManager : public Runnable
     /** Export the British summer time
      */
         bool GetBST( void );
-    /** set the offset for the Azimuth
-     */
-        void SetMagneticOffset( float Offset );
-    /** get the offset for the Azimuth
-     */
-        float GetMagneticOffset( void );
-    /** set the offset for the Altitude
-     */
-        void SetAccelOffset( float Offset );
-    /** set the offset for the Altitude
-     */
-        float GetAccelOffset( void );
     /** only one instance of this class is required.
      */
         static TelescopeManager Telescope;
@@ -209,8 +197,6 @@ class TelescopeManager : public Runnable
         static float Heading;
         static float Roll;
         static float PitchDegrees;
-        static float MagneticOffset;
-        static float AccelOffset;
 };
 
 #endif /* TELESCOPE_MANAGER_H */

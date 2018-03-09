@@ -66,8 +66,6 @@ float TelescopeManager::Pitch;
 float TelescopeManager::Heading;
 float TelescopeManager::Roll;
 float TelescopeManager::PitchDegrees;
-float TelescopeManager::MagneticOffset;
-float TelescopeManager::AccelOffset;
 
 
 
@@ -129,6 +127,7 @@ void TelescopeManager::Run()
         Get the Position, Orientation and time of the telescope
     */
     TelescopeOrientation::Orient.GetOrientation( &Pitch, &Roll, &Heading );
+    
     PitchDegrees = (180.0f*(Pitch/M_PI));
         
     if (HalGps::Gps.GetFix())
@@ -536,32 +535,6 @@ bool TelescopeManager::GetBST( void )
     return gmt.tm_isdst;
 }
 
-/* set the offset for the Azimuth
- */
-void TelescopeManager::SetMagneticOffset( float Offset )
-{
-    MagneticOffset = Offset;
-}
-
-/* get the offset for the Azimuth
- */
-float TelescopeManager::GetMagneticOffset( void )
-{
-    return MagneticOffset;
-}
-/* set the offset for the Altitude
- */
-void TelescopeManager::SetAccelOffset( float Offset )
-{
-    AccelOffset = Offset;
-}
-
-/* set the offset for the Altitude
- */
-float TelescopeManager::GetAccelOffset( void )
-{
-    return AccelOffset;
-}
 
 
 #if 0

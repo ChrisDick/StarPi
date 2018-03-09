@@ -746,13 +746,13 @@ uint8_t TelescopeSocket::MagneticOffsetHandler( char* Buffer )
     if ( strncmp( Buffer, "MAGO=", 5 ) == 0 )
     {
         float Offset = 0.0f;
-        scanf( Buffer, "MAGO=%f#", Offset );
-        TelescopeManager::Telescope.SetMagneticOffset( Offset );
-        sprintf( Buffer, "MAGO=%f#", TelescopeManager::Telescope.GetMagneticOffset());
+        sscanf( Buffer, "MAGO=%f#", &Offset );
+        TelescopeOrientation::Orient.SetMagneticOffset( Offset );
+        sprintf( Buffer, "MAGO=%f#", TelescopeOrientation::Orient.GetMagneticOffset());
     }
     else
     {
-        sprintf( Buffer, "MAGO=%f#", TelescopeManager::Telescope.GetMagneticOffset());
+        sprintf( Buffer, "MAGO=%f#", TelescopeOrientation::Orient.GetMagneticOffset());
     }
     return ( strcspn (Buffer, "#") + 1u );
 }
@@ -765,13 +765,13 @@ uint8_t TelescopeSocket::AccelOffsetHandler( char* Buffer )
     if ( strncmp( Buffer, "ACCO=", 5 ) == 0 )
     {
         float Offset = 0.0f;
-        scanf( Buffer, "ACCO=%f#", Offset );
-        TelescopeManager::Telescope.SetMagneticOffset( Offset );
-        sprintf( Buffer, "ACCO=%f#", TelescopeManager::Telescope.GetAccelOffset());
+        sscanf( Buffer, "ACCO=%f#", &Offset );
+        TelescopeOrientation::Orient.SetAccelOffset( Offset );
+        sprintf( Buffer, "ACCO=%f#", TelescopeOrientation::Orient.GetAccelOffset());
     }
     else
     {
-        sprintf( Buffer, "ACCO=%f#", TelescopeManager::Telescope.GetAccelOffset());
+        sprintf( Buffer, "ACCO=%f#", TelescopeOrientation::Orient.GetAccelOffset());
     }    
     return ( strcspn (Buffer, "#") + 1u );
 }
