@@ -45,6 +45,10 @@
 
 #Assume we have a jessie based install
 sudo apt-get -y install scons libncurses5-dev python-dev pps-tools git-core python-smbus i2c-tools
+sudo apt-get install -y cdbs libcfitsio-dev libnova-dev libusb-1.0-0-dev libjpeg-dev libusb-dev libtiff5-dev libftdi1-dev fxload libkrb5-dev libcurl4-gnutls-dev libraw-dev libgphoto2-dev libgsl-dev dkms libboost-regex-dev libgps-dev libdc1394-22-dev cmake
+sudo apt-get install --reinstall libtheora0
+sudo apt-get --fix-broken install
+
 cd ./Software
 
 #Gps deamon:
@@ -64,6 +68,25 @@ sudo ldconfig
 cd ./../..
 make
 
+cd ..
+git clone https://github.com/indilib/indi.git
+cd indi
+mkdir -p build/libindi
+cd build/libindi
+cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Debug ../../libindi
+make
+sudo make install
+
+
+cd ..
+mkdir indi-starpi
+cd indi-starpi
+cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Debug ../../3rdparty/indi-starpi
+make
+#sudo make install ???
+cd ./../..
+sudo cp ./Software/indi-starpi/indi_starpi_sk.xml /usr/share/indi/indi_starpi_sk.xml
+
 # ready after reboot
-sudo reboot
+#sudo reboot
 

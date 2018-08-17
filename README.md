@@ -6,7 +6,6 @@ More details can be found at https://hackaday.io/project/10181-starpi
 # Installation
 
  From a console do the following: 
- **Note:** do not use the gui raspi-config it doesn't have the option to enable hardware serial with console disabled.
  configure wifi
 
     sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
@@ -20,6 +19,7 @@ More details can be found at https://hackaday.io/project/10181-starpi
     }
 
  save the config then configure the Pi:
+ **Note:** do not use the gui raspi-config it doesn't have the option to enable hardware serial with console disabled.
 
     sudo raspi-config 
 
@@ -36,7 +36,7 @@ More details can be found at https://hackaday.io/project/10181-starpi
     sudo rpi-update
     sudo reboot
     
- for Jessie lite install git and wiringpi:
+ for raspbian lite versions install git and wiringpi:
 
     sudo apt-get -y install git-core
     git clone git://git.drogon.net/wiringPi
@@ -44,7 +44,7 @@ More details can be found at https://hackaday.io/project/10181-starpi
     ./build
     cd ..
     
- for both Jessie variants:
+ for both raspbian variants:
 
     git clone https://github.com/ChrisDick/StarPi
 
