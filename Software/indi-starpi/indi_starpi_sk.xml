@@ -1,0 +1,145 @@
+<INDIDriver>
+
+<defNumberVector device="StarPi" name="HORIZONTAL_COORD" label="Hor. Coordinates" group="Main Control" state="Idle" perm="ro" timeout="0">
+    <defNumber name="ALT" label="Altitude" format="%10.6m" min="-90" max="90" step="0">
+0.0
+    </defNumber>
+    <defNumber name="AZ" label="Azimuth" format="%10.6m" min="0" max="360" step="0">
+0.0
+    </defNumber>
+</defNumberVector>
+
+<defSwitchVector device="StarPi" name="CAL_ON" label="Calibration" group="Calibration" state="Idle" perm="rw" rule="OneOfMany" timeout="60">
+    <defSwitch name="START" label="Start">
+Off
+    </defSwitch>
+    <defSwitch name="END" label="Finish">
+On
+    </defSwitch>
+</defSwitchVector>
+
+<defNumberVector device="StarPi" name="RAW_VALUES" label="Raw values" group="Calibration" state="Idle" perm="ro">
+    <defNumber name="RAW_ACC_X" label="Accelerometer X" format="%16.0m" min="-32768" max="32767" step="1">
+0
+    </defNumber>
+    <defNumber name="RAW_ACC_Y" label="Accelerometer Y" format="%16.0m" min="-32768" max="32767" step="1">
+0
+    </defNumber>
+    <defNumber name="RAW_ACC_Z" label="Accelerometer Z" format="%16.0m" min="-32768" max="32767" step="1">
+0
+    </defNumber>
+    <defNumber name="RAW_MAG_X" label="Magnetometer X" format="%16.0m" min="-32768" max="32767" step="1">
+0
+    </defNumber>
+    <defNumber name="RAW_MAG_Y" label="Magnetometer Y" format="%16.0m" min="-32768" max="32767" step="1">
+0
+    </defNumber>
+    <defNumber name="RAW_MAG_Z" label="Magnetometer Z" format="%16.0m" min="-32768" max="32767" step="1">
+0
+    </defNumber>
+</defNumberVector>
+
+<defNumberVector device="StarPi" name="ACCEL_OFFSET" label="Accelerometer Offset" group="Calibration" state="Idle" perm="rw" timeout="0">
+    <defNumber name="ACCEL_OFF" label="Accelerometer Offset" format="%10.6m" min="-90" max="90" step="1">
+0
+    </defNumber>
+</defNumberVector>
+
+<defNumberVector device="StarPi" name="CALPITCH" label="Pitch" group="Calibration" state="Idle" perm="ro">
+    <defNumber name="PITCH" label="Pitch" format="%16.0m" min="-90" max="90">
+0
+    </defNumber>
+</defNumberVector>
+
+<defNumberVector device="StarPi" name="ACCEL_CAL" label="Accelerometer Calibration" group="Calibration" state="Idle" perm="ro">
+    <defNumber name="AccelXmin" label="X min" format="%16.0m" min="-32768" max="32767" step="1">
+0
+    </defNumber>
+    <defNumber name="AccelXmax" label="X max" format="%16.0m" min="-32768" max="32767" step="1">
+0
+    </defNumber>
+    <defNumber name="AccelYmin" label="Y min" format="%16.0m" min="-32768" max="32767" step="1">
+0
+    </defNumber>
+    <defNumber name="AccelYmax" label="Y max" format="%16.0m" min="-32768" max="32767" step="1">
+0
+    </defNumber>
+    <defNumber name="AccelZmin" label="Z min" format="%16.0m" min="-32768" max="32767" step="1">
+0
+    </defNumber>
+    <defNumber name="AccelZmax" label="Z max" format="%16.0m" min="-32768" max="32767" step="1">
+0
+    </defNumber>
+</defNumberVector>
+
+<defNumberVector device="StarPi" name="MAG_OFFSET" label="Magnetometer Offset" group="Calibration" state="Idle" perm="rw" timeout="0">
+    <defNumber name="MAG_OFF" label="Magnetometer Offset" format="%10.6m" min="-90" max="90" step="1">
+0
+    </defNumber>
+    
+</defNumberVector>
+
+<defNumberVector device="StarPi" name="CALMAG" label="Heading" group="Calibration" state="Idle" perm="ro">
+    <defNumber name="HEADING" label="Heading" format="%16.0m" min="0" max="360" step="1">
+0
+    </defNumber>
+</defNumberVector>
+
+<defNumberVector device="StarPi" name="MAG_CAL" label="Magnetic" group="Calibration" state="Idle" perm="ro">
+    <defNumber name="MagXmin" label="X min" format="%16.0m" min="-32768" max="32767" step="1">
+0
+    </defNumber>
+    <defNumber name="MagXmax" label="X max" format="%16.0m" min="-32768" max="32767" step="1">
+0
+    </defNumber>
+    <defNumber name="MagYmin" label="Y min" format="%16.0m" min="-32768" max="32767" step="1">
+0
+    </defNumber>
+    <defNumber name="MagYmax" label="Y max" format="%16.0m" min="-32768" max="32767" step="1">
+0
+    </defNumber>
+    <defNumber name="MagZmin" label="Z min" format="%16.0m" min="-32768" max="32767" step="1">
+0
+    </defNumber>
+    <defNumber name="MagZmax" label="Z max" format="%16.0m" min="-32768" max="32767" step="1">
+0
+    </defNumber>
+</defNumberVector>
+
+<defNumberVector device="StarPi" name="RAW DATA" label="Magnetic" group="Raw" state="Idle" perm="ro">
+    <defNumber name="PITCH" label="Pitch" format="%16.0m" min="-90" max="90">
+0
+    </defNumber>
+    <defNumber name="ROLL" label="Roll" format="%16.0m" min="-180" max="180" step="1">
+0
+    </defNumber>
+    <defNumber name="HEADING" label="Heading" format="%16.0m" min="0" max="360" step="1">
+0
+    </defNumber>
+    <defNumber name="MAGDEC" label="Mag Declination" format="%16.0m" min="0" max="360" step="1">
+0
+    </defNumber>
+    <defNumber name="CORRHEAD" label="True Heading" format="%16.0m" min="0" max="360" step="1">
+0
+    </defNumber>
+</defNumberVector>
+
+<defSwitchVector device="StarPi" name="RESET" label="Reset" group="Calibration" state="Idle" perm="rw" rule="OneOfMany" timeout="60">
+    <defSwitch name="ACCEL_RESET" label="Accelerometer">
+Off
+    </defSwitch>
+    <defSwitch name="MAG_RESET" label="Magnetometer">
+On
+    </defSwitch>
+</defSwitchVector>
+
+<defSwitchVector device="StarPi" name="CONNECTION" label="Connection" group="Main Control" state="Idle" perm="rw" rule="OneOfMany" timeout="60">
+    <defSwitch name="CONNECT" label="Connect">
+Off
+    </defSwitch>
+    <defSwitch name="DISCONNECT" label="Disconnect">
+On
+    </defSwitch>
+</defSwitchVector>
+
+</INDIDriver>

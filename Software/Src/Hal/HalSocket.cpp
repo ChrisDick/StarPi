@@ -96,6 +96,7 @@ void HalSocket::Init( uint16_t Port, void (*callback_function)(char*))
     //accept the incoming connection 
     puts("Waiting for connections ...");  
 }
+
 /**
  */
 void HalSocket::Run( void )
@@ -110,8 +111,6 @@ void HalSocket::Run( void )
     uint8_t i;  
     //set of socket descriptors 
     fd_set readfds;  
-    //a message 
-    const char* message = "StarPi! \r\n";  
     timeval timeout;
         
     //clear the socket set 
@@ -214,9 +213,14 @@ void HalSocket::Run( void )
                         //set the string terminating NULL byte on the end 
                         //of the data read 
                         //txbuffer[valread] = '\0';
-                        if ( buffer[0] != NULL )
+                        if ( buffer[0] != '\0' )
                         {
                             send(sd , buffer , strlen(buffer) , 0 );  
+                        }
+                        /* empty the buffer */
+                        for ( uint16_t i = 0; i < HAL_SOCKET_BUFFER_SIZE; i++ )
+                        {
+                            buffer[i] = 0u;
                         }
                     }
                 }

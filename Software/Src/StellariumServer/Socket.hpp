@@ -83,9 +83,6 @@ class Socket
      * Composes a "MessageCurrentPosition" in the write buffer.
      * This is a Stellarium telescope control protocol message containing
      * the current right ascension, declination and status of the telescope mount.
-     * @param RAInt uint32_T version of the Right Ascension
-     * @param DecInt int32_t version of the Declination
-     * @param Status int32_t version of the 
      */
         virtual void SendPosition( uint32_t /* RAInt */, int32_t /* DecInt */, int32_t /* Status */) {}
         

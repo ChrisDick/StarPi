@@ -1,4 +1,4 @@
-/**
+/*
  * @author Aaron Berk
  *
  * @section LICENSE

@@ -253,7 +253,8 @@ class GPIO
      */
         void SetupOutput( pin_name_t PinName );
     /** Setup pull up/down mode
-     * @param PinName
+     * @param PinName Name of the pin to set
+     * @param PullMode pin configuration
      */
         void SetPullMode( pin_name_t PinName, pin_pull_t PullMode );
     /** set PWM mode
@@ -287,10 +288,11 @@ class GPIO
         bool GetPinState( pin_name_t PinName );
     /** Set the state of an output pin
      * @param PinName name of the pin to set
+     * @param State state to set the pin to.
      */
-        void SetPinState( pin_name_t PinName, bool state );
+        void SetPinState( pin_name_t PinName, bool State );
 
-        static GPIO gpio;
+        static GPIO gpio; /**< only one is required */
 
     private:
         uint16_t PWMRange; /**< range of the PWM */

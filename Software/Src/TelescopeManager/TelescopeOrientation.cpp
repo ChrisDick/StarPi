@@ -22,15 +22,20 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "TelescopeOrientation.h"
 #include "HalMagnetometer.h"
 #include "HalAccelerometer.h"
+#include "HalFilesystem.h"
 #include "Config.h"
 
-#if ( defined CALIBRATE_MAG_DEBUG) || ( defined CALIBRATE_ACC_DEBUG )
+//#if ( defined CALIBRATE_MAG_DEBUG) || ( defined CALIBRATE_ACC_DEBUG )
 #include <stdio.h>
-#endif
-
+//#endif
+#include <unistd.h>
+#include <limits.h>
+#include <string.h>
 #ifdef TIMING
 #include "GPIO.h"
 #endif
+
+using namespace std;
 
 TelescopeOrientation TelescopeOrientation::Orient;
 
@@ -48,19 +53,10 @@ bool TelescopeOrientation::Init( void )
     HalAccelerometer::Accelerometer.Init();
     HalMagnetometer::Magneto.Init();
     Calibrating = false;
-    MxMax = CONFIG_MXMAX;
-    MxMin = CONFIG_MXMIN;
-    MyMax = CONFIG_MYMAX;
-    MyMin = CONFIG_MYMIN;
-    MzMax = CONFIG_MZMAX;
-    MzMin = CONFIG_MZMIN;
-    AxMax = CONFIG_AXMAX;
-    AxMin = CONFIG_AXMIN;
-    AyMax = CONFIG_AYMAX;
-    AyMin = CONFIG_AYMIN;
-    AzMax = CONFIG_AZMAX;
-    AzMin = CONFIG_AZMIN;
-        /* raw magneto values */
+    
+    LoadConfig();
+    
+    /* raw magneto values */
     Mx = 0.0f;
     My = 0.0f;
     Mz = 0.0f;
@@ -77,6 +73,55 @@ bool TelescopeOrientation::Init( void )
     return true;
 }
 
+/* Handle loading the calibration or load the defaults.
+ */
+void TelescopeOrientation::LoadConfig( void )
+{
+    HalFilesystem File;
+    char Path[PATH_MAX];
+    char Configuration[4096u];
+    /* Get Path of StarPi executable */
+    getcwd( Path, PATH_MAX );
+    strcat( Path, "/Orientation.Conf");
+    if ( File.GetConfig( Path, Configuration ) )
+    {
+        sscanf( Configuration, "MxMax=%f, MxMin=%f, MyMax=%f, MyMin=%f, MyMax=%f, MzMax=%f, MzMin=%f, AxMax=%f, AxMin=%f, AyMax=%f, AyMin=%f, AyMax=%f, AzMax=%f, AzMin=%f, MagneticOffset=%f, AccelOffset=%f", &MxMax, &MxMin, &MyMax, &MyMin, &MyMax, &MzMax, &MzMin, &AxMax, &AxMin, &AyMax, &AyMin, &AyMax, &AzMax, &AzMin, &MagneticOffset, &AccelOffset );
+        printf( "Calibrations loaded\n\r" );
+    }
+    else
+    {
+        MxMax = CONFIG_MXMAX;
+        MxMin = CONFIG_MXMIN;
+        MyMax = CONFIG_MYMAX;
+        MyMin = CONFIG_MYMIN;
+        MzMax = CONFIG_MZMAX;
+        MzMin = CONFIG_MZMIN;
+        AxMax = CONFIG_AXMAX;
+        AxMin = CONFIG_AXMIN;
+        AyMax = CONFIG_AYMAX;
+        AyMin = CONFIG_AYMIN;
+        AzMax = CONFIG_AZMAX;
+        AzMin = CONFIG_AZMIN;
+        MagneticOffset = 0.0f;
+        AccelOffset = 0.0f;
+        printf( "Using default calibrations\n\r" );
+    }
+}
+
+
+/* Handle saving of the calibration.
+ */
+void TelescopeOrientation::SaveConfig( void )
+{
+    HalFilesystem File;
+    char Path[PATH_MAX];
+    char Configuration[4096u];
+    /* Get Path of StarPi executable */
+    getcwd( Path, PATH_MAX );
+    strcat( Path, "/Orientation.Conf");
+    sprintf( Configuration, "MxMax=%f, MxMin=%f, MyMax=%f, MyMin=%f, MyMax=%f, MzMax=%f, MzMin=%f, AxMax=%f, AxMin=%f, AyMax=%f, AyMin=%f, AyMax=%f, AzMax=%f, AzMin=%f, MagneticOffset=%f, AccelOffset=%f", MxMax, MxMin, MyMax, MyMin, MyMax, MzMax, MzMin, AxMax, AxMin, AyMax, AyMin, AyMax, AzMax, AzMin, MagneticOffset, AccelOffset );
+    File.SetConfig( Path, Configuration );
+}
 
 /* TelescopeOrientationRun
  *  Runs the Accelerometer and the Magnetometer.
@@ -185,6 +230,11 @@ void TelescopeOrientation::GetOrientation( float* Pitch, float* Roll, float* Hea
 void TelescopeOrientation::EnableCalibration ( bool Enable )
 {
     Calibrating = Enable;
+    /* If we are stopping calibration save the values */
+    if ( !Enable )
+    {
+        SaveConfig();
+    }
 }    
 
 /* Calibration

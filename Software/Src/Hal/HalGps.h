@@ -3,7 +3,7 @@ HalGps provides an interface to retrive the time and location from
 the GPSD deamon.
 
 Author and copyright of this file:
-Chris Dick, 2015
+Chris Dick, 2018
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -31,9 +31,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 class HalGps: public Runnable 
 {
-    //gpsmm gps_rec( "localhost", DEFAULT_GPSD_PORT);
     public:
-    static gpsmm* gps_ptr;
+        static gpsmm* gps_ptr; /**< pointer to GPS library functions */
     /** Constructor
      */
         HalGps( void );
@@ -91,16 +90,16 @@ class HalGps: public Runnable
      */    
         double GetHeightInkm( void );
        
-        static HalGps Gps;
+        static HalGps Gps; /**< Only one is required */
         
         private:
-        static double Longitude;           /**< longitude of the telescope */
-        static double Latitude;            /**< latitude of the telescope */
-        static time_t Time;                /**< latest time */
+        static double Longitude;           /**< longitude of the telescope        */
+        static double Latitude;            /**< latitude of the telescope         */
+        static time_t Time;                /**< latest time                       */
         static double Height;              /**< height above sea level of the gps */
-        static uint8_t Mode;               /**< fix mode                         */
-        static uint8_t NumberOfSatellites; /**< the number of satellites in view */
-        static uint16_t GpsdPort;          /**< port to connect to GPSD */
+        static uint8_t Mode;               /**< fix mode                          */
+        static uint8_t NumberOfSatellites; /**< the number of satellites in view  */
+        static uint16_t GpsdPort;          /**< port to connect to GPSD           */
 };
 
 #endif /* HALGPS_H */

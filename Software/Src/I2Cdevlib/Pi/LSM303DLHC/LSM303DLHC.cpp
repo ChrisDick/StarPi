@@ -33,7 +33,7 @@ THE SOFTWARE.
 */
 
 #include "LSM303DLHC.h"
-/** Default constructor, uses default I2C address.
+/* Default constructor, uses default I2C address.
  */
 LSM303DLHC_Accel::LSM303DLHC_Accel()
 {
@@ -41,7 +41,7 @@ LSM303DLHC_Accel::LSM303DLHC_Accel()
 }
 
 
-/** Power on and prepare for general usage.
+/* Power on and prepare for general usage.
  * This will prepare the magnetometer with default settings, ready for single-
  * use mode (very low power requirements). Default settings include 8-sample
  * averaging, 15 Hz data output rate, normal measurement bias, a,d 1090 gain (in
@@ -61,17 +61,17 @@ void LSM303DLHC_Accel::initialize()
 
 }
 
-/** Verify the I2C connection.
+/* Verify the I2C connection.
  * Make sure the device is connected and responds as expected.
- * @return True if connection is valid, false otherwise
+ * return True if connection is valid, false otherwise
  */
 bool LSM303DLHC_Accel::testConnection()
 {
     return true;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setXEnable( lsm303lhc_enable_t enable )
 {
@@ -81,8 +81,8 @@ void LSM303DLHC_Accel::setXEnable( lsm303lhc_enable_t enable )
     I2Cdev::writeByte( accel_devAddr, CTRL_REG1_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getXEnable()
 {
@@ -94,8 +94,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getXEnable()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setYEnable( lsm303lhc_enable_t enable )
 {
@@ -106,8 +106,8 @@ void LSM303DLHC_Accel::setYEnable( lsm303lhc_enable_t enable )
 }
 
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getYEnable()
 {
@@ -118,8 +118,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getYEnable()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setZEnable( lsm303lhc_enable_t enable)
 {
@@ -130,8 +130,8 @@ void LSM303DLHC_Accel::setZEnable( lsm303lhc_enable_t enable)
 }
 
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getZEnable()
 {
@@ -142,8 +142,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getZEnable()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setLowPowerMode(lsm303lhc_accel_power_mode_t mode)
 {
@@ -154,8 +154,8 @@ void LSM303DLHC_Accel::setLowPowerMode(lsm303lhc_accel_power_mode_t mode)
 }
 
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_power_mode_t LSM303DLHC_Accel::getLowPowerMode()
 {
@@ -165,8 +165,8 @@ lsm303lhc_accel_power_mode_t LSM303DLHC_Accel::getLowPowerMode()
     result = (lsm303lhc_accel_power_mode_t)Reg.bits.LowPowerMode;
     return result;
 }
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setDataRateSelect( lsm303lhc_accel_data_rate_t rate )
 {
@@ -177,8 +177,8 @@ void LSM303DLHC_Accel::setDataRateSelect( lsm303lhc_accel_data_rate_t rate )
 }
 
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_data_rate_t LSM303DLHC_Accel::getDataRateSelect()
 {
@@ -189,8 +189,8 @@ lsm303lhc_accel_data_rate_t LSM303DLHC_Accel::getDataRateSelect()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setInterrupt1HighPassEnable( lsm303lhc_enable_t enable)
 {
@@ -201,8 +201,8 @@ void LSM303DLHC_Accel::setInterrupt1HighPassEnable( lsm303lhc_enable_t enable)
 }
 
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getInterrupt1HighPassEnable()
 {
@@ -213,8 +213,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getInterrupt1HighPassEnable()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setInterrupt2HighPassEnable( lsm303lhc_enable_t enable )
 {
@@ -224,8 +224,8 @@ void LSM303DLHC_Accel::setInterrupt2HighPassEnable( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, CTRL_REG2_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getInterrupt2HighPassEnable()
 {
@@ -236,8 +236,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getInterrupt2HighPassEnable()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setClickHighPassEnable( lsm303lhc_enable_t enable )
 {
@@ -247,8 +247,8 @@ void LSM303DLHC_Accel::setClickHighPassEnable( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, CTRL_REG2_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getClickHighPassEnable()
 {
@@ -259,8 +259,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getClickHighPassEnable()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setFilterDataSelect( lsm303lhc_accel_filtered_data_t filtered)
 {
@@ -270,8 +270,8 @@ void LSM303DLHC_Accel::setFilterDataSelect( lsm303lhc_accel_filtered_data_t filt
     I2Cdev::writeByte(  accel_devAddr, CTRL_REG2_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_filtered_data_t LSM303DLHC_Accel::getFilterDataSelect()
 {
@@ -282,8 +282,8 @@ lsm303lhc_accel_filtered_data_t LSM303DLHC_Accel::getFilterDataSelect()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setHighPassCutOff( uint8_t cutoff)
 {
@@ -293,8 +293,8 @@ void LSM303DLHC_Accel::setHighPassCutOff( uint8_t cutoff)
     I2Cdev::writeByte(  accel_devAddr, CTRL_REG2_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 uint8_t LSM303DLHC_Accel::getHighPassCutOff()
 {
@@ -305,8 +305,8 @@ uint8_t LSM303DLHC_Accel::getHighPassCutOff()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setHighPassMode( lsm303lhc_accel_high_pass_mode_t mode )
 {
@@ -316,8 +316,8 @@ void LSM303DLHC_Accel::setHighPassMode( lsm303lhc_accel_high_pass_mode_t mode )
     I2Cdev::writeByte(  accel_devAddr, CTRL_REG2_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_high_pass_mode_t LSM303DLHC_Accel::getHighPassMode()
 {
@@ -328,8 +328,8 @@ lsm303lhc_accel_high_pass_mode_t LSM303DLHC_Accel::getHighPassMode()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setOverrun( lsm303lhc_enable_t enable)
 {
@@ -339,8 +339,8 @@ void LSM303DLHC_Accel::setOverrun( lsm303lhc_enable_t enable)
     I2Cdev::writeByte(  accel_devAddr, CTRL_REG3_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getOverrun()
 {
@@ -351,8 +351,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getOverrun()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setWatermark( lsm303lhc_enable_t enable )
 {
@@ -362,8 +362,8 @@ void LSM303DLHC_Accel::setWatermark( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, CTRL_REG3_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getWatermark()
 {
@@ -374,8 +374,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getWatermark()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setDataReady2( lsm303lhc_enable_t enable )
 {
@@ -385,8 +385,8 @@ void LSM303DLHC_Accel::setDataReady2( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, CTRL_REG3_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getDataReady2()
 {
@@ -397,8 +397,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getDataReady2()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setDataReady1( lsm303lhc_enable_t enable )
 {
@@ -408,8 +408,8 @@ void LSM303DLHC_Accel::setDataReady1( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, CTRL_REG3_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getDataReady1()
 {
@@ -420,8 +420,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getDataReady1()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setAOI1Interrupt( lsm303lhc_enable_t enable )
 {
@@ -431,8 +431,8 @@ void LSM303DLHC_Accel::setAOI1Interrupt( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, CTRL_REG3_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getAOI1Interrupt()
 {
@@ -443,8 +443,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getAOI1Interrupt()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setAOI2Interrupt( lsm303lhc_enable_t enable )
 {
@@ -454,8 +454,8 @@ void LSM303DLHC_Accel::setAOI2Interrupt( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, CTRL_REG3_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getAOI2Interrupt()
 {
@@ -466,8 +466,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getAOI2Interrupt()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setClick( lsm303lhc_enable_t enable )
 {
@@ -477,8 +477,8 @@ void LSM303DLHC_Accel::setClick( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, CTRL_REG3_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getClick()
 {
@@ -489,100 +489,100 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getClick()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setHighResolutionMode( lsm303lhc_enable_t enable)
 {
-    accelerometer_contorl_t Reg;
+    accelerometer_control_t Reg;
     I2Cdev::readByte( accel_devAddr, CTRL_REG4_A, &Reg.all );
     Reg.bits.HighResolutionMode = (uint8_t)enable;
     I2Cdev::writeByte(  accel_devAddr, CTRL_REG4_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getHighResolutionMode()
 {
-    accelerometer_contorl_t Reg;
+    accelerometer_control_t Reg;
     lsm303lhc_enable_t result;
     I2Cdev::readByte( accel_devAddr, CTRL_REG4_A, &Reg.all );
     result = (lsm303lhc_enable_t)Reg.bits.HighResolutionMode;
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setFullScaleSelection( lsm303lhc_accel_full_scale_t scale )
 {
-    accelerometer_contorl_t Reg;
+    accelerometer_control_t Reg;
     I2Cdev::readByte( accel_devAddr, CTRL_REG4_A, &Reg.all );
     Reg.bits.FullScaleSelection = (uint8_t)scale;
     I2Cdev::writeByte(  accel_devAddr, CTRL_REG4_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_full_scale_t LSM303DLHC_Accel::getFullScaleSelection()
 {
-    accelerometer_contorl_t Reg;
+    accelerometer_control_t Reg;
     lsm303lhc_accel_full_scale_t result;
     I2Cdev::readByte( accel_devAddr, CTRL_REG4_A, &Reg.all );
     result = (lsm303lhc_accel_full_scale_t)Reg.bits.FullScaleSelection;
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setEndianess( lsm303lhc_accel_endianess_t endianess )
 {
-    accelerometer_contorl_t Reg;
+    accelerometer_control_t Reg;
     I2Cdev::readByte( accel_devAddr, CTRL_REG4_A, &Reg.all );
     Reg.bits.Endianess = (uint8_t)endianess;
     I2Cdev::writeByte(  accel_devAddr, CTRL_REG4_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_endianess_t LSM303DLHC_Accel::getEndianess()
 {
-    accelerometer_contorl_t Reg;
+    accelerometer_control_t Reg;
     lsm303lhc_accel_endianess_t result;
     I2Cdev::readByte( accel_devAddr, CTRL_REG4_A, &Reg.all );
     result = (lsm303lhc_accel_endianess_t)Reg.bits.Endianess;
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setBlockUpdateMode( lsm303lhc_accell_update_mode_t mode )
 {
-    accelerometer_contorl_t Reg;
+    accelerometer_control_t Reg;
     I2Cdev::readByte( accel_devAddr, CTRL_REG4_A, &Reg.all );
     Reg.bits.BlockUpdateMode = (uint8_t)mode;
     I2Cdev::writeByte(  accel_devAddr, CTRL_REG4_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accell_update_mode_t LSM303DLHC_Accel::getBlockUpdateMode()
 {
-    accelerometer_contorl_t Reg;
+    accelerometer_control_t Reg;
     lsm303lhc_accell_update_mode_t result;
     I2Cdev::readByte( accel_devAddr, CTRL_REG4_A, &Reg.all );
     result = (lsm303lhc_accell_update_mode_t)Reg.bits.BlockUpdateMode;
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setFourDEnableInt2( lsm303lhc_enable_t enable )
 {
@@ -592,8 +592,8 @@ void LSM303DLHC_Accel::setFourDEnableInt2( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, CTRL_REG5_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getFourDEnableInt2()
 {
@@ -604,8 +604,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getFourDEnableInt2()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setLatchIntRequest2( lsm303lhc_enable_t enable )
 {
@@ -615,8 +615,8 @@ void LSM303DLHC_Accel::setLatchIntRequest2( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, CTRL_REG5_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getLatchIntRequest2()
 {
@@ -627,8 +627,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getLatchIntRequest2()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setFourDEnableInt1( lsm303lhc_enable_t enable )
 {
@@ -638,8 +638,8 @@ void LSM303DLHC_Accel::setFourDEnableInt1( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, CTRL_REG5_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getFourDEnableInt1()
 {
@@ -650,8 +650,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getFourDEnableInt1()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setLatchIntRequest1( lsm303lhc_accel_interrupt_latch_t latch )
 {
@@ -661,8 +661,8 @@ void LSM303DLHC_Accel::setLatchIntRequest1( lsm303lhc_accel_interrupt_latch_t la
     I2Cdev::writeByte(  accel_devAddr, CTRL_REG5_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_interrupt_latch_t LSM303DLHC_Accel::getLatchIntRequest1()
 {
@@ -673,8 +673,8 @@ lsm303lhc_accel_interrupt_latch_t LSM303DLHC_Accel::getLatchIntRequest1()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setFIFOEnable( lsm303lhc_enable_t enable )
 {
@@ -684,8 +684,8 @@ void LSM303DLHC_Accel::setFIFOEnable( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, CTRL_REG5_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getFIFOEnable()
 {
@@ -696,8 +696,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getFIFOEnable()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setReboot( lsm303lhc_enable_t enable )
 {
@@ -707,8 +707,8 @@ void LSM303DLHC_Accel::setReboot( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, CTRL_REG5_A, Reg.all);
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setActiveHigh( lsm303lhc_enable_t enable )
 {
@@ -718,8 +718,8 @@ void LSM303DLHC_Accel::setActiveHigh( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, CTRL_REG6_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getActiveHigh()
 {
@@ -730,8 +730,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getActiveHigh()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setActiveFunctionPAD2( lsm303lhc_enable_t enable )
 {
@@ -741,8 +741,8 @@ void LSM303DLHC_Accel::setActiveFunctionPAD2( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, CTRL_REG6_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getActiveFunctionPAD2()
 {
@@ -753,8 +753,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getActiveFunctionPAD2()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setRebootPAD2( lsm303lhc_enable_t enable )
 {
@@ -764,8 +764,8 @@ void LSM303DLHC_Accel::setRebootPAD2( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, CTRL_REG6_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getRebootPAD2()
 {
@@ -776,8 +776,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getRebootPAD2()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setInt2PAD2( lsm303lhc_enable_t enable )
 {
@@ -787,8 +787,8 @@ void LSM303DLHC_Accel::setInt2PAD2( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, CTRL_REG6_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getInt2PAD2()
 {
@@ -799,8 +799,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getInt2PAD2()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setInt1PAD2( lsm303lhc_enable_t enable )
 {
@@ -810,8 +810,8 @@ void LSM303DLHC_Accel::setInt1PAD2( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, CTRL_REG6_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getInt1PAD2()
 {
@@ -822,8 +822,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getInt1PAD2()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setClickPAD2( lsm303lhc_enable_t enable )
 {
@@ -833,8 +833,8 @@ void LSM303DLHC_Accel::setClickPAD2( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, CTRL_REG6_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getClickPAD2()
 {
@@ -846,8 +846,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getClickPAD2()
 }
 
 //#define REFERENCE_A 0x26
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_avaliable_t LSM303DLHC_Accel::getXDataAvaliable()
 {
@@ -858,8 +858,8 @@ lsm303lhc_accel_avaliable_t LSM303DLHC_Accel::getXDataAvaliable()
     return result;
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_avaliable_t LSM303DLHC_Accel::getYDataAvaliable()
 {
@@ -870,8 +870,8 @@ lsm303lhc_accel_avaliable_t LSM303DLHC_Accel::getYDataAvaliable()
     return result;
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_avaliable_t LSM303DLHC_Accel::getZDataAvaliable()
 {
@@ -882,8 +882,8 @@ lsm303lhc_accel_avaliable_t LSM303DLHC_Accel::getZDataAvaliable()
     return result;
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_avaliable_t LSM303DLHC_Accel::getAllDataAvaliable()
 {
@@ -894,8 +894,8 @@ lsm303lhc_accel_avaliable_t LSM303DLHC_Accel::getAllDataAvaliable()
     return result;
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_avaliable_t LSM303DLHC_Accel::getXOverrun()
 {
@@ -906,8 +906,8 @@ lsm303lhc_accel_avaliable_t LSM303DLHC_Accel::getXOverrun()
     return result;
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_avaliable_t LSM303DLHC_Accel::getYOverrun()
 {
@@ -918,8 +918,8 @@ lsm303lhc_accel_avaliable_t LSM303DLHC_Accel::getYOverrun()
     return result;
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_avaliable_t LSM303DLHC_Accel::getZOverrun()
 {
@@ -930,8 +930,8 @@ lsm303lhc_accel_avaliable_t LSM303DLHC_Accel::getZOverrun()
     return result;
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_avaliable_t LSM303DLHC_Accel::getAllOverrun()
 {
@@ -942,8 +942,8 @@ lsm303lhc_accel_avaliable_t LSM303DLHC_Accel::getAllOverrun()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setTriggerSelect( lsm303lhc_accel_trigger_mode_t mode )
 {
@@ -953,8 +953,8 @@ void LSM303DLHC_Accel::setTriggerSelect( lsm303lhc_accel_trigger_mode_t mode )
     I2Cdev::writeByte(  accel_devAddr, FIFO_CTRL_REG_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_trigger_mode_t LSM303DLHC_Accel::getTriggerSelect()
 {
@@ -965,8 +965,8 @@ lsm303lhc_accel_trigger_mode_t LSM303DLHC_Accel::getTriggerSelect()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setFIFOMode( lsm303lhc_accel_fifo_mode_t mode )
 {
@@ -976,8 +976,8 @@ void LSM303DLHC_Accel::setFIFOMode( lsm303lhc_accel_fifo_mode_t mode )
     I2Cdev::writeByte(  accel_devAddr, FIFO_CTRL_REG_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_fifo_mode_t LSM303DLHC_Accel::getFIFOMode()
 {
@@ -988,8 +988,8 @@ lsm303lhc_accel_fifo_mode_t LSM303DLHC_Accel::getFIFOMode()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setInt1XLowEvent( lsm303lhc_enable_t enable )
 {
@@ -999,8 +999,8 @@ void LSM303DLHC_Accel::setInt1XLowEvent( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, INT1_CFG_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getInt1XLowEvent()
 {
@@ -1011,8 +1011,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getInt1XLowEvent()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setInt1XHighEvent( lsm303lhc_enable_t enable )
 {
@@ -1022,8 +1022,8 @@ void LSM303DLHC_Accel::setInt1XHighEvent( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, CTRL_REG4_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getInt1XHighEvent()
 {
@@ -1034,8 +1034,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getInt1XHighEvent()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setInt1YLowEvent( lsm303lhc_enable_t enable )
 {
@@ -1045,8 +1045,8 @@ void LSM303DLHC_Accel::setInt1YLowEvent( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, INT1_CFG_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getInt1YLowEvent()
 {
@@ -1057,8 +1057,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getInt1YLowEvent()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setInt1YHighEvent( lsm303lhc_enable_t enable )
 {
@@ -1068,8 +1068,8 @@ void LSM303DLHC_Accel::setInt1YHighEvent( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, INT1_CFG_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getInt1YHighEvent()
 {
@@ -1080,8 +1080,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getInt1YHighEvent()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setInt1ZLowEvent( lsm303lhc_enable_t enable )
 {
@@ -1091,8 +1091,8 @@ void LSM303DLHC_Accel::setInt1ZLowEvent( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, INT1_CFG_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getInt1ZLowEvent()
 {
@@ -1103,8 +1103,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getInt1ZLowEvent()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setInt1ZHighEvent( lsm303lhc_enable_t enable )
 {
@@ -1114,8 +1114,8 @@ void LSM303DLHC_Accel::setInt1ZHighEvent( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, INT1_CFG_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getInt1ZHighEvent()
 {
@@ -1126,8 +1126,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getInt1ZHighEvent()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setInt1TypeEnable( lsm303lhc_enable_t enable )
 {
@@ -1137,8 +1137,8 @@ void LSM303DLHC_Accel::setInt1TypeEnable( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, INT1_CFG_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getInt1TypeEnable()
 {
@@ -1149,8 +1149,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getInt1TypeEnable()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setInt2XLowEvent( lsm303lhc_enable_t enable )
 {
@@ -1160,8 +1160,8 @@ void LSM303DLHC_Accel::setInt2XLowEvent( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, INT2_CFG_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getInt2XLowEvent()
 {
@@ -1172,8 +1172,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getInt2XLowEvent()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setInt2XHighEvent( lsm303lhc_enable_t enable )
 {
@@ -1183,8 +1183,8 @@ void LSM303DLHC_Accel::setInt2XHighEvent( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, INT2_CFG_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getInt2XHighEvent()
 {
@@ -1196,8 +1196,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getInt2XHighEvent()
 }
 
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setInt2YLowEvent( lsm303lhc_enable_t enable )
 {
@@ -1207,8 +1207,8 @@ void LSM303DLHC_Accel::setInt2YLowEvent( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, INT2_CFG_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getInt2YLowEvent()
 {
@@ -1219,8 +1219,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getInt2YLowEvent()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setInt2YHighEvent( lsm303lhc_enable_t enable )
 {
@@ -1230,8 +1230,8 @@ void LSM303DLHC_Accel::setInt2YHighEvent( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, INT1_CFG_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getInt2YHighEvent()
 {
@@ -1242,8 +1242,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getInt2YHighEvent()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setInt2ZLowEvent( lsm303lhc_enable_t enable )
 {
@@ -1253,8 +1253,8 @@ void LSM303DLHC_Accel::setInt2ZLowEvent( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, INT2_CFG_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getInt2ZLowEvent()
 {
@@ -1265,8 +1265,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getInt2ZLowEvent()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setInt2ZHighEvent( lsm303lhc_enable_t enable )
 {
@@ -1276,8 +1276,8 @@ void LSM303DLHC_Accel::setInt2ZHighEvent( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, INT2_CFG_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getInt2ZHighEvent()
 {
@@ -1288,8 +1288,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getInt2ZHighEvent()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setInt2TypeEnable( lsm303lhc_enable_t enable )
 {
@@ -1299,8 +1299,8 @@ void LSM303DLHC_Accel::setInt2TypeEnable( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, INT2_CFG_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getInt2TypeEnable()
 {
@@ -1311,8 +1311,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getInt2TypeEnable()
     return result;
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getInt1XLow()
 {
@@ -1323,8 +1323,8 @@ lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getInt1XLow()
     return result;
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getInt1XHigh()
 {
@@ -1335,8 +1335,8 @@ lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getInt1XHigh()
     return result;
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getInt1YLow()
 {
@@ -1347,8 +1347,8 @@ lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getInt1YLow()
     return result;
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getInt1YHigh()
 {
@@ -1359,8 +1359,8 @@ lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getInt1YHigh()
     return result;
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getInt1ZLow()
 {
@@ -1371,8 +1371,8 @@ lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getInt1ZLow()
     return result;
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getInt1ZHigh()
 {
@@ -1383,8 +1383,8 @@ lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getInt1ZHigh()
     return result;
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getInt1InterruptActive()
 {
@@ -1396,8 +1396,8 @@ lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getInt1InterruptActive()
 }
 
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getInt2XLow()
 {
@@ -1408,8 +1408,8 @@ lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getInt2XLow()
     return result;
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getInt2XHigh()
 {
@@ -1420,8 +1420,8 @@ lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getInt2XHigh()
     return result;
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getInt2YLow()
 {
@@ -1432,8 +1432,8 @@ lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getInt2YLow()
     return result;
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getInt2YHigh()
 {
@@ -1444,8 +1444,8 @@ lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getInt2YHigh()
     return result;
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getInt2ZLow()
 {
@@ -1456,8 +1456,8 @@ lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getInt2ZLow()
     return result;
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getInt2ZHigh()
 {
@@ -1468,8 +1468,8 @@ lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getInt2ZHigh()
     return result;
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getInt2InterruptActive()
 {
@@ -1481,8 +1481,8 @@ lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getInt2InterruptActive()
 }
 
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setInt1Threshold( uint8_t Threshold )
 {
@@ -1492,8 +1492,8 @@ void LSM303DLHC_Accel::setInt1Threshold( uint8_t Threshold )
     I2Cdev::writeByte(  accel_devAddr, INT1_THS_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 uint8_t LSM303DLHC_Accel::getInt1Threshold()
 {
@@ -1504,8 +1504,8 @@ uint8_t LSM303DLHC_Accel::getInt1Threshold()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setInt2Threshold( uint8_t Threshold )
 {
@@ -1515,8 +1515,8 @@ void LSM303DLHC_Accel::setInt2Threshold( uint8_t Threshold )
     I2Cdev::writeByte(  accel_devAddr, INT2_THS_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 uint8_t LSM303DLHC_Accel::getInt2Threshold()
 {
@@ -1527,8 +1527,8 @@ uint8_t LSM303DLHC_Accel::getInt2Threshold()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setClickThreshold( uint8_t Threshold )
 {
@@ -1538,8 +1538,8 @@ void LSM303DLHC_Accel::setClickThreshold( uint8_t Threshold )
     I2Cdev::writeByte(  accel_devAddr, CLICK_THS_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 uint8_t LSM303DLHC_Accel::getClickThreshold()
 {
@@ -1550,8 +1550,8 @@ uint8_t LSM303DLHC_Accel::getClickThreshold()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setInt1Duration( uint8_t duration )
 {
@@ -1561,8 +1561,8 @@ void LSM303DLHC_Accel::setInt1Duration( uint8_t duration )
     I2Cdev::writeByte(  accel_devAddr, INT1_DURATION_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 uint8_t LSM303DLHC_Accel::getInt1Duration()
 {
@@ -1573,8 +1573,8 @@ uint8_t LSM303DLHC_Accel::getInt1Duration()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setInt2Duration( uint8_t duration )
 {
@@ -1584,8 +1584,8 @@ void LSM303DLHC_Accel::setInt2Duration( uint8_t duration )
     I2Cdev::writeByte(  accel_devAddr, INT2_DURATION_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 uint8_t LSM303DLHC_Accel::getInt2Duration()
 {
@@ -1596,8 +1596,8 @@ uint8_t LSM303DLHC_Accel::getInt2Duration()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setXSingleEnable( lsm303lhc_enable_t enable )
 {
@@ -1607,8 +1607,8 @@ void LSM303DLHC_Accel::setXSingleEnable( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, CLICK_CFG_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getXSingleEnable()
 {
@@ -1619,8 +1619,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getXSingleEnable()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setXDoubleEnable( lsm303lhc_enable_t enable )
 {
@@ -1630,8 +1630,8 @@ void LSM303DLHC_Accel::setXDoubleEnable( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, CLICK_CFG_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getXDoubleEnable()
 {
@@ -1642,8 +1642,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getXDoubleEnable()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setYSingleEnable( lsm303lhc_enable_t enable )
 {
@@ -1653,8 +1653,8 @@ void LSM303DLHC_Accel::setYSingleEnable( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, CLICK_CFG_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getYSingleEnable()
 {
@@ -1665,8 +1665,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getYSingleEnable()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setYDoubleEnable( lsm303lhc_enable_t enable )
 {
@@ -1676,8 +1676,8 @@ void LSM303DLHC_Accel::setYDoubleEnable( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, CLICK_CFG_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getYDoubleEnable()
 {
@@ -1688,8 +1688,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getYDoubleEnable()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setZSingleEnable( lsm303lhc_enable_t enable )
 {
@@ -1699,8 +1699,8 @@ void LSM303DLHC_Accel::setZSingleEnable( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, CLICK_CFG_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getZSingleEnable()
 {
@@ -1711,8 +1711,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getZSingleEnable()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setZDoubleEnable( lsm303lhc_enable_t enable )
 {
@@ -1722,8 +1722,8 @@ void LSM303DLHC_Accel::setZDoubleEnable( lsm303lhc_enable_t enable )
     I2Cdev::writeByte(  accel_devAddr, CLICK_CFG_A, Reg.all);
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_enable_t LSM303DLHC_Accel::getZDoubleEnable()
 {
@@ -1734,8 +1734,8 @@ lsm303lhc_enable_t LSM303DLHC_Accel::getZDoubleEnable()
     return result;
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getXClick()
 {
@@ -1746,8 +1746,8 @@ lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getXClick()
     return result;
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getYClick()
 {
@@ -1758,8 +1758,8 @@ lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getYClick()
     return result;
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getZClick()
 {
@@ -1770,8 +1770,8 @@ lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getZClick()
     return result;
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getSign()
 {
@@ -1782,8 +1782,8 @@ lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getSign()
     return result;
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getSingle()
 {
@@ -1794,8 +1794,8 @@ lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getSingle()
     return result;
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getDouble()
 {
@@ -1806,8 +1806,8 @@ lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getDouble()
     return result;
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getInterruptActive()
 {
@@ -1818,8 +1818,8 @@ lsm303lhc_accel_event_active_t LSM303DLHC_Accel::getInterruptActive()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setClickLimit( uint8_t Limit )
 {
@@ -1828,8 +1828,8 @@ void LSM303DLHC_Accel::setClickLimit( uint8_t Limit )
     I2Cdev::writeByte(  accel_devAddr, TIME_LIMIT_A, Reg.all );
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 uint8_t LSM303DLHC_Accel::getClickLimit()
 {
@@ -1840,16 +1840,16 @@ uint8_t LSM303DLHC_Accel::getClickLimit()
     return result;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setClickLatency( uint8_t Latency )
 {
     I2Cdev::writeByte(  accel_devAddr, TIME_LATENCY_A, Latency );
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 uint8_t LSM303DLHC_Accel::getClickLatency()
 {
@@ -1858,16 +1858,16 @@ uint8_t LSM303DLHC_Accel::getClickLatency()
     return Reg;
 }
 
-/** set
- * @param
+/* set
+ * param
  */
 void LSM303DLHC_Accel::setClickWindow( uint8_t window )
 {
     I2Cdev::writeByte(  accel_devAddr, TIME_WINDOW_A, window );
 }
 
-/** Get
- * @return
+/* Get
+ * return
  */
 uint8_t LSM303DLHC_Accel::getClickWindow()
 {
@@ -1876,13 +1876,13 @@ uint8_t LSM303DLHC_Accel::getClickWindow()
     return Reg;
 }
 
-/** Get 3-axis accleration measurements.
+/* Get 3-axis accleration measurements.
  * These six bytes are eight bits each and hold
  * the output data for each axis.
  *
- * @param x 16-bit signed integer container for X-axis acceleration
- * @param y 16-bit signed integer container for Y-axis acceleration
- * @param z 16-bit signed integer container for Z-axis acceleration
+ * param x 16-bit signed integer container for X-axis acceleration
+ * param y 16-bit signed integer container for Y-axis acceleration
+ * param z 16-bit signed integer container for Z-axis acceleration
  */
 void LSM303DLHC_Accel::getAcceleration(int16_t* x, int16_t* y, int16_t* z)
 {
@@ -1892,8 +1892,8 @@ void LSM303DLHC_Accel::getAcceleration(int16_t* x, int16_t* y, int16_t* z)
     *z = (((int16_t)buffer[5]) << 8) | buffer[4];
 }
 
-/** Get X-axis accleration measurement.
- * @return 16-bit signed X-axis acceleration value
+/* Get X-axis accleration measurement.
+ * return 16-bit signed X-axis acceleration value
  */
 int16_t LSM303DLHC_Accel::getAccelerationX()
 {
@@ -1901,8 +1901,8 @@ int16_t LSM303DLHC_Accel::getAccelerationX()
     return (((int16_t)buffer[1]) << 8) | buffer[0];
 }
 
-/** Get Y-axis accleration measurement.
- * @return 16-bit signed Y-axis acceleration value
+/* Get Y-axis accleration measurement.
+ * return 16-bit signed Y-axis acceleration value
  */
 int16_t LSM303DLHC_Accel::getAccelerationY()
 {
@@ -1910,8 +1910,8 @@ int16_t LSM303DLHC_Accel::getAccelerationY()
     return (((int16_t)buffer[1]) << 8) | buffer[0];
 }
 
-/** Get Z-axis accleration measurement.
- * @return 16-bit signed Z-axis acceleration value
+/* Get Z-axis accleration measurement.
+ * return 16-bit signed Z-axis acceleration value
  */
 int16_t LSM303DLHC_Accel::getAccelerationZ()
 {
@@ -1927,7 +1927,7 @@ int16_t LSM303DLHC_Accel::getAccelerationZ()
  */
 
 
-/** Default constructor, uses default I2C address.
+/* Default constructor, uses default I2C address.
  * @see LSM303LHC_DEFAULT_ADDRESS
  */
 LSM303DLHC_Mag::LSM303DLHC_Mag()
@@ -1935,7 +1935,7 @@ LSM303DLHC_Mag::LSM303DLHC_Mag()
     mag_devAddr = LSM303_MAG;
 }
 
-/** Power on and prepare for general usage.
+/* Power on and prepare for general usage.
  * This will prepare the magnetometer with default settings, ready for single-
  * use mode (very low power requirements). Default settings include 8-sample
  * averaging, 15 Hz data output rate, normal measurement bias, a,d 1090 gain (in
@@ -1954,9 +1954,9 @@ void LSM303DLHC_Mag::initialize()
     }
 }
 
-/** Verify the I2C connection.
+/* Verify the I2C connection.
  * Make sure the device is connected and responds as expected.
- * @return True if connection is valid, false otherwise
+ * return True if connection is valid, false otherwise
  */
 bool LSM303DLHC_Mag::testConnection()
 {
@@ -1973,8 +1973,8 @@ bool LSM303DLHC_Mag::testConnection()
 }
 
         // CONFIG_A register
-/** set the scale of the measurment.
- * @param Scale desired scale of measurement
+/* set the scale of the measurment.
+ * param Scale desired scale of measurement
  */
 void LSM303DLHC_Mag::setGain( lsm303lhc_mag_scale_t Scale )
 {
@@ -1984,8 +1984,8 @@ void LSM303DLHC_Mag::setGain( lsm303lhc_mag_scale_t Scale )
     I2Cdev::writeByte( mag_devAddr, CRB_REG_M, Reg.all );
 }
 
-/** Get the scale of the measurment..
- * @return lsm303lhc_mag_scale_t the current scale of measurement.
+/* Get the scale of the measurment..
+ * return lsm303lhc_mag_scale_t the current scale of measurement.
  */
 lsm303lhc_mag_scale_t LSM303DLHC_Mag::getGain()
 {
@@ -1996,8 +1996,8 @@ lsm303lhc_mag_scale_t LSM303DLHC_Mag::getGain()
     return result;
 }
 
-/** set the mode of the measurment.
- * @param Mode mode of measurement
+/* set the mode of the measurment.
+ * param Mode mode of measurement
  */
 void LSM303DLHC_Mag::setMode( lsm303lhc_mag_mode_t Mode )
 {
@@ -2007,8 +2007,8 @@ void LSM303DLHC_Mag::setMode( lsm303lhc_mag_mode_t Mode )
     I2Cdev::writeByte( mag_devAddr, MR_REG_M, Reg.all );
 }
 
-/** Get the mdoe of the measurment.
- * @return lsm303lhc_mag_mode_t the mode of measurement.
+/* Get the mdoe of the measurment.
+ * return lsm303lhc_mag_mode_t the mode of measurement.
  */
 lsm303lhc_mag_mode_t LSM303DLHC_Mag::getMode()
 {
@@ -2019,8 +2019,8 @@ lsm303lhc_mag_mode_t LSM303DLHC_Mag::getMode()
     return result;
 }
 
-/** Get the data ready flag
- * @return bool the data ready flag
+/* Get the data ready flag
+ * return bool the data ready flag
  */
 bool LSM303DLHC_Mag::getDataReady()
 {
@@ -2028,16 +2028,16 @@ bool LSM303DLHC_Mag::getDataReady()
     //ToDo
 }
 
-/** set the update lock flag
- * @param lock enable or disable the lock
+/* set the update lock flag
+ * param lock enable or disable the lock
  */
 void LSM303DLHC_Mag::setUpdateLock( bool lock)
 {
     (void)lock;//ToDo
 }
 
-/** Get the update lock flag.
- * @return bool update lock flag
+/* Get the update lock flag.
+ * return bool update lock flag
  */
 bool LSM303DLHC_Mag::getUpdateLock()
 {
@@ -2045,13 +2045,13 @@ bool LSM303DLHC_Mag::getUpdateLock()
     //ToDo
 }
 
-/** Get 3-axis accleration measurements.
+/* Get 3-axis accleration measurements.
  * These six bytes are eight bits each and hold
  * the output data for each axis.
  *
- * @param x 16-bit signed integer container for X-axis acceleration
- * @param y 16-bit signed integer container for Y-axis acceleration
- * @param z 16-bit signed integer container for Z-axis acceleration
+ * param x 16-bit signed integer container for X-axis acceleration
+ * param y 16-bit signed integer container for Y-axis acceleration
+ * param z 16-bit signed integer container for Z-axis acceleration
  */
 void LSM303DLHC_Mag::getHeading(int16_t* x, int16_t* y, int16_t* z)
 {
@@ -2062,8 +2062,8 @@ void LSM303DLHC_Mag::getHeading(int16_t* x, int16_t* y, int16_t* z)
 }
 
 
-/** Get the X measurement.
- * @return int16_t the measurement
+/* Get the X measurement.
+ * return int16_t the measurement
  */
 int16_t LSM303DLHC_Mag::getHeadingX()
 {
@@ -2072,8 +2072,8 @@ int16_t LSM303DLHC_Mag::getHeadingX()
 }
 
 
-/** Get the Y measurement.
- * @return int16_t the measurement
+/* Get the Y measurement.
+ * return int16_t the measurement
  */
 int16_t LSM303DLHC_Mag::getHeadingY()
 {
@@ -2082,8 +2082,8 @@ int16_t LSM303DLHC_Mag::getHeadingY()
 }
 
 
-/** Get the Z measurement.
- * @return int16_t the measurement
+/* Get the Z measurement.
+ * return int16_t the measurement
  */
 int16_t LSM303DLHC_Mag::getHeadingZ()
 {
@@ -2092,8 +2092,8 @@ int16_t LSM303DLHC_Mag::getHeadingZ()
 }
 
 
-/** Get the temperature measurement.
- * @return int16_t the measurement
+/* Get the temperature measurement.
+ * return int16_t the measurement
  */
 int16_t LSM303DLHC_Mag::getTemperature()
 {
@@ -2103,8 +2103,8 @@ int16_t LSM303DLHC_Mag::getTemperature()
 
 
 // ID_* registers
-/** Get identification byte A
- * @return ID_A byte (should be 01001000, ASCII value 'H')
+/* Get identification byte A
+ * return ID_A byte (should be 01001000, ASCII value 'H')
  */
 uint8_t LSM303DLHC_Mag::getIDA()
 {
@@ -2113,8 +2113,8 @@ uint8_t LSM303DLHC_Mag::getIDA()
 }
 
 
-/** Get identification byte B
- * @return ID_A byte (should be 00110100, ASCII value '4')
+/* Get identification byte B
+ * return ID_A byte (should be 00110100, ASCII value '4')
  */
 uint8_t LSM303DLHC_Mag::getIDB()
 {
@@ -2123,8 +2123,8 @@ uint8_t LSM303DLHC_Mag::getIDB()
 }
 
 
-/** Get identification byte C
- * @return ID_A byte (should be 00110011, ASCII value '3')
+/* Get identification byte C
+ * return ID_A byte (should be 00110011, ASCII value '3')
  */
 uint8_t LSM303DLHC_Mag::getIDC()
 {

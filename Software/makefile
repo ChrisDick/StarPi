@@ -43,6 +43,7 @@ CPPFILES := 		Src/Main.cpp \
 					Src/Hal/HalAccelerometer.cpp \
 					Src/Hal/HalMagnetometer.cpp \
 					Src/Hal/HalSocket.cpp \
+					Src/Hal/HalFilesystem.cpp \
 					Src/Drivers/GPIO.cpp \
 					Src/Scheduler/TTC_Sched.cpp \
 					Src/Scheduler/Runnable.cpp \

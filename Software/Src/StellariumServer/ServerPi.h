@@ -1,4 +1,4 @@
-/*
+/**
 The stellarium telescope library helps building
 telescope server programs, that can communicate with stellarium
 by means of the stellarium TCP telescope protocol.
@@ -43,13 +43,13 @@ class ServerPi : public Server, public Runnable
     /** 
      */
         void Run ( void );
-    /** 
+    /** Set the Right Ascension and Declination
+     * @param Ra Right Ascension
+     * @param Dec Declination
      */
         void SetRaDec (double Ra, double Dec );
     /** perform one step of the server
-     * @param timeout_micros
-     * @param ra
-     * @param dec
+     * @param TimeoutMicros time out in microseconds
      */    
         void Step(int64_t TimeoutMicros);
     
@@ -62,9 +62,9 @@ private:
     /**
      */
 
-    int64_t next_pos_time; /**< variable to prevent over sending of the messages */
-    double RightAscension;        /**< Right ascension */
-    double Declination;           /**< Declination */
+    int64_t next_pos_time;   /**< variable to prevent over sending of the messages */
+    double RightAscension;   /**< Right ascension */
+    double Declination;      /**< Declination */
 };
 
-#endif /* SERVER_ASTRO_PI_H */
+#endif /* SERVER_PI_H */

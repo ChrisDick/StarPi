@@ -2,7 +2,7 @@
 Telescope manager is a higher level system manager
 
 Author and copyright of this file:
-Chris Dick, 2015
+Chris Dick, 2018
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -286,14 +286,14 @@ void TelescopeManager::GetRaDec ( double* Ra, double* Dec )
  */
 float TelescopeManager::GetRightAscension( void )
 {
-    return (float)RightAscension;
+    return (float)((RightAscension/M_PI)*24.0);
 }
 
 /* Export the Declination
  */
 float TelescopeManager::GetDeclination( void )
 {
-    return (float)Declination;
+    return (float)((Declination/M_PI)*180.0);
 }
 
 /* Export the MagneticDeclination

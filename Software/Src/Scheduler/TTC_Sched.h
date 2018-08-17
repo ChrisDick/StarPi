@@ -17,7 +17,7 @@ class TTC_Sched
 {
 
 protected:
-    Runnable * Tasks[SCH_MAX_TASKS]; /**<  */
+    Runnable * Tasks[SCH_MAX_TASKS]; /**< task list */
 
 public:
 /** Causes a task (function) to be executed at regular intervals

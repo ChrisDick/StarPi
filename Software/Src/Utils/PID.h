@@ -84,7 +84,7 @@ public:
      * @param InMin The real world value corresponding to 0%.
      * @param InMax The real world value corresponding to 100%.
      */
-    void setInputLimits(float inMin , float inMax);
+    void setInputLimits(float InMin , float InMax);
  
     /**
      * Scale from outputs to 0-100%.
@@ -154,14 +154,37 @@ public:
      */
     float compute(void);
  
-    //Getters.
+    /** Get the in minimum
+     * @return float input minimum
+     */ 
     float getInMin();
+    /** Get the in maximum
+     * @return float input maximum
+     */ 
     float getInMax();
+    /** Get the out minimum
+     * @return float output minimum
+     */ 
     float getOutMin();
+    /** Get the out maximum
+     * @return float output maximum
+     */ 
     float getOutMax();
+    /** Get the interval
+     * @return float interval
+     */ 
     float getInterval();
+    /** Get the P parameter
+     * @return float P
+     */ 
     float getPParam();
+    /** Get the I Parameter
+     * @return float I
+     */ 
     float getIParam();
+    /** Get the D Parameter
+     * @return float D
+     */ 
     float getDParam();
  
 private:

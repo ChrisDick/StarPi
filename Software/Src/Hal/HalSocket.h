@@ -7,7 +7,7 @@ Each time the run function is called, a message will be taken from
 the queue and sent to websocketd
 
 Author and copyright of this file:
-Chris Dick, 2016
+Chris Dick, 2018
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -32,7 +32,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 /* Configuration */
 
 #define HAL_SOCKET_MAX_CLIENTS 30
-#define HAL_SOCKET_BUFFER_SIZE 50
+#define HAL_SOCKET_BUFFER_SIZE 256
         
 /** HalSocket
  * - Class to provide a socket
@@ -50,16 +50,13 @@ class HalSocket: public Runnable
     /** Runs the filter
      */
         void Run( void );
-    /** ThreadRun
-     *  Check for any new data store in the input queue
-     */
 
-        static HalSocket Socket; /**< We only want one object handling any stdio. */
-        static void (*callback)(char*);
+        static HalSocket Socket;                             /**< We only want one object handling any stdio. */
+        static void (*callback)(char*); 
     private:
-        static int master_socket;                            /**<  */
-        static struct sockaddr_in address;                   /**<  */
-        static int client_socket[HAL_SOCKET_MAX_CLIENTS];    /**<  */
+        static int master_socket;                            /**< Master socket                               */
+        static struct sockaddr_in address;                   /**< Address                                     */
+        static int client_socket[HAL_SOCKET_MAX_CLIENTS];    /**< connection list                             */
 };
 
 #endif /* HALSOCKET_H */

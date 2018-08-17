@@ -4,7 +4,7 @@ supported by the I2Cdevlib library. It uses a config file to select
 which sensor to use. 
 
 Author and copyright of this file:
-Chris Dick, 2015
+Chris Dick, 2018
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -42,16 +42,21 @@ class HalAccelerometer: public Runnable {
          */
             void  Run( void );
         /** Access to the Accelerometer data.
+         * @param Ax Pointer to X axis result
+         * @param Ay Pointer to Y axis result
+         * @param Az Pointer to Z axis result
          */
             void GetAll( float* Ax, float* Ay, float* Az );
 
-            static HalAccelerometer Accelerometer; /**< Only one copy of the Acceleromter is required */
+            static HalAccelerometer Accelerometer; /**< Only one copy of the Accelerometer is required */
         
     private:
         /** Get the raw value of the Accelerometer
          * This function reads 6 bytes at once over the I2C 
          * instead of 3 transactions.
-         * @void
+         * @param X Raw X result
+         * @param Y Raw Y result
+         * @param Z Raw Z result
          */
             void GetRawData( int16_t* X, int16_t* Y, int16_t* Z );
         /** Get the X axis raw value of the Accelerometer
@@ -65,7 +70,7 @@ class HalAccelerometer: public Runnable {
         /** Get the Z axis raw value of the Accelerometer
          * @return int16_t Z axis value
          */
-        int16_t GetZRawAcceleration( void );
+            int16_t GetZRawAcceleration( void );
 
         float Scaling;   /**< scaling for the device         */
         float FilterX;   /**< storage for X axis filter data */
