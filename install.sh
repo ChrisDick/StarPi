@@ -44,31 +44,32 @@
 #     ./Out/StarPi 10001
 
 #Assume we have a jessie based install
-sudo apt-get -y install scons libncurses5-dev python-dev pps-tools git-core python-smbus i2c-tools
-sudo apt-get install -y cdbs libcfitsio-dev libnova-dev libusb-1.0-0-dev libjpeg-dev libusb-dev libtiff5-dev libftdi1-dev fxload libkrb5-dev libcurl4-gnutls-dev libraw-dev libgphoto2-dev libgsl-dev dkms libboost-regex-dev libgps-dev libdc1394-22-dev cmake
-sudo apt-get install --reinstall libtheora0
+sudo apt-get -y install scons libncurses5-dev python-dev pps-tools python-smbus i2c-tools cdbs libcfitsio-dev libnova-dev libusb-1.0-0-dev libjpeg-dev libusb-dev libtiff5-dev libftdi1-dev fxload libkrb5-dev libcurl4-gnutls-dev libraw-dev libgphoto2-dev libgsl-dev dkms libboost-regex-dev libgps-dev libdc1394-22-dev cmake libftdi-dev libboost-dev librtlsdr-dev libfftw3-dev
+sudo apt-get install -y --reinstall libtheora0
 sudo apt-get --fix-broken install
 
 cd ./Software
 
 #Gps deamon:
-wget http://git.savannah.gnu.org/cgit/gpsd.git/snapshot/gpsd-release-3.16.tar.gz
-tar -zxf  gpsd-release-3.16.tar.gz
-rm gpsd-release-3.16.tar.gz
-cp -r gpsd-release-3.16/* ./Src/GPSD
-rm -r gpsd-release-3.16
-cd ./Src/GPSD
-sudo scons && sudo scons check && sudo scons udev-install
-sudo ldconfig
+sudo apt-get install -y gpsd
+#wget http://git.savannah.gnu.org/cgit/gpsd.git/snapshot/gpsd-release-3.16.tar.gz
+#tar -zxf  gpsd-release-3.16.tar.gz
+#rm gpsd-release-3.16.tar.gz
+#cp -r gpsd-release-3.16/* ./Src/GPSD
+#rm -r gpsd-release-3.16
+#cd ./Src/GPSD
+#sudo scons && sudo scons check && sudo scons udev-install
+#sudo ldconfig
+
 # todo auto start gpsd
 #sudo systemctl enable gpsd.socket
 #sudo systemctl start gpsd.socket
 
 #StarPi:
-cd ./../..
+#cd ./../..
 make
 
-cd ..
+cd ../..
 git clone https://github.com/indilib/indi.git
 cd indi
 mkdir -p build/libindi
@@ -78,14 +79,14 @@ make
 sudo make install
 
 
-cd ..
-mkdir indi-starpi
-cd indi-starpi
-cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Debug ../../3rdparty/indi-starpi
+cd ./../..
+cp -r ./../StarPi/Software/indi-starpi ./3rdparty/indi-starpi
+mkdir -p build/indi-starpi
+cd build/indi-starpi
+cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Debug ./../../3rdparty/indi-starpi
 make
 #sudo make install ???
-cd ./../..
-sudo cp ./Software/indi-starpi/indi_starpi_sk.xml /usr/share/indi/indi_starpi_sk.xml
+sudo cp ./../../3rdparty/indi-starpi/indi_starpi_sk.xml /usr/share/indi/indi_starpi_sk.xml
 
 # ready after reboot
 #sudo reboot
