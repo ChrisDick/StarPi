@@ -37,23 +37,14 @@
 
 # usage over ssh:
 # Any of the following depending on how your run it. ( WMM.COF must be in directory StarPi is started from )
-# start GPSD in it's own ssh session
-#     gpsd -D 5 -N -n /dev/serial0
-# in another ssh session
+# start GPSD
+#     gpsd /dev/serial0
+# then
 #     cd ~/StarPi/Software
 #     ./Out/StarPi 10001
 
 #Assume we have a raspian based install
-sudo apt-get -y install libnova-dev libcfitsio-dev libusb-1.0-0-dev libjpeg-dev libgsl-dev libcurl4-gnutls-dev cmake gpsd      
-#sudo apt-get -y install libnova-dev libcfitsio-dev libusb-1.0-0-dev libjpeg-dev libgsl-dev libcurl4-gnutls-dev cmake zlib1g-dev build-essential  
-
-#cdbs libusb-dev libtiff5-dev  fxload libkrb5-dev  dkmslibdc1394-22-dev
-
-#all dependencies for thrid party
-#libgps-dev libftdi1-dev libraw-dev libgphoto2-dev libboost-dev libboost-regex-dev librtlsdr-dev libfftw3-dev libftdi-dev      
-
-#sudo apt-get install -y --reinstall libtheora0
-#sudo apt-get --fix-broken install
+sudo apt-get -y install libnova-dev libcfitsio-dev libusb-1.0-0-dev libjpeg-dev libgsl-dev libcurl4-gnutls-dev cmake gpsd libgps-dev     
 
 
 #StarPi:
@@ -84,7 +75,11 @@ cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Debug ./../../3rdparty/indi
 make
 sudo make install
 
+#if you want to use the picam with indi, uncomment this line then add indi_v4l2_ccd when calling indiserver:
+#sudo modprobe bcm2835-v4l2
 
 # todo auto start gpsd
 #sudo systemctl enable gpsd.socket
 #sudo systemctl start gpsd.socket
+
+
