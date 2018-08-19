@@ -44,7 +44,7 @@
 #     ./Out/StarPi 10001
 
 #Assume we have a raspian based install
-sudo apt-get -y install libnova-dev libcfitsio-dev libusb-1.0-0-dev libjpeg-dev libgsl-dev libcurl4-gnutls-dev cmake       
+sudo apt-get -y install libnova-dev libcfitsio-dev libusb-1.0-0-dev libjpeg-dev libgsl-dev libcurl4-gnutls-dev cmake gpsd      
 #sudo apt-get -y install libnova-dev libcfitsio-dev libusb-1.0-0-dev libjpeg-dev libgsl-dev libcurl4-gnutls-dev cmake zlib1g-dev build-essential  
 
 #cdbs libusb-dev libtiff5-dev  fxload libkrb5-dev  dkmslibdc1394-22-dev
@@ -56,17 +56,11 @@ sudo apt-get -y install libnova-dev libcfitsio-dev libusb-1.0-0-dev libjpeg-dev 
 #sudo apt-get --fix-broken install
 
 
-#Gps deamon:
-sudo apt-get install -y gpsd
-
-# todo auto start gpsd
-#sudo systemctl enable gpsd.socket
-#sudo systemctl start gpsd.socket
-
 #StarPi:
 cd ./Software
 make
 
+#indi
 cd ../..
 git clone https://github.com/indilib/indi.git
 cd indi
@@ -75,15 +69,13 @@ cd build/libindi
 cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Debug ../../libindi
 make
 sudo make install
-
-
 cd ./../..
 cp -r ./../StarPi/Software/indi-starpi ./3rdparty/indi-starpi
 mkdir -p build/indi-starpi
 cd build/indi-starpi
 cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Debug ./../../3rdparty/indi-starpi
 make
-#sudo make install ???
+sudo cp indi-starpi /usr/bin/indi_starpi
 sudo cp ./../../3rdparty/indi-starpi/indi_starpi_sk.xml /usr/share/indi/indi_starpi_sk.xml
 cd ..
 mkdir indi-gpsd
@@ -93,3 +85,6 @@ make
 sudo make install
 
 
+# todo auto start gpsd
+#sudo systemctl enable gpsd.socket
+#sudo systemctl start gpsd.socket
