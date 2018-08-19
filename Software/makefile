@@ -23,13 +23,6 @@ INCLUDE_PATHS := 	-I./Src/I2Cdevlib/Pi/I2Cdev/ \
 					-I./Src/Drivers/ 
 
 CPPFILES := 		Src/Main.cpp \
-					Src/I2Cdevlib/Pi/ADXL345/ADXL345.cpp \
-					Src/I2Cdevlib/Pi/AK8975/AK8975.cpp \
-					Src/I2Cdevlib/Pi/BMA150/BMA150.cpp \
-					Src/I2Cdevlib/Pi/HMC5843/HMC5843.cpp \
-					Src/I2Cdevlib/Pi/HMC5883L/HMC5883L.cpp \
-					Src/I2Cdevlib/Pi/MPU6050/MPU6050.cpp \
-					Src/I2Cdevlib/Pi/MPU9150/MPU9150.cpp \
 					Src/I2Cdevlib/Pi/LSM303DLHC/LSM303DLHC.cpp \
 					Src/I2Cdevlib/Pi/I2Cdev/I2Cdev.cpp \
 					Src/StellariumServer/Connection.cpp \

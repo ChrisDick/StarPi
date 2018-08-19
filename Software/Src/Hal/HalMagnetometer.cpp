@@ -24,25 +24,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "Config.h"
 #include <math.h>
 
-#ifdef AK8975_MAGNETOMETER
-#include "AK8975.h"
-AK8975 Magnetomometer;
-#elif defined HMC5843L_MAGNETOMETER
-#include "HMC5843L.h"
-HMC5843 Magnetomometer;
-#elif defined HMC5883L_MAGNETOMETER
-#include "HMC5883L.h"
-HMC5883L Magnetomometer;
-#elif defined MPU9150_MAGNETOMETER
-#error todo MPU9150 has function named getHeading
-#include "MPU9150.h"
-MPU9150 Magnetomometer;
-#elif defined LSM303DLHC_MAGNETOMETER
 #include "LSM303DLHC.h"
 LSM303DLHC_Mag Magnetomometer;
-#else
-#error no magnetometer defined - please edit your config.h file.
-#endif
 
 static float b[] = {1,  -1.4, 1};
 static float a[] = {1, -1.3, 0.5};
@@ -75,17 +58,7 @@ bool HalMagnetometer::Init( void )
     Magnetomometer.initialize();
     FilterCount = 0; 
     // initialise Magnetoerometer specifics here
-#ifdef AK8975_MAGNETOMETER
-    #error no init code for Magnetometer
-#elif defined HMC5843_MAGNETOMETER
-    #error no init code for Magnetometer
-#elif defined HMC5883L_MAGNETOMETER
     Scaling = 1; 
-#elif defined MPU9150_MAGNETOMETER
-    #error no init code for Magnetometer
-#elif defined LSM303DLHC_MAGNETOMETER
-    Scaling = 1; 
-#endif
     return true; // todo
 }
 
@@ -100,9 +73,6 @@ void HalMagnetometer::Run( void )
     int16_t Z = 0;
     static float Xv1m1 = 0, Xv2m1 = 0, Yv1m1 = 0, Yv2m1 = 0, Zv1m1 = 0, Zv2m1 = 0;
     
-    //X = GetXRawHeading();
-    //Y = GetYRawHeading();
-    //Z = GetZRawHeading();
 
     GetRawData( &X, &Y, &Z );
     

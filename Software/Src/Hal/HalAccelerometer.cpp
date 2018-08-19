@@ -25,27 +25,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "Config.h"
 #include <math.h>
 
-#ifdef MPU6050_ACCEL
-#include "MPU6050.h"
-MPU6050 Accel;
-#elif defined ADXL345_ACCEL
-#include "ADXL345.h"
-ADXL345 Accel;
-#elif defined BMA150_ACCEL
-#include "BMA150.h"
-BMA150 Accel;
-#elif L3G4200D_ACCEL
-#include "L3G4200.h"
-L3G4200D Accel;
-#elif defined MPU9150_ACCEL
-#include "MPU9150.h"
-MPU9150 Accel;
-#elif defined LSM303DLHC_ACCEL
 #include "LSM303DLHC.h"
+
 LSM303DLHC_Accel Accel;
-#else
-#error no Accelerometer defined - please edit your config.h file.
-#endif
 
 static float b[] = {1,  -1.4, 1};
 static float a[] = {1, -1.3, 0.5};
@@ -75,25 +57,9 @@ bool HalAccelerometer::Init( void )
     Accel.initialize();
     // initialise Accelerometer specifics here
     Scaling = 32768.0F;
-#ifdef MPU6050_ACCEL
-    Accel.setAccelXSelfTest(false);
-    Accel.setAccelYSelfTest(false);
-    Accel.setAccelZSelfTest(false);
-    Scaling = 16384.0;
-    Result = true;
-#elif defined ADXL345_ACCEL
-    #error no init code for Accelerometer
-#elif defined BMA150_ACCEL
-    #error no init code for Accelerometer
-#elif L3G4200D_ACCEL
-    #error no init code for Accelerometer
-#elif defined MPU9150_ACCEL
-    #error no init code for Accelerometer
-#elif defined LSM303DLHC_ACCEL
 // ToDo: configure intial LSM303DLHC settings
     Scaling = 16384.0;
     Result = true;
-#endif
     return Result;
 }
 

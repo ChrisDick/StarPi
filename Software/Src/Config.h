@@ -2,11 +2,6 @@
 /*
    The type of accelerometer is: 
 */
-//#define ADXL345_ACCEL
-//#define BMA150_ACCEL
-//#define L3G4200D_ACCEL
-//#define MPU9150_ACCEL
-//#define MPU6050_ACCEL
 #define LSM303DLHC_ACCEL
 
 /*
@@ -107,24 +102,6 @@
 #define CONFIG_MY_OFFSET ((float) ((CONFIG_MYMIN + CONFIG_MYMAX)/2.0))
 #define CONFIG_MZ_OFFSET ((float) ((CONFIG_MZMIN + CONFIG_MZMAX)/2.0))
 
-
-/*
-    Motor stuff
-*/
-#define LM29XIN1 WIRINGPIN26
-#define LM29XIN2 WIRINGPIN27
-#define LM29XIN3 WIRINGPIN28
-#define LM29XIN4 WIRINGPIN29
-#define PWM1
-#define PWM2
-#define LM29X
-#define LM29X1 1
-#define LM29X2 2
-#define CONFIG_NUMBER_OF_MOTORS 2
-#define MOTOR_ONE LM29X1
-#define MOTOR_TWO LM29X2
-
-
 /*
     Timing defines
 */
@@ -138,13 +115,3 @@
 #define SERVER_PI_PIN              BCM_GPIO26
 #endif /* end of timing defines #if 0 */
 
-
-
-/*
-    define checking macros
-*/
-
-#if ((defined ADXL345) && (defined BMA150))
-    #error two accelerometers defined
-#endif
-// etc.
