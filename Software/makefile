@@ -50,8 +50,7 @@ CPPFILES := 		Src/Main.cpp \
 					Src/TelescopeManager/TelescopeManager.cpp \
 					Src/TelescopeManager/erfa.cpp \
 					Src/Scheduler/TTC_Sched_Pi_Impl.cpp \
-					Src/MagModelCorrection/MagModel.cpp \
-					Src/GPSD/libgpsmm.cpp
+					Src/MagModelCorrection/MagModel.cpp
 
 CFILES :=			\
 					Src/MagModelCorrection/GeomagnetismLibrary.c

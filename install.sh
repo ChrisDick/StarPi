@@ -1,6 +1,6 @@
 #! /bin/bash
 #Star Pi install script, tested with a Zero W
-# still a lot of work to make this a totally automated installation.
+# still a lot of work to make this a totally automated installation. see README.md for up to date instructions.
 # please do this first:
 # From a console do the following.
 # Note: do not use the gui raspi-config it doesn't have the option to enable hardware serial with console disabled and, if using serial gps, disable shell on serial before connecting the GPS to it.
@@ -43,30 +43,28 @@
 #     cd ~/StarPi/Software
 #     ./Out/StarPi 10001
 
-#Assume we have a jessie based install
-sudo apt-get -y install scons libncurses5-dev python-dev pps-tools python-smbus i2c-tools cdbs libcfitsio-dev libnova-dev libusb-1.0-0-dev libjpeg-dev libusb-dev libtiff5-dev libftdi1-dev fxload libkrb5-dev libcurl4-gnutls-dev libraw-dev libgphoto2-dev libgsl-dev dkms libboost-regex-dev libgps-dev libdc1394-22-dev cmake libftdi-dev libboost-dev librtlsdr-dev libfftw3-dev
-sudo apt-get install -y --reinstall libtheora0
-sudo apt-get --fix-broken install
+#Assume we have a raspian based install
+sudo apt-get -y install libnova-dev libcfitsio-dev libusb-1.0-0-dev libjpeg-dev libgsl-dev libcurl4-gnutls-dev cmake       
+#sudo apt-get -y install libnova-dev libcfitsio-dev libusb-1.0-0-dev libjpeg-dev libgsl-dev libcurl4-gnutls-dev cmake zlib1g-dev build-essential  
 
-cd ./Software
+#cdbs libusb-dev libtiff5-dev  fxload libkrb5-dev  dkmslibdc1394-22-dev
+
+#all dependencies for thrid party
+#libgps-dev libftdi1-dev libraw-dev libgphoto2-dev libboost-dev libboost-regex-dev librtlsdr-dev libfftw3-dev libftdi-dev      
+
+#sudo apt-get install -y --reinstall libtheora0
+#sudo apt-get --fix-broken install
+
 
 #Gps deamon:
 sudo apt-get install -y gpsd
-#wget http://git.savannah.gnu.org/cgit/gpsd.git/snapshot/gpsd-release-3.16.tar.gz
-#tar -zxf  gpsd-release-3.16.tar.gz
-#rm gpsd-release-3.16.tar.gz
-#cp -r gpsd-release-3.16/* ./Src/GPSD
-#rm -r gpsd-release-3.16
-#cd ./Src/GPSD
-#sudo scons && sudo scons check && sudo scons udev-install
-#sudo ldconfig
 
 # todo auto start gpsd
 #sudo systemctl enable gpsd.socket
 #sudo systemctl start gpsd.socket
 
 #StarPi:
-#cd ./../..
+cd ./Software
 make
 
 cd ../..
@@ -87,7 +85,11 @@ cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Debug ./../../3rdparty/indi
 make
 #sudo make install ???
 sudo cp ./../../3rdparty/indi-starpi/indi_starpi_sk.xml /usr/share/indi/indi_starpi_sk.xml
+cd ..
+mkdir indi-gpsd
+cd indi-gpsd
+cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Debug ./../../3rdparty/indi-gpsd
+make
+sudo make install
 
-# ready after reboot
-#sudo reboot
 
