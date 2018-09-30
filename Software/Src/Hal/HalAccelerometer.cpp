@@ -55,10 +55,6 @@ bool HalAccelerometer::Init( void )
 {
     bool Result = false;    
     Accel.initialize();
-    // initialise Accelerometer specifics here
-    Scaling = 32768.0F;
-// ToDo: configure intial LSM303DLHC settings
-    Scaling = 16384.0;
     Result = true;
     return Result;
 }

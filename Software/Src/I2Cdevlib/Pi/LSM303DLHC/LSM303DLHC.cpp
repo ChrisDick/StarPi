@@ -2057,8 +2057,8 @@ void LSM303DLHC_Mag::getHeading(int16_t* x, int16_t* y, int16_t* z)
 {
     I2Cdev::readBytes( mag_devAddr, OUT_X_H_M, 6, buffer );
     *x = (((int16_t)buffer[0]) << 8) | buffer[1];
-    *y = (((int16_t)buffer[2]) << 8) | buffer[3];
-    *z = (((int16_t)buffer[4]) << 8) | buffer[5];
+    *z = (((int16_t)buffer[2]) << 8) | buffer[3];
+    *y = (((int16_t)buffer[4]) << 8) | buffer[5];
 }
 
 

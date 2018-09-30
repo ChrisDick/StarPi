@@ -58,7 +58,6 @@ bool HalMagnetometer::Init( void )
     Magnetomometer.initialize();
     FilterCount = 0; 
     // initialise Magnetoerometer specifics here
-    Scaling = 1; 
     return true; // todo
 }
 
@@ -107,49 +106,49 @@ void HalMagnetometer::GetRawData( int16_t* X, int16_t* Y, int16_t* Z )
     
     Magnetomometer.getHeading( &XRaw, &YRaw, &ZRaw);
     
-#ifdef OBJECTIVE_END_ACCEL_X_PLUS    
+#ifdef OBJECTIVE_END_MAGNETOMETER_X_PLUS    
     *X = XRaw;
-#elif defined OBJECTIVE_END_ACCEL_X_MINUS
+#elif defined OBJECTIVE_END_MAGNETOMETER_X_MINUS
     *X = 0 - XRaw;
-#elif defined OBJECTIVE_END_ACCEL_Y_PLUS    
+#elif defined OBJECTIVE_END_MAGNETOMETER_Y_PLUS    
     *X = YRaw;
-#elif defined OBJECTIVE_END_ACCEL_Y_MINUS
+#elif defined OBJECTIVE_END_MAGNETOMETER_Y_MINUS
     *X = 0 - YRaw;
-#elif defined OBJECTIVE_END_ACCEL_Z_PLUS    
+#elif defined OBJECTIVE_END_MAGNETOMETER_Z_PLUS    
     *X = ZRaw;
-#elif defined OBJECTIVE_END_ACCEL_Z_MINUS
+#elif defined OBJECTIVE_END_MAGNETOMETER_Z_MINUS
     *X = 0 - ZRaw;
 #else
     #error y axis not defined
 #endif
 
-#ifdef TELESCOPE_RIGHT_ACCEL_X_PLUS
+#ifdef TELESCOPE_RIGHT_MAGNETOMETER_X_PLUS
     *Y = XRaw;
-#elif defined TELESCOPE_RIGHT_ACCEL_X_MINUS
+#elif defined TELESCOPE_RIGHT_MAGNETOMETER_X_MINUS
     *Y = 0 - XRaw;
-#elif defined TELESCOPE_RIGHT_ACCEL_Y_PLUS
+#elif defined TELESCOPE_RIGHT_MAGNETOMETER_Y_PLUS
     *Y = YRaw;
-#elif defined TELESCOPE_RIGHT_ACCEL_Y_MINUS
+#elif defined TELESCOPE_RIGHT_MAGNETOMETER_Y_MINUS
     *Y = 0 - YRaw;
-#elif defined TELESCOPE_RIGHT_ACCEL_Z_PLUS
+#elif defined TELESCOPE_RIGHT_MAGNETOMETER_Z_PLUS
     *Y = ZRaw;
-#elif defined TELESCOPE_RIGHT_ACCEL_Z_MINUS
+#elif defined TELESCOPE_RIGHT_MAGNETOMETER_Z_MINUS
     *Y = 0 - ZRaw;
 #else
     #error y axis not defined
 #endif
 
-#ifdef UP_ACCEL_X_PLUS
+#ifdef UP_MAGNETOMETER_X_PLUS
     *Z = XRaw;
-#elif defined UP_ACCEL_X_MINUS
+#elif defined UP_MAGNETOMETER_X_MINUS
     *Z = 0 - XRaw;
-#elif defined UP_ACCEL_Y_PLUS
+#elif defined UP_MAGNETOMETER_Y_PLUS
     *Z = YRaw;
-#elif defined UP_ACCEL_Y_MINUS
+#elif defined UP_MAGNETOMETER_Y_MINUS
     *Z = 0 - YRaw;
-#elif defined UP_ACCEL_Z_PLUS
+#elif defined UP_MAGNETOMETER_Z_PLUS
     *Z = ZRaw;
-#elif defined UP_ACCEL_Z_MINUS
+#elif defined UP_MAGNETOMETER_Z_MINUS
     *Z = 0 - ZRaw;
 #else
     #error z axis not defined

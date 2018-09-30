@@ -232,6 +232,10 @@ class TelescopeManager : public Runnable
         static float Heading;                 /**< heading in radians                */
         static float Roll;                    /**< roll in radians                   */
         static float PitchDegrees;            /**< pitch in degrees                  */
+        float Temperature;
+        float Humidity;
+        float Pressure;
+
 };
 
 #endif /* TELESCOPE_MANAGER_H */

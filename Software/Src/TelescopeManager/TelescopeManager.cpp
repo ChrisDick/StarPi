@@ -22,6 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <math.h>
 #include "TelescopeOrientation.h"
 #include "HalGps.h"
+#include "HalWeather.h"
 #include "MagModel.h"
 #include "erfa.h"
 #include "Config.h"
@@ -104,6 +105,7 @@ void TelescopeManager::Init()
 
     TelescopeOrientation::Orient.Init();
     HalGps::Gps.Init();
+//    HalWeather::Weather.Init();
     
 #ifdef TIMING
     GPIO::gpio.SetupOutput( TELESCOPE_MANAGER_PIN );
@@ -123,6 +125,14 @@ void TelescopeManager::Run()
 
     MagModel MagCorrect;
     erfa era; 
+//    static uint16_t Count = 0u;
+//    Count++;
+//    if ( Count == 10u )
+//    {
+//        HalWeather::Weather.Run();
+//        Count = 0u;
+//        printf("Pressure: %f Humidity:%f", Pressure, Humidity );
+//    }
     /*
         Get the Position, Orientation and time of the telescope
     */
@@ -166,6 +176,10 @@ void TelescopeManager::Run()
         MagCorrect.SetParams( Latitude, Longitude, HieghtAboveGround, gmt.tm_mday, (gmt.tm_mon + 1), (gmt.tm_year + 1900) );
         MagneticDeclination = MagCorrect.GetDeclination();
     }
+//    Temperature = HalWeather::Weather.getTemperature();
+//    Humidity = HalWeather::Weather.getHumidity();
+//    Pressure = HalWeather::Weather.getPressure();
+
     /* Atoc13 function params - ToDo do these want exporting? */ 
     double utc1, utc2; 
     double xp = 0.0;
@@ -179,7 +193,14 @@ void TelescopeManager::Run()
         Perform Calculation for Telescope position
     */
     Azimuth = Heading - ((MagneticDeclination/180.0f)*M_PI); // ToDo make this come from magmodel in radians?
-     
+    if ( Azimuth < 0 )
+    {
+        Azimuth += ( 2 * M_PI );
+    }
+    if ( Azimuth > ( 2 * M_PI ) )
+    {
+        Azimuth -= ( 2 * M_PI );
+    }
     /* calculate utc as two part value */
     (void)era.Dtf2d("UTC", 
         gmt.tm_year + 1900, gmt.tm_mon + 1, gmt.tm_mday, 

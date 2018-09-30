@@ -3,13 +3,7 @@ all :
 #substitutions
 
 INCLUDE_PATHS := 	-I./Src/I2Cdevlib/Pi/I2Cdev/ \
-					-I./Src/I2Cdevlib/Pi/HMC5883L/ \
-					-I./Src/I2Cdevlib/Pi/ADXL345/ \
-					-I./Src/I2Cdevlib/Pi/AK8975/ \
-					-I./Src/I2Cdevlib/Pi/BMA150/ \
-					-I./Src/I2Cdevlib/Pi/HMC5843/ \
-					-I./Src/I2Cdevlib/Pi/MPU6050/ \
-					-I./Src/I2Cdevlib/Pi/MPU9150/ \
+					-I./Src/I2Cdevlib/Pi/BME280/ \
 					-I./Src/I2Cdevlib/Pi/LSM303DLHC/ \
 					-I./Src/Hal/ \
 					-I./Src/TelescopeManager/ \
@@ -17,12 +11,13 @@ INCLUDE_PATHS := 	-I./Src/I2Cdevlib/Pi/I2Cdev/ \
 					-I./Src/StellariumServer/ \
 					-I./Src/GPSD/ \
 					-I./Src/MagModelCorrection/ \
-					-I./Src/SOFA \
+					-I./Src/SOFA/ \
 					-I./Src/ \
-					-I./Src/Utils \
+					-I./Src/Utils/ \
 					-I./Src/Drivers/ 
 
 CPPFILES := 		Src/Main.cpp \
+					Src/I2Cdevlib/Pi/BME280/BME280.cpp \
 					Src/I2Cdevlib/Pi/LSM303DLHC/LSM303DLHC.cpp \
 					Src/I2Cdevlib/Pi/I2Cdev/I2Cdev.cpp \
 					Src/StellariumServer/Connection.cpp \
@@ -37,6 +32,7 @@ CPPFILES := 		Src/Main.cpp \
 					Src/Hal/HalMagnetometer.cpp \
 					Src/Hal/HalSocket.cpp \
 					Src/Hal/HalFilesystem.cpp \
+					Src/Hal/HalWeather.cpp \
 					Src/Drivers/GPIO.cpp \
 					Src/Scheduler/TTC_Sched.cpp \
 					Src/Scheduler/Runnable.cpp \
@@ -45,8 +41,7 @@ CPPFILES := 		Src/Main.cpp \
 					Src/Scheduler/TTC_Sched_Pi_Impl.cpp \
 					Src/MagModelCorrection/MagModel.cpp
 
-CFILES :=			\
-					Src/MagModelCorrection/GeomagnetismLibrary.c
+CFILES :=			Src/MagModelCorrection/GeomagnetismLibrary.c
 
 OUTDIR := Out
 OBJDIR := Obj
