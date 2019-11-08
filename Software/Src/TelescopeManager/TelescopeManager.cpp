@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <math.h>
 #include "TelescopeOrientation.h"
 #include "HalGps.h"
-#include "HalWeather.h"
+//#include "HalWeather.h"
 #include "MagModel.h"
 #include "erfa.h"
 #include "Config.h"

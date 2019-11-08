@@ -6,24 +6,11 @@ More details can be found at https://hackaday.io/project/10181-starpi
 # Installation
 
  From a console do the following: 
- configure wifi
-
-    sudo nano /etc/wpa_supplicant/wpa_supplicant.conf
-
-
- add the following at the end:
-
-     network={
-          ssid="yourssid"
-          psk="yourpassword"
-    }
-
- save the config then configure the Pi:
- **Note:** do not use the gui raspi-config it doesn't have the option to enable hardware serial with console disabled.
 
     sudo raspi-config 
 
-  Enable ssh and i2c.  
+  Enable ssh,i2c and Serial with the shell disabled.
+  Enter your WiFi details  
   disable the serial shell and enable the hardware serial.  
   set the domain name and boot to cli.  
   reduce the graphics memory.  
@@ -33,18 +20,14 @@ More details can be found at https://hackaday.io/project/10181-starpi
 
     sudo apt-get update
     sudo apt-get dist-upgrade
-    sudo rpi-update
+    sudo rpi-upgrade
     sudo reboot
     
- for raspbian lite versions install git and wiringpi:
+ for raspbian lite versions install git:
 
     sudo apt-get -y install git-core
-    git clone git://git.drogon.net/wiringPi
-    cd ~/wiringPi
-    ./build
-    cd ..
     
- for both raspbian variants:
+ Clone the Source:
 
     git clone https://github.com/ChrisDick/StarPi
 

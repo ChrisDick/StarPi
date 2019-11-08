@@ -17,7 +17,6 @@ INCLUDE_PATHS := 	-I./Src/I2Cdevlib/Pi/I2Cdev/ \
 					-I./Src/Drivers/ 
 
 CPPFILES := 		Src/Main.cpp \
-					Src/I2Cdevlib/Pi/BME280/BME280.cpp \
 					Src/I2Cdevlib/Pi/LSM303DLHC/LSM303DLHC.cpp \
 					Src/I2Cdevlib/Pi/I2Cdev/I2Cdev.cpp \
 					Src/StellariumServer/Connection.cpp \
@@ -32,7 +31,6 @@ CPPFILES := 		Src/Main.cpp \
 					Src/Hal/HalMagnetometer.cpp \
 					Src/Hal/HalSocket.cpp \
 					Src/Hal/HalFilesystem.cpp \
-					Src/Hal/HalWeather.cpp \
 					Src/Drivers/GPIO.cpp \
 					Src/Scheduler/TTC_Sched.cpp \
 					Src/Scheduler/Runnable.cpp \
@@ -40,6 +38,9 @@ CPPFILES := 		Src/Main.cpp \
 					Src/TelescopeManager/erfa.cpp \
 					Src/Scheduler/TTC_Sched_Pi_Impl.cpp \
 					Src/MagModelCorrection/MagModel.cpp
+
+#					Src/Hal/HalWeather.cpp \
+#					Src/I2Cdevlib/Pi/BME280/BME280.cpp \
 
 CFILES :=			Src/MagModelCorrection/GeomagnetismLibrary.c
 
