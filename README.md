@@ -20,12 +20,11 @@ More details can be found at https://hackaday.io/project/10181-starpi
 
     sudo apt-get update
     sudo apt-get dist-upgrade
-    sudo rpi-upgrade
     sudo reboot
     
  for raspbian lite versions install git:
 
-    sudo apt-get -y install git-core
+    sudo apt-get -y install git
     
  Clone the Source:
 
@@ -33,7 +32,7 @@ More details can be found at https://hackaday.io/project/10181-starpi
 
   edit any options in  to match your choice of sensors and install.
 
-    nano StarPi/Software/Src/config.h
+    nano StarPi/Software/Src/Config.h
     cd ~/StarPi
     chmod u+x install.sh
     ./install.sh
