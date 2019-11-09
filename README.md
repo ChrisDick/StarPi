@@ -16,12 +16,6 @@ More details can be found at https://hackaday.io/project/10181-starpi
   reduce the graphics memory.  
   reboot.  
  
- Get the most recent version. 
-
-    sudo apt-get update
-    sudo apt-get dist-upgrade
-    sudo reboot
-    
  for raspbian lite versions install git:
 
     sudo apt-get -y install git
@@ -30,7 +24,7 @@ More details can be found at https://hackaday.io/project/10181-starpi
 
     git clone https://github.com/ChrisDick/StarPi
 
-  edit any options in  to match your choice of sensors and install.
+  edit any options in to match your choice of sensors and install.
 
     nano StarPi/Software/Src/Config.h
     cd ~/StarPi
