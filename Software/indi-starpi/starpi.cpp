@@ -53,7 +53,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 /* Our auto pointer */
 std::unique_ptr<StarPi> starpi(new StarPi());
 
-const int POLLMS = 500; /* Period of update, 1 second. */
+//const int POLLMS = 500; /* Period of update, 1 second. */
 
 /**************************************************************************************
 **
