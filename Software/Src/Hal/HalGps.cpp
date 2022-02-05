@@ -82,7 +82,7 @@ void HalGps::Run( void )
     {
         if (NewGpsData->set & TIME_SET)
         {
-            Time = NewGpsData->fix.time;
+            Time = NewGpsData->fix.time.tv_sec;
         }
         if (NewGpsData->set & LATLON_SET)
         {

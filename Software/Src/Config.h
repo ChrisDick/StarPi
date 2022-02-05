@@ -2,8 +2,8 @@
 /*
    The type of accelerometer is: 
 */
-#define LSM303DLHC_ACCEL
-
+//#define LSM303DLHC_ACCEL
+#define MPU9250_ACCEL
 /*
     Orientation of the accelerometer with respect to the telescope
     When the telescope is level (0 degrees elevation):
@@ -54,8 +54,8 @@
 //#define HMC5843_MAGNETOMETER
 //#define HMC5883L_MAGNETOMETER
 //#define MPU9150_MAGNETOMETER
-#define LSM303DLHC_MAGNETOMETER
-
+//#define LSM303DLHC_MAGNETOMETER
+#define MPU9250_MAGNETOMETER
 /*
     Orientation of the magnetometer with respect to the telescope
     When the telescope is level (0 degrees elevation):

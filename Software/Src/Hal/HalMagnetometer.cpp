@@ -23,9 +23,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "HalMagnetometer.h"
 #include "Config.h"
 #include <math.h>
-
+#ifdef LSM303DLHC_MAGNETOMETER
 #include "LSM303DLHC.h"
-LSM303DLHC_Mag Magnetomometer;
+LSM303DLHC_Mag Magnetometer;
+#endif
+
+#ifdef MPU9250_MAGNETOMETER
+#include "MPU9250.h"
+MPU9250 Magnetometer;
+#endif
 
 static float b[] = {1,  -1.4, 1};
 static float a[] = {1, -1.3, 0.5};
@@ -55,7 +61,7 @@ HalMagnetometer::HalMagnetometer( void )
  */
 bool HalMagnetometer::Init( void )
 {
-    Magnetomometer.initialize();
+    Magnetometer.initialize();
     FilterCount = 0; 
     // initialise Magnetoerometer specifics here
     return true; // todo
@@ -103,9 +109,18 @@ void HalMagnetometer::GetRawData( int16_t* X, int16_t* Y, int16_t* Z )
     int16_t XRaw = 0;
     int16_t YRaw = 0;
     int16_t ZRaw = 0;
+    #ifndef MPU9250_MAGNETOMETER
+    Magnetometer.getHeading( &XRaw, &YRaw, &ZRaw);
+    #else
+    int16_t AXRaw = 0;
+    int16_t AYRaw = 0;
+    int16_t AZRaw = 0;
+    int16_t GXRaw = 0;
+    int16_t GYRaw = 0;
+    int16_t GZRaw = 0;
     
-    Magnetomometer.getHeading( &XRaw, &YRaw, &ZRaw);
-    
+    Magnetometer.getMotion9( &AXRaw, &AYRaw, &AZRaw, &GXRaw, &GYRaw, &GZRaw, &XRaw, &YRaw, &ZRaw );
+#endif
 #ifdef OBJECTIVE_END_MAGNETOMETER_X_PLUS    
     *X = XRaw;
 #elif defined OBJECTIVE_END_MAGNETOMETER_X_MINUS
@@ -155,7 +170,7 @@ void HalMagnetometer::GetRawData( int16_t* X, int16_t* Y, int16_t* Z )
 #endif
 }
 
-
+#ifndef MPU9250_MAGNETOMETER
 /* GetXRawHeading
  *  Get the raw X heading of the Magneto
  * @return int16_t heading 
@@ -164,17 +179,17 @@ int16_t HalMagnetometer::GetXRawHeading( void )
 {
     int16_t Result = 0;
 #ifdef OBJECTIVE_END_MAGNETOMETER_X_PLUS    
-    Result = Magnetomometer.getHeadingX();
+    Result = Magnetometer.getHeadingX();
 #elif defined OBJECTIVE_END_MAGNETOMETER_X_MINUS
-    Result = 0 - Magnetomometer.getHeadingX();
+    Result = 0 - Magnetometer.getHeadingX();
 #elif defined OBJECTIVE_END_MAGNETOMETER_Y_PLUS    
-    Result = Magnetomometer.getHeadingY();
+    Result = Magnetometer.getHeadingY();
 #elif defined OBJECTIVE_END_MAGNETOMETER_Y_MINUS
-    Result = 0 - Magnetomometer.getHeadingY();
+    Result = 0 - Magnetometer.getHeadingY();
 #elif defined OBJECTIVE_END_MAGNETOMETER_Z_PLUS    
-    Result = Magnetomometer.getHeadingZ();
+    Result = Magnetometer.getHeadingZ();
 #elif defined OBJECTIVE_END_MAGNETOMETER_Z_MINUS
-    Result = 0 - Magnetomometer.getHeadingZ();
+    Result = 0 - Magnetometer.getHeadingZ();
 #else
     #error y axis not defined
 #endif
@@ -189,17 +204,17 @@ int16_t HalMagnetometer::GetYRawHeading( void )
 {
     int16_t Result = 0;
 #ifdef TELESCOPE_RIGHT_MAGNETOMETER_X_PLUS
-    Result = Magnetomometer.getHeadingX();
+    Result = Magnetometer.getHeadingX();
 #elif defined TELESCOPE_RIGHT_MAGNETOMETER_X_MINUS
-    Result = 0 - Magnetomometer.getHeadingX();
+    Result = 0 - Magnetometer.getHeadingX();
 #elif defined TELESCOPE_RIGHT_MAGNETOMETER_Y_PLUS
-    Result = Magnetomometer.getHeadingY();
+    Result = Magnetometer.getHeadingY();
 #elif defined TELESCOPE_RIGHT_MAGNETOMETER_Y_MINUS
-    Result = 0 - Magnetomometer.getHeadingY();
+    Result = 0 - Magnetometer.getHeadingY();
 #elif defined TELESCOPE_RIGHT_MAGNETOMETER_Z_PLUS
-    Result = Magnetomometer.getHeadingZ();
+    Result = Magnetometer.getHeadingZ();
 #elif defined TELESCOPE_RIGHT_MAGNETOMETER_Z_MINUS
-    Result = 0 - Magnetomometer.getHeadingZ();
+    Result = 0 - Magnetometer.getHeadingZ();
 #else
     #error y axis not defined
 #endif
@@ -214,19 +229,20 @@ int16_t HalMagnetometer::GetZRawHeading( void )
 {
     int16_t Result = 0;
 #ifdef UP_MAGNETOMETER_X_PLUS
-    Result = Magnetomometer.getHeadingX();
+    Result = Magnetometer.getHeadingX();
 #elif defined UP_MAGNETOMETER_X_MINUS
-    Result = 0 - Magnetomometer.getHeadingX();
+    Result = 0 - Magnetometer.getHeadingX();
 #elif defined UP_MAGNETOMETER_Y_PLUS
-    Result = Magnetomometer.getHeadingY();
+    Result = Magnetometer.getHeadingY();
 #elif defined UP_MAGNETOMETER_Y_MINUS
-    Result = 0 - Magnetomometer.getHeadingY();
+    Result = 0 - Magnetometer.getHeadingY();
 #elif defined UP_MAGNETOMETER_Z_PLUS
-    Result = Magnetomometer.getHeadingZ();
+    Result = Magnetometer.getHeadingZ();
 #elif defined UP_MAGNETOMETER_Z_MINUS
-    Result = 0 - Magnetomometer.getHeadingZ();
+    Result = 0 - Magnetometer.getHeadingZ();
 #else
     #error z axis not defined
 #endif
     return Result;        
 }
+#endif

@@ -5,6 +5,7 @@ all :
 INCLUDE_PATHS := 	-I./Src/I2Cdevlib/Pi/I2Cdev/ \
 					-I./Src/I2Cdevlib/Pi/BME280/ \
 					-I./Src/I2Cdevlib/Pi/LSM303DLHC/ \
+					-I./Src/I2Cdevlib/Pi/MPU9250/ \
 					-I./Src/Hal/ \
 					-I./Src/TelescopeManager/ \
 					-I./Src/Scheduler/ \
@@ -18,6 +19,7 @@ INCLUDE_PATHS := 	-I./Src/I2Cdevlib/Pi/I2Cdev/ \
 
 CPPFILES := 		Src/Main.cpp \
 					Src/I2Cdevlib/Pi/LSM303DLHC/LSM303DLHC.cpp \
+					Src/I2Cdevlib/Pi/MPU9250/MPU9250.cpp \
 					Src/I2Cdevlib/Pi/I2Cdev/I2Cdev.cpp \
 					Src/StellariumServer/Connection.cpp \
 					Src/StellariumServer/Listener.cpp \
@@ -31,7 +33,6 @@ CPPFILES := 		Src/Main.cpp \
 					Src/Hal/HalMagnetometer.cpp \
 					Src/Hal/HalSocket.cpp \
 					Src/Hal/HalFilesystem.cpp \
-					Src/Drivers/GPIO.cpp \
 					Src/Scheduler/TTC_Sched.cpp \
 					Src/Scheduler/Runnable.cpp \
 					Src/TelescopeManager/TelescopeManager.cpp \
@@ -47,7 +48,7 @@ CFILES :=			Src/MagModelCorrection/GeomagnetismLibrary.c
 OUTDIR := Out
 OBJDIR := Obj
 OUT_DIR = ./Out/
-CFLAGS =  -std=c++0x -c -pedantic -Wall -W -O -lwiringPi -lgps 
+CFLAGS =  -std=c++0x -c -pedantic -Wall -W -O
 CC = g++
 OUTPUT = -o $@
 
@@ -73,7 +74,7 @@ all : $(OUT_DIR)StarPi
 
 $(OUT_DIR)StarPi:	${obj.cpp} ${obj.c} ${OUTDIR}
 	@echo link files..
-	$(CC) -Wall -lwiringPi -lgps $(OUTPUT) ${obj.cpp} ${obj.c}  >> log.txt 2>&1
+	$(CC) -Wall $(OUTPUT) ${obj.cpp} ${obj.c}  -lgps -lbcm2835   >> log.txt 2>&1
 
 %.o : 
 	@echo compiling $@

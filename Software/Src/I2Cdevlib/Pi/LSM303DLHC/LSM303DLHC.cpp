@@ -2118,7 +2118,7 @@ uint8_t LSM303DLHC_Mag::getIDA()
  */
 uint8_t LSM303DLHC_Mag::getIDB()
 {
-    I2Cdev::readByte( mag_devAddr, IRC_REG_M, buffer );
+    I2Cdev::readByte( mag_devAddr, IRB_REG_M, buffer );
     return buffer[0];
 }
 

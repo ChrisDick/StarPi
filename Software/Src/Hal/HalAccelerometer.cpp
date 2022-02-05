@@ -4,7 +4,7 @@ supported by the I2Cdevlib library. It uses a config file to select
 which sensor to use. 
 
 Author and copyright of this file:
-Chris Dick, 2015
+Chris Dick, 2020
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
@@ -25,9 +25,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include "Config.h"
 #include <math.h>
 
+#ifdef LSM303DLHC_ACCEL
 #include "LSM303DLHC.h"
 
 LSM303DLHC_Accel Accel;
+#endif
+
+#ifdef MPU9250_ACCEL
+#include "MPU9250.h"
+
+MPU9250 Accel;
+#endif
 
 static float b[] = {1,  -1.4, 1};
 static float a[] = {1, -1.3, 0.5};

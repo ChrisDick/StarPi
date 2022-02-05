@@ -20,6 +20,7 @@
 #include <signal.h>
 #include <string.h>
 #include <stdio.h>
+#include "I2Cdev.h"
 #include "ServerPi.h"
 #include "HalSocket.h"
 #include "HalGps.h"
@@ -83,7 +84,7 @@ int main(int argc, char *argv[])
     }
     TTC_Sched_Pi_Impl   Scheduler;
     ServerPi PiServer( Port );
-    
+    I2Cdev::initialize();
 #ifdef TIMING
     GPIO::gpio.Init();
     GPIO::gpio.SetupOutput( SERVER_PI_PIN );
