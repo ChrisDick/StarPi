@@ -48,31 +48,31 @@ cd ..
 make
 
 #indi:
-#mkdir -p indi
-#cd indi
-#git clone https://github.com/indilib/indi.git
-#git clone https://github.com/indilib/indi-3rdparty
-#mkdir -p build/indi-core
-#cd build/indi-core
-#cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Debug ./../../indi/
-#make -j4
-#sudo make install
-#cd ../..
-#mkdir -p indidrivers
-#cd indidrivers
-#mkdir -p build/indi-starpi
-#cd build/indi-starpi
-#cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Debug ./../../../../indi-starpi
-#make
-#sudo cp indi-starpi /usr/bin/indi_starpi
-#cd ..
-#mkdir indi-gpsd
-#cd indi-gpsd
-#cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Debug ./../../../indi-3rdparty/indi-gpsd
-#make
-#sudo make install
-#cd ../../../..
-#sudo cp ./indi-starpi/indi_starpi_sk.xml /usr/share/indi/indi_starpi_sk.xml
+mkdir -p indi
+cd indi
+git clone https://github.com/indilib/indi.git
+git clone https://github.com/indilib/indi-3rdparty
+mkdir -p build/indi-core
+cd build/indi-core
+cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Debug ./../../indi/
+make -j
+sudo make install
+cd ../..
+mkdir -p indidrivers
+cd indidrivers
+mkdir -p build/indi-starpi
+cd build/indi-starpi
+cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Debug ./../../../../indi-starpi
+make
+sudo cp indi-starpi /usr/bin/indi_starpi
+cd ..
+mkdir indi-gpsd
+cd indi-gpsd
+cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Debug ./../../../indi-3rdparty/indi-gpsd
+make
+sudo make install
+cd ../../../..
+sudo cp ./indi-starpi/indi_starpi_sk.xml /usr/share/indi/indi_starpi_sk.xml
 
 
 
