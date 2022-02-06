@@ -25,7 +25,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <sys/time.h>
 #include <stdint.h>
 #include "Runnable.h"
-#include <libgpsmm.h>
+
 /** HalGps
  * - Class to provide functionality for the GPS
  */
