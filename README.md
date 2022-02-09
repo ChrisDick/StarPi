@@ -34,32 +34,22 @@ More details can be found at https://hackaday.io/project/10181-starpi
 Then go and make a nice cup of tea. it'll take a little while.
 
 # Use
-  over ssh:  
-  Any of the following depending on how your run it. ( WMM.COF must be in directory StarPi is started from )  
-  start GPSD in it's own ssh session  
-
-    gpsd -D 5 -N -n /dev/serial0 
-
-  in another ssh session  
+  Intended on being run remotely over ssh:  
+  WMM.COF must be in directory StarPi is started from, in this case ~/StarPi/Software
 
     cd ~/StarPi/Software
     ./Out/StarPi 10001
 
- 
-# Design
-
-The design for this system has been done with the community edition of Visual Paradigm and can be found in the Design folder.
-
-The system,
-
-  Shall calculate the position the telescope is pointing to on the sky map from measurements taken from Accelerometer and Magnetometer sensors.  
-  Shall send position to Stellarium via TCP/IP.  
-  Shall Receive GoTo commands via TCP/IP from Stellarium.  
-  Shall Receive User inputs from a web interface  
-  May receive user inputs from GPIO.  
-  May Move the Telescope to change the position on the skymap  
-  May adjust focus of The image.  
-  Shall Control a Pi camera to take photos and videos.  
-  May display current position, target position, mode and menus on an LCD display.  
-  May act as a Wireless access point with DHCP server to allow access to the server from Stellarium or a web browser on another wireless device. This will allow the system to be used without any network present.  
-
+  The only current option is the port number for connection with Stellarium. The Stellarium default of 10001 is used in this example.
+  
+  To connect with Stellarium, open the telescope move dialog and configure a telescope. Add a new telescope and chose external software on a remote computer. Name the telescope, add the IP address of StarPi and set the port number to match the option given.
+  
+  To use indi to connect to StarPi, once StarPi is started, start the indiserver.
+  
+    indiserver -v indi_starpi
+  
+  Since StarPi uses a gpsd to get GPS data, it is possible to run indi_gpsd along side StarPi
+  
+    indiserver -v indi_starpi indi_gpsd
+  
+  

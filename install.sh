@@ -23,11 +23,11 @@
 # then go and make a nice cup of tea. it'll take a little while.
 # usage over ssh:
 # Any of the following depending on how your run it. ( WMM.COF must be in directory StarPi is started from )
-# start GPSD
-#     gpsd /dev/serial0
-# then
 #     cd ~/StarPi/Software
 #     sudo ./Out/StarPi 10001
+
+now=$(date +"%T")
+echo "Start time : $now"
 
 sudo apt-get update
 sudo apt-get -y dist-upgrade
@@ -55,7 +55,7 @@ git clone https://github.com/indilib/indi-3rdparty
 mkdir -p build/indi-core
 cd build/indi-core
 cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Debug ./../../indi/
-make -j
+make
 sudo make install
 cd ../..
 mkdir -p indidrivers
@@ -74,13 +74,12 @@ sudo make install
 cd ../../../..
 sudo cp ./indi-starpi/indi_starpi_sk.xml /usr/share/indi/indi_starpi_sk.xml
 
-
+echo "Start time : $now"
+now=$(date +"%T")
+echo "Finish time : $now"
 
 #if you want to use the picam with indi, uncomment this line then add indi_v4l2_ccd when calling indiserver:
 #sudo modprobe bcm2835-v4l2
 
-# todo auto start gpsd
-#sudo systemctl enable gpsd.socket
-#sudo systemctl start gpsd.socket
 
 
