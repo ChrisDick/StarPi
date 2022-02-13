@@ -363,37 +363,37 @@ float TelescopeOrientation::GetAzMax( void )
  */
 void TelescopeOrientation::ResetAxMin( void )
 {
-    AxMin = 0.0f;
+    AxMin = +1000.0f;
 }
 /* AyMin Reset
  */
 void TelescopeOrientation::ResetAyMin( void )
 {
-    AyMin = 0.0f;
+    AyMin = +1000.0f;
 }
 /* AzMin Reset
  */
 void TelescopeOrientation::ResetAzMin( void )
 {
-    AzMin = 0.0f;
+    AzMin = +1000.0f;
 }
 /* AxMax Reset
  */
 void TelescopeOrientation::ResetAxMax( void )
 {
-    AxMax = 0.0f;
+    AxMax = -1000.0f;
 }
 /* AyMax Reset
  */
 void TelescopeOrientation::ResetAyMax( void )
 {
-    AyMax = 0.0f;
+    AyMax = -1000.0f;
 }
 /* AzMax Reset
  */
 void TelescopeOrientation::ResetAzMax( void )
 {
-    AzMax = 0.0f;
+    AzMax = -1000.0f;
 }
 
 /* Mx getter
@@ -455,37 +455,37 @@ float TelescopeOrientation::GetMzMax( void )
  */
 void TelescopeOrientation::ResetMxMin( void )
 {
-    MxMin = 0.0f;
+    MxMin = +1000.0f;
 }
 /* MyMin Reset
  */
 void TelescopeOrientation::ResetMyMin( void )
 {
-    MyMin = 0.0f;
+    MyMin = +1000.0f;
 }
 /* MzMin Reset
  */
 void TelescopeOrientation::ResetMzMin( void )
 {
-    MzMin = 0.0f;
+    MzMin = +1000.0f;
 }
 /* MxMax Reset
  */
 void TelescopeOrientation::ResetMxMax( void )
 {
-    MxMax = 0.0f;
+    MxMax = -1000.0f;
 }
 /* MyMax Reset
  */
 void TelescopeOrientation::ResetMyMax( void )
 {
-    MyMax = 0.0f;
+    MyMax = -1000.0f;
 }
 /* MzMax Reset
  */
 void TelescopeOrientation::ResetMzMax( void )
 {
-    MzMax = 0.0f;
+    MzMax = -1000.0f;
 }
 
 
