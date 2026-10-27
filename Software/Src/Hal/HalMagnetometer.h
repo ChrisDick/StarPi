@@ -24,12 +24,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #define HALMMAGNETOMETER_H
 
 #include <stdint.h>
-#include "Runnable.h"
 
 /** HalMagnetometer
  * - Class to provide use to the magnetometer
  */
-class HalMagnetometer: public Runnable {
+class HalMagnetometer
+{
     public:
         /** Constructor
          */
@@ -41,7 +41,7 @@ class HalMagnetometer: public Runnable {
             bool Init( void );
         /** Runs the filter
          */
-            void Run( void );
+            bool Run( void );
         /** Access to the Magnetometer data.
          * @param Mx Pointer to X axis result
          * @param My Pointer to Y axis result

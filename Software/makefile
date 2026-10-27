@@ -15,6 +15,7 @@ INCLUDE_PATHS := 	-I./Src/I2Cdevlib/Pi/I2Cdev/ \
 					-I./Src/SOFA/ \
 					-I./Src/ \
 					-I./Src/Utils/ \
+					-I./Src/Eigen/ \
 					-I./Src/Drivers/ 
 
 CPPFILES := 		Src/Main.cpp \
@@ -41,6 +42,7 @@ CPPFILES := 		Src/Main.cpp \
 					Src/MagModelCorrection/MagModel.cpp
 
 #					Src/Hal/HalWeather.cpp \
+#					Src/Drivers/GPIO.cpp \
 #					Src/I2Cdevlib/Pi/BME280/BME280.cpp \
 
 CFILES :=			Src/MagModelCorrection/GeomagnetismLibrary.c
@@ -48,7 +50,8 @@ CFILES :=			Src/MagModelCorrection/GeomagnetismLibrary.c
 OUTDIR := Out
 OBJDIR := Obj
 OUT_DIR = ./Out/
-CFLAGS =  -std=c++0x -c -pedantic -Wall -W -O
+CFLAGS =  -std=c++0x -c -pedantic -Wall -W -O 
+LIBRARY = -lwiringPi -lgps -L/usr/local/lib/bcm2835 -lbcm2835
 CC = g++
 OUTPUT = -o $@
 
@@ -74,15 +77,16 @@ all : $(OUT_DIR)StarPi
 
 $(OUT_DIR)StarPi:	${obj.cpp} ${obj.c} ${OUTDIR}
 	@echo link files..
-	$(CC) -Wall $(OUTPUT) ${obj.cpp} ${obj.c}  -lgps -lbcm2835   >> log.txt 2>&1
+	$(CC) -Wall $(LIBRARY) $(OUTPUT) ${obj.cpp} ${obj.c}  >> log.txt 2>&1
 
 %.o : 
 	@echo compiling $@
-	$(CC) -c $(CFLAGS) $(INCLUDE_PATHS) $< $(OUTPUT)  >> log.txt 2>&1
+	$(CC) -c $(CFLAGS) $(LIBRARY) $(INCLUDE_PATHS) $< $(OUTPUT)  >> log.txt 2>&1
 
 .PHONY: clean
 clean:
 		rm $(OBJDIR)/*.o 
+		rm log.txt
 
 .PHONY: cleansched
 cleansched:
@@ -95,6 +99,14 @@ cleandata:
 		rm $(OBJDIR)/TelescopeIO.o 
 		rm $(OBJDIR)/CelestrialConverter.o 
 		rm $(OBJDIR)/HalWebsocketd.o 
+
+.PHONY: cleantiming
+cleantiming:
+		rm $(OBJDIR)/TelescopeManager.o 
+		rm $(OBJDIR)/TelescopeOrientation.o 
+		rm $(OBJDIR)/HalGps.o 
+		rm $(OBJDIR)/Main.o 
+		rm $(OBJDIR)/ServerPi.o 
 
 ${OUTDIR} :
 	mkdir $@

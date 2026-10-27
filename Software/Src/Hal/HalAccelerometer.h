@@ -24,12 +24,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #define HAL_ACCELEROMETER_H
 
 #include <stdint.h>
-#include "Runnable.h"
 
 /** HalAccelerometer
  * - Class to provide use of the Accelerometer
  */
-class HalAccelerometer: public Runnable {
+class HalAccelerometer {
     public:
         /** Constructor
         */
@@ -40,7 +39,7 @@ class HalAccelerometer: public Runnable {
             bool  Init( void );
         /** runs the filter and updates the Roll and Pitch
          */
-            void  Run( void );
+            bool  Run( void );
         /** Access to the Accelerometer data.
          * @param Ax Pointer to X axis result
          * @param Ay Pointer to Y axis result

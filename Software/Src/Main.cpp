@@ -48,7 +48,7 @@ static void signal_handler(int signum)
         case SIGTERM:
         {
             continue_looping = false;
-            printf ("End.\n");
+//            printf ("End.\n");
             break;
         } 
         default:
@@ -95,21 +95,26 @@ int main(int argc, char *argv[])
     Scheduler.Init();   // call first to reset task table and configure timer.
     //printf ("scheduler initialised.\n");
     
+    /* run every 10ms. takes 2.2ms max, 1 tick 10.x ms */
     TelescopeOrientation::Orient.SetDelay(0); 
-    TelescopeOrientation::Orient.SetPeriod(4); // run every 4 ticks (1 tick == 500us).
+    TelescopeOrientation::Orient.SetPeriod(1); 
     
+    /* run every 10ms. takes 2.2ms max */
     HalSocket::Socket.Init( 9999, &TelescopeSocket::TeleSocket.SocketCallback );
     HalSocket::Socket.SetDelay(1); 
-    HalSocket::Socket.SetPeriod(50);
-
+    HalSocket::Socket.SetPeriod(10);
+    
+    /* run every 1s. takes 0.3ms max */
     HalGps::Gps.SetDelay(0); // run one tick after telescope mgr run.
-    HalGps::Gps.SetPeriod(100); // run every 200ms.
+    HalGps::Gps.SetPeriod(100);
+ 
+    /* run every 1s. takes 10ms max run after GPS for best accuracy. ToDo: improve by running GPS on PPS interupt */
+    TelescopeManager::Telescope.SetDelay(0);
+    TelescopeManager::Telescope.SetPeriod(100);
     
-    TelescopeManager::Telescope.SetDelay(1); 
-    TelescopeManager::Telescope.SetPeriod(10);
-    
-    PiServer.SetDelay(1);
-    PiServer.SetPeriod(10);
+    /* run every 250ms. takes 11ms max */
+    PiServer.SetDelay(0);
+    PiServer.SetPeriod(25);
     
     
     uint8_t error = 0;

@@ -71,20 +71,22 @@ bool HalMagnetometer::Init( void )
 /* HalMagnetometerRun
  *  Runs the filter
  */
-void HalMagnetometer::Run( void )
+bool HalMagnetometer::Run( void )
 {
-    int16_t X = 0;
-    int16_t Y = 0;
-    int16_t Z = 0;
+    bool result = false;
     static float Xv1m1 = 0, Xv2m1 = 0, Yv1m1 = 0, Yv2m1 = 0, Zv1m1 = 0, Zv2m1 = 0;
-    
-
-    GetRawData( &X, &Y, &Z );
-    
-    FilterX = iirfilter(((float)X), &Xv1m1, &Xv2m1);
-    FilterY = iirfilter(((float)Y), &Yv1m1, &Yv2m1);
-    FilterZ = iirfilter(((float)Z), &Zv1m1, &Zv2m1);
- 
+    if ( Magnetomometer.getDataReady() )
+    {
+        int16_t X = 0;
+        int16_t Y = 0;
+        int16_t Z = 0;
+        result = true;
+        GetRawData( &X, &Y, &Z );
+        
+        FilterX[4] = iirfilter(((((float)X)/32767.0f)*1.3f), &Xv1m1, &Xv2m1);
+        FilterY[4] = iirfilter(((((float)Y)/32767.0f)*1.3f), &Yv1m1, &Yv2m1);
+        FilterZ[4] = iirfilter(((((float)Z)/32767.0f)*1.3f), &Zv1m1, &Zv2m1);
+    }
 }
 
 /* Access to the Magnetometer data.

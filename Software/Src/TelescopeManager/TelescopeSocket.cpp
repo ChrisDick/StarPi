@@ -30,7 +30,7 @@ TelescopeSocket TelescopeSocket::TeleSocket;
 /*
     Command table - Each callback must update the return buffer and return how much data has been added.
 */
-TELEDATA_T TelescopeSocket::TelescopeData[60] =
+TELEDATA_T TelescopeSocket::TelescopeData[NO_OF_COMMANDS] =
 {
 /* Id                     Header  Handler                                                                      */
 /* Multi Item            */ { "MULT", &MultiHandler                 }, /**< any debug string                   */
@@ -92,6 +92,16 @@ TELEDATA_T TelescopeSocket::TelescopeData[60] =
 /* Calibration Enable    */ { "CALE", &CalibrationEnableHandler     }, /**< Calibration enable                 */
 /* MagneticOffset        */ { "MAGO", &MagneticOffsetHandler        }, /**< user offset to Azimuth             */
 /* AccelOffset           */ { "ACCO", &AccelOffsetHandler           }, /**< user offsset to Altitude           */
+/* Accel X Down Cal      */ { "AXDC", &AccelXDownHandler            }, /**< Set calibration X Down             */
+/* Accel X Up Cal        */ { "AXUC", &AccelXUpHandler              }, /**< Set calibration X Up               */
+/* Accel Y Down Cal      */ { "AYDC", &AccelYDownHandler            }, /**< Set calibration Y Down             */
+/* Accel Y Up Cal        */ { "AYUC", &AccelYUpHandler              }, /**< Set calibration Y Up               */
+/* Accel Z Down Cal      */ { "AZDC", &AccelZDownHandler            }, /**< Set calibration Z Down             */
+/* Accel Z Up Cal        */ { "AZUC", &AccelZUpHandler              }, /**< Set calibration Z Up               */
+/* Mag Xb Calibration    */ { "XBDC", &MagXbHandler                 }, /**< Set calibration Xb                 */
+/* Mag Yb Calibration    */ { "YBDC", &MagYbHandler                 }, /**< Set calibration Yb                 */
+/* Mag Zb Calibration    */ { "ZBDC", &MagZbHandler                 }, /**< Set calibration Zb                 */
+/* Mag3D Calibration     */ { "DDDC", &MagDDDHandler                }, /**< Set calibration 3D                 */
 /* Default               */ { "DFLT", &DefaultHandler               }, /**< any debug string                   */
 };
 
@@ -720,6 +730,170 @@ uint8_t TelescopeSocket::AccelOffsetHandler( char* Buffer )
     return ( strcspn (Buffer, "#") + 1u );
 }
 
+/* Handler for Accelerometer X down calibration
+ */
+uint8_t TelescopeSocket::AccelXDownHandler( char* Buffer )
+{
+    if ( strncmp( Buffer, "AXDC=Enable", 11 ) == 0 )
+    {
+        sprintf( Buffer, "AXDC=%s#", "Enabled");
+        TelescopeOrientation::Orient.SetAccAxDown( true );
+    }
+    else
+    {
+        sprintf( Buffer, "AXDC=%s#", "Disabled");
+        TelescopeOrientation::Orient.SetAccAxDown( false );
+    }
+    return ( strcspn (Buffer, "#") + 1u );
+}
+
+/* Handler for Accelerometer X Up calibration
+ */
+uint8_t TelescopeSocket::AccelXUpHandler( char* Buffer )
+{
+    if ( strncmp( Buffer, "AXUC=Enable", 11 ) == 0 )
+    {
+        sprintf( Buffer, "AXUC=%s#", "Enabled");
+        TelescopeOrientation::Orient.SetAccAxUp( true );
+    }
+    else
+    {
+        sprintf( Buffer, "AXUC=%s#", "Disabled");
+        TelescopeOrientation::Orient.SetAccAxUp( false );
+    }
+    return ( strcspn (Buffer, "#") + 1u );
+}
+/* Handler for Accelerometer Y Down calibration
+ */
+uint8_t TelescopeSocket::AccelYDownHandler( char* Buffer )
+{
+    if ( strncmp( Buffer, "AYDC=Enable", 11 ) == 0 )
+    {
+        sprintf( Buffer, "AYDC=%s#", "Enabled");
+        TelescopeOrientation::Orient.SetAccAyDown( true );
+    }
+    else
+    {
+        sprintf( Buffer, "AYDC=%s#", "Disabled");
+        TelescopeOrientation::Orient.SetAccAyDown( false );
+    }
+    return ( strcspn (Buffer, "#") + 1u );
+}
+/* Handler for Accelerometer Y Up calibration
+ */
+uint8_t TelescopeSocket::AccelYUpHandler( char* Buffer )
+{
+    if ( strncmp( Buffer, "AYUC=Enable", 11 ) == 0 )
+    {
+        sprintf( Buffer, "AYUC=%s#", "Enabled");
+        TelescopeOrientation::Orient.SetAccAyUp( true );
+    }
+    else
+    {
+        sprintf( Buffer, "AYUC=%s#", "Disabled");
+        TelescopeOrientation::Orient.SetAccAyUp( false );
+    }
+    return ( strcspn (Buffer, "#") + 1u );
+}
+/* Handler for Accelerometer Z Down calibration
+ */
+uint8_t TelescopeSocket::AccelZDownHandler( char* Buffer )
+{
+    if ( strncmp( Buffer, "AZDC=Enable", 11 ) == 0 )
+    {
+        sprintf( Buffer, "AZDC=%s#", "Enabled");
+        TelescopeOrientation::Orient.SetAccAzDown( true );
+    }
+    else
+    {
+        sprintf( Buffer, "AZDC=%s#", "Disabled");
+        TelescopeOrientation::Orient.SetAccAzDown( false );
+    }
+    return ( strcspn (Buffer, "#") + 1u );
+}
+
+/* Handler for Accelerometer Z Up calibration
+ */
+uint8_t TelescopeSocket::AccelZUpHandler( char* Buffer )
+{
+    if ( strncmp( Buffer, "AZUC=Enable", 11 ) == 0 )
+    {
+        sprintf( Buffer, "AZUC=%s#", "Enabled");
+        TelescopeOrientation::Orient.SetAccAzUp( true );
+    }
+    else
+    {
+        sprintf( Buffer, "AZUC=%s#", "Disabled");
+        TelescopeOrientation::Orient.SetAccAzUp( false );
+    }
+    return ( strcspn (Buffer, "#") + 1u );
+}
+
+/* Handler for Mag calibration Xb handler
+ */
+uint8_t TelescopeSocket::MagXbHandler( char* Buffer )
+{
+    if ( strncmp( Buffer, "XBDC=Enable", 11 ) == 0 )
+    {
+        sprintf( Buffer, "XBDC=%s#", "Enabled");
+        TelescopeOrientation::Orient.SetMagXbDown( true );
+    }
+    else
+    {
+        sprintf( Buffer, "XBDC=%s#", "Disabled");
+        TelescopeOrientation::Orient.SetMagXbDown( false );
+    }
+    return ( strcspn (Buffer, "#") + 1u );
+}
+
+/* Handler for Mag calibration Yb handler
+ */
+uint8_t TelescopeSocket::MagYbHandler( char* Buffer )
+{
+    if ( strncmp( Buffer, "YBDC=Enable", 11 ) == 0 )
+    {
+        sprintf( Buffer, "YBDC=%s#", "Enabled");
+        TelescopeOrientation::Orient.SetMagYbDown( true );
+    }
+    else
+    {
+        sprintf( Buffer, "YBDC=%s#", "Disabled");
+        TelescopeOrientation::Orient.SetMagYbDown( false );
+    }
+    return ( strcspn (Buffer, "#") + 1u );
+}
+/* Handler for Mag calibration Zb handler
+ */
+uint8_t TelescopeSocket::MagZbHandler( char* Buffer )
+{
+    if ( strncmp( Buffer, "ZBDC=Enable", 11 ) == 0 )
+    {
+        sprintf( Buffer, "ZBDC=%s#", "Enabled");
+        TelescopeOrientation::Orient.SetMagZbDown( true );
+    }
+    else
+    {
+        sprintf( Buffer, "ZBDC=%s#", "Disabled");
+        TelescopeOrientation::Orient.SetMagZbDown( false );
+    }
+    return ( strcspn (Buffer, "#") + 1u );
+}
+/* Handler for Mag calibration 3D handler
+ */
+uint8_t TelescopeSocket::MagDDDHandler( char* Buffer )
+{
+    if ( strncmp( Buffer, "DDDC=Enable", 11 ) == 0 )
+    {
+        sprintf( Buffer, "DDDC=%s#", "Enabled");
+        TelescopeOrientation::Orient.SetMagDDD( true );
+    }
+    else
+    {
+        sprintf( Buffer, "DDDC=%s#", "Disabled");
+        TelescopeOrientation::Orient.SetMagDDD( false );
+    }
+    return ( strcspn (Buffer, "#") + 1u );
+}
 /* Handler for an unknown message
  */
 uint8_t TelescopeSocket::DefaultHandler( char* Buffer )

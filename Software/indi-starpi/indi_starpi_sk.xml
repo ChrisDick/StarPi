@@ -39,6 +39,60 @@ On
     </defNumber>
 </defNumberVector>
 
+<defSwitchVector device="StarPi" name="AXDCAL_ON" label="Accel X Down" group="Calibration" state="Idle" perm="rw" rule="OneOfMany" timeout="60">
+    <defSwitch name="STARTAXD" label="Start">
+Off
+    </defSwitch>
+    <defSwitch name="ENDAXD" label="Finish">
+On
+    </defSwitch>
+</defSwitchVector>
+
+<defSwitchVector device="StarPi" name="AXUCAL_ON" label="Accel X Up" group="Calibration" state="Idle" perm="rw" rule="OneOfMany" timeout="60">
+    <defSwitch name="STARTAXU" label="Start">
+Off
+    </defSwitch>
+    <defSwitch name="ENDAXU" label="Finish">
+On
+    </defSwitch>
+</defSwitchVector>
+
+<defSwitchVector device="StarPi" name="AYDCAL_ON" label="Accel Y Down" group="Calibration" state="Idle" perm="rw" rule="OneOfMany" timeout="60">
+    <defSwitch name="STARTAYD" label="Start">
+Off
+    </defSwitch>
+    <defSwitch name="ENDAYD" label="Finish">
+On
+    </defSwitch>
+</defSwitchVector>
+
+<defSwitchVector device="StarPi" name="AYUCAL_ON" label="Accel Y Up" group="Calibration" state="Idle" perm="rw" rule="OneOfMany" timeout="60">
+    <defSwitch name="STARTAYU" label="Start">
+Off
+    </defSwitch>
+    <defSwitch name="ENDAYU" label="Finish">
+On
+    </defSwitch>
+</defSwitchVector>
+
+<defSwitchVector device="StarPi" name="AZDCAL_ON" label="Accel Z Down" group="Calibration" state="Idle" perm="rw" rule="OneOfMany" timeout="60">
+    <defSwitch name="STARTAZD" label="Start">
+Off
+    </defSwitch>
+    <defSwitch name="ENDAZD" label="Finish">
+On
+    </defSwitch>
+</defSwitchVector>
+
+<defSwitchVector device="StarPi" name="AZUCAL_ON" label="Accel Z Up" group="Calibration" state="Idle" perm="rw" rule="OneOfMany" timeout="60">
+    <defSwitch name="STARTAZU" label="Start">
+Off
+    </defSwitch>
+    <defSwitch name="ENDAZU" label="Finish">
+On
+    </defSwitch>
+</defSwitchVector>
+
 <defNumberVector device="StarPi" name="ACCEL_OFFSET" label="Accelerometer Offset" group="Calibration" state="Idle" perm="rw" timeout="0">
     <defNumber name="ACCEL_OFF" label="Accelerometer Offset" format="%10.6m" min="-90" max="90" step="1">
 0
@@ -51,57 +105,50 @@ On
     </defNumber>
 </defNumberVector>
 
-<defNumberVector device="StarPi" name="ACCEL_CAL" label="Accelerometer Calibration" group="Calibration" state="Idle" perm="ro">
-    <defNumber name="AccelXmin" label="X min" format="%16.0m" min="-32768" max="32767" step="1">
-0
-    </defNumber>
-    <defNumber name="AccelXmax" label="X max" format="%16.0m" min="-32768" max="32767" step="1">
-0
-    </defNumber>
-    <defNumber name="AccelYmin" label="Y min" format="%16.0m" min="-32768" max="32767" step="1">
-0
-    </defNumber>
-    <defNumber name="AccelYmax" label="Y max" format="%16.0m" min="-32768" max="32767" step="1">
-0
-    </defNumber>
-    <defNumber name="AccelZmin" label="Z min" format="%16.0m" min="-32768" max="32767" step="1">
-0
-    </defNumber>
-    <defNumber name="AccelZmax" label="Z max" format="%16.0m" min="-32768" max="32767" step="1">
-0
-    </defNumber>
-</defNumberVector>
+<defSwitchVector device="StarPi" name="XBCAL_ON" label="Mag Xb Down" group="Calibration" state="Idle" perm="rw" rule="OneOfMany" timeout="60">
+    <defSwitch name="STARTXB" label="Start">
+Off
+    </defSwitch>
+    <defSwitch name="ENDXB" label="Finish">
+On
+    </defSwitch>
+</defSwitchVector>
+
+<defSwitchVector device="StarPi" name="YBCAL_ON" label="Mag Yb Down" group="Calibration" state="Idle" perm="rw" rule="OneOfMany" timeout="60">
+    <defSwitch name="STARTYB" label="Start">
+Off
+    </defSwitch>
+    <defSwitch name="ENDYB" label="Finish">
+On
+    </defSwitch>
+</defSwitchVector>
+
+<defSwitchVector device="StarPi" name="ZBCAL_ON" label="Mag Zb Down" group="Calibration" state="Idle" perm="rw" rule="OneOfMany" timeout="60">
+    <defSwitch name="STARTZB" label="Start">
+Off
+    </defSwitch>
+    <defSwitch name="ENDZB" label="Finish">
+On
+    </defSwitch>
+</defSwitchVector>
+
+<defSwitchVector device="StarPi" name="DDDCAL_ON" label="Mag 3D" group="Calibration" state="Idle" perm="rw" rule="OneOfMany" timeout="60">
+    <defSwitch name="STARTDD" label="Start">
+Off
+    </defSwitch>
+    <defSwitch name="ENDDD" label="Finish">
+On
+    </defSwitch>
+</defSwitchVector>
 
 <defNumberVector device="StarPi" name="MAG_OFFSET" label="Magnetometer Offset" group="Calibration" state="Idle" perm="rw" timeout="0">
     <defNumber name="MAG_OFF" label="Magnetometer Offset" format="%10.6m" min="-90" max="90" step="1">
 0
     </defNumber>
-    
 </defNumberVector>
 
 <defNumberVector device="StarPi" name="CALMAG" label="Heading" group="Calibration" state="Idle" perm="ro">
     <defNumber name="HEADING" label="Heading" format="%16.0m" min="0" max="360" step="1">
-0
-    </defNumber>
-</defNumberVector>
-
-<defNumberVector device="StarPi" name="MAG_CAL" label="Magnetic" group="Calibration" state="Idle" perm="ro">
-    <defNumber name="MagXmin" label="X min" format="%16.0m" min="-32768" max="32767" step="1">
-0
-    </defNumber>
-    <defNumber name="MagXmax" label="X max" format="%16.0m" min="-32768" max="32767" step="1">
-0
-    </defNumber>
-    <defNumber name="MagYmin" label="Y min" format="%16.0m" min="-32768" max="32767" step="1">
-0
-    </defNumber>
-    <defNumber name="MagYmax" label="Y max" format="%16.0m" min="-32768" max="32767" step="1">
-0
-    </defNumber>
-    <defNumber name="MagZmin" label="Z min" format="%16.0m" min="-32768" max="32767" step="1">
-0
-    </defNumber>
-    <defNumber name="MagZmax" label="Z max" format="%16.0m" min="-32768" max="32767" step="1">
 0
     </defNumber>
 </defNumberVector>

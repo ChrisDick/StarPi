@@ -69,23 +69,29 @@ bool HalAccelerometer::Init( void )
 
 /* runs the filter and updates the Roll and Pitch
  */
-void HalAccelerometer::Run( void )
+bool HalAccelerometer::Run( void )
 {
+    bool result = false;
     static float Xv1m1 = 0;
     static float Xv2m1 = 0;
     static float Yv1m1 = 0;
     static float Yv2m1 = 0;
     static float Zv1m1 = 0;
     static float Zv2m1 = 0;
-    int16_t X = 0;
-    int16_t Y = 0;
-    int16_t Z = 0;
     
-    GetRawData( &X, &Y, &Z );
-    
-    FilterX = iirfilter(((float)X)/32767.0F, &Xv1m1, &Xv2m1);
-    FilterY = iirfilter(((float)Y)/32767.0F, &Yv1m1, &Yv2m1);
-    FilterZ = iirfilter(((float)Z)/32767.0F, &Zv1m1, &Zv2m1);
+    if ( Accel.getAllDataAvaliable() )
+    {
+        int16_t X = 0;
+        int16_t Y = 0;
+        int16_t Z = 0;
+        result = true;
+        GetRawData( &X, &Y, &Z );
+        
+        FilterX = iirfilter(((((float)X)/32767.0f))*2.0f, &Xv1m1, &Xv2m1);
+        FilterY = iirfilter(((((float)Y)/32767.0f))*2.0f, &Yv1m1, &Yv2m1);
+        FilterZ = iirfilter(((((float)Z)/32767.0f))*2.0f, &Zv1m1, &Zv2m1);    
+    }
+    return result;
 }
     
     

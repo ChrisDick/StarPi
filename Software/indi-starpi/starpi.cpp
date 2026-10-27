@@ -53,7 +53,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110 - 1301  USA
 /* Our auto pointer */
 std::unique_ptr<StarPi> starpi(new StarPi());
 
-//const int POLLMS = 500; /* Period of update, 1 second. */
+const int POLLMS = 500; /* Period of update, 1 second. */
 
 /**************************************************************************************
 **
@@ -149,7 +149,8 @@ bool StarPi::initProperties()
         {
         }
     }
-    
+#endif
+    //addDebugControl();
             strcpy(host, "localhost");
             portno = 9999;
     
@@ -328,20 +329,17 @@ bool StarPi::ISNewSwitch(const char *dev, const char *name, ISState *states, cha
                         if ( strncmp( buffer, "CALE=Disabled", 13 ) == 0 )
                         {
                             svp->s = IPS_IDLE;
-                            calibrating = false;
                             result = true;
                         }
                         else
                         {
                             svp->s = IPS_ALERT;
-                            calibrating = false;
                             result = false;
                         }
                     }
                     else
                     {
                         svp->s = IPS_ALERT;
-                        calibrating = false;
                         result = false;
                     }
                 }
@@ -354,20 +352,17 @@ bool StarPi::ISNewSwitch(const char *dev, const char *name, ISState *states, cha
                         if ( strncmp( buffer, "CALE=Enabled", 12 ) == 0 )
                         {
                             svp->s = IPS_OK;
-                            calibrating = true;
                             result = true;
                         }
                         else
                         {
                             svp->s = IPS_ALERT;
-                            calibrating = false;
                             result = false;
                         }
                     }
                     else
                     {
                         svp->s = IPS_ALERT;
-                        calibrating = false;
                         result = false;
                     }
                     svp->s = IPS_OK;
@@ -381,6 +376,603 @@ bool StarPi::ISNewSwitch(const char *dev, const char *name, ISState *states, cha
                 }
                 IDSetSwitch( svp, nullptr );
             }
+			
+            else if (strcmp(svp->name, "AXDCAL_ON") == 0)
+            {
+                uint8_t index = IUFindOnSwitchIndex(svp);
+                IUUpdateSwitch(svp, states, names, n);
+                    
+                if( index == 0u )
+                {                
+                    /* turn off calibration */
+                    strcpy ( buffer, "AXDC=Disable#" );
+                    if ( SendMsg( buffer) )
+                    {
+                        if ( strncmp( buffer, "AXDC=Disabled", 13 ) == 0 )
+                        {
+                            svp->s = IPS_IDLE;
+                            result = true;
+                        }
+                        else
+                        {
+                            svp->s = IPS_ALERT;
+                            result = false;
+                        }
+                    }
+                    else
+                    {
+                        svp->s = IPS_ALERT;
+                        result = false;
+                    }
+                }
+                else if (index == 1u )
+                {
+                    /* turn on calibration */
+                    strcpy ( buffer, "AXDC=Enable#" );
+                    if ( SendMsg( buffer) )
+                    {
+                        if ( strncmp( buffer, "AXDC=Enabled", 12 ) == 0 )
+                        {
+                            svp->s = IPS_OK;
+                            result = true;
+                        }
+                        else
+                        {
+                            svp->s = IPS_ALERT;
+                            result = false;
+                        }
+                    }
+                    else
+                    {
+                        svp->s = IPS_ALERT;
+                        result = false;
+                    }
+                }
+                else
+                {
+                    /* shouldn't be here */
+                    svp->s = IPS_ALERT ;
+                    result = false;
+                }
+                IDSetSwitch( svp, nullptr );
+            }
+            
+            else if (strcmp(svp->name, "AXUCAL_ON") == 0)
+            {
+                uint8_t index = IUFindOnSwitchIndex(svp);
+                IUUpdateSwitch(svp, states, names, n);
+                    
+                if( index == 0u )
+                {                
+                    /* turn off calibration */
+                    strcpy ( buffer, "AXUC=Disable#" );
+                    if ( SendMsg( buffer) )
+                    {
+                        if ( strncmp( buffer, "AXUC=Disabled", 13 ) == 0 )
+                        {
+                            svp->s = IPS_IDLE;
+                            result = true;
+                        }
+                        else
+                        {
+                            svp->s = IPS_ALERT;
+                            result = false;
+                        }
+                    }
+                    else
+                    {
+                        svp->s = IPS_ALERT;
+                        result = false;
+                    }
+                }
+                else if (index == 1u )
+                {
+                    /* turn on calibration */
+                    strcpy ( buffer, "AXUC=Enable#" );
+                    if ( SendMsg( buffer) )
+                    {
+                        if ( strncmp( buffer, "AXUC=Enabled", 12 ) == 0 )
+                        {
+                            svp->s = IPS_OK;
+                            result = true;
+                        }
+                        else
+                        {
+                            svp->s = IPS_ALERT;
+                            result = false;
+                        }
+                    }
+                    else
+                    {
+                        svp->s = IPS_ALERT;
+                        result = false;
+                    }
+                }
+                else
+                {
+                    /* shouldn't be here */
+                    svp->s = IPS_ALERT ;
+                    result = false;
+                }
+                IDSetSwitch( svp, nullptr );
+            }
+            else if (strcmp(svp->name, "AYDCAL_ON") == 0)
+            {
+                uint8_t index = IUFindOnSwitchIndex(svp);
+                IUUpdateSwitch(svp, states, names, n);
+                    
+                if( index == 0u )
+                {                
+                    /* turn off calibration */
+                    strcpy ( buffer, "AYDC=Disable#" );
+                    if ( SendMsg( buffer) )
+                    {
+                        if ( strncmp( buffer, "AYDC=Disabled", 13 ) == 0 )
+                        {
+                            svp->s = IPS_IDLE;
+                            result = true;
+                        }
+                        else
+                        {
+                            svp->s = IPS_ALERT;
+                            result = false;
+                        }
+                    }
+                    else
+                    {
+                        svp->s = IPS_ALERT;
+                        result = false;
+                    }
+                }
+                else if (index == 1u )
+                {
+                    /* turn on calibration */
+                    strcpy ( buffer, "AYDC=Enable#" );
+                    if ( SendMsg( buffer) )
+                    {
+                        if ( strncmp( buffer, "AYDC=Enabled", 12 ) == 0 )
+                        {
+                            svp->s = IPS_OK;
+                            result = true;
+                        }
+                        else
+                        {
+                            svp->s = IPS_ALERT;
+                            result = false;
+                        }
+                    }
+                    else
+                    {
+                        svp->s = IPS_ALERT;
+                        result = false;
+                    }
+                }
+                else
+                {
+                    /* shouldn't be here */
+                    svp->s = IPS_ALERT ;
+                    result = false;
+                }
+                IDSetSwitch( svp, nullptr );
+            }
+            
+            else if (strcmp(svp->name, "AYUCAL_ON") == 0)
+            {
+                uint8_t index = IUFindOnSwitchIndex(svp);
+                IUUpdateSwitch(svp, states, names, n);
+                    
+                if( index == 0u )
+                {                
+                    /* turn off calibration */
+                    strcpy ( buffer, "AYUC=Disable#" );
+                    if ( SendMsg( buffer) )
+                    {
+                        if ( strncmp( buffer, "AYUC=Disabled", 13 ) == 0 )
+                        {
+                            svp->s = IPS_IDLE;
+                            result = true;
+                        }
+                        else
+                        {
+                            svp->s = IPS_ALERT;
+                            result = false;
+                        }
+                    }
+                    else
+                    {
+                        svp->s = IPS_ALERT;
+                        result = false;
+                    }
+                }
+                else if (index == 1u )
+                {
+                    /* turn on calibration */
+                    strcpy ( buffer, "AYUC=Enable#" );
+                    if ( SendMsg( buffer) )
+                    {
+                        if ( strncmp( buffer, "AYUC=Enabled", 12 ) == 0 )
+                        {
+                            svp->s = IPS_OK;
+                            result = true;
+                        }
+                        else
+                        {
+                            svp->s = IPS_ALERT;
+                            result = false;
+                        }
+                    }
+                    else
+                    {
+                        svp->s = IPS_ALERT;
+                        result = false;
+                    }
+                }
+                else
+                {
+                    /* shouldn't be here */
+                    svp->s = IPS_ALERT ;
+                    result = false;
+                }
+                IDSetSwitch( svp, nullptr );
+            }
+            else if (strcmp(svp->name, "AZDCAL_ON") == 0)
+            {
+                uint8_t index = IUFindOnSwitchIndex(svp);
+                IUUpdateSwitch(svp, states, names, n);
+                    
+                if( index == 0u )
+                {                
+                    /* turn off calibration */
+                    strcpy ( buffer, "AZDC=Disable#" );
+                    if ( SendMsg( buffer) )
+                    {
+                        if ( strncmp( buffer, "AZDC=Disabled", 13 ) == 0 )
+                        {
+                            svp->s = IPS_IDLE;
+                            result = true;
+                        }
+                        else
+                        {
+                            svp->s = IPS_ALERT;
+                            result = false;
+                        }
+                    }
+                    else
+                    {
+                        svp->s = IPS_ALERT;
+                        result = false;
+                    }
+                }
+                else if (index == 1u )
+                {
+                    /* turn on calibration */
+                    strcpy ( buffer, "AZDC=Enable#" );
+                    if ( SendMsg( buffer) )
+                    {
+                        if ( strncmp( buffer, "AZDC=Enabled", 12 ) == 0 )
+                        {
+                            svp->s = IPS_OK;
+                            result = true;
+                        }
+                        else
+                        {
+                            svp->s = IPS_ALERT;
+                            result = false;
+                        }
+                    }
+                    else
+                    {
+                        svp->s = IPS_ALERT;
+                        result = false;
+                    }
+                }
+                else
+                {
+                    /* shouldn't be here */
+                    svp->s = IPS_ALERT ;
+                    result = false;
+                }
+                IDSetSwitch( svp, nullptr );
+            }
+            
+            else if (strcmp(svp->name, "AZUCAL_ON") == 0)
+            {
+                uint8_t index = IUFindOnSwitchIndex(svp);
+                IUUpdateSwitch(svp, states, names, n);
+                    
+                if( index == 0u )
+                {                
+                    /* turn off calibration */
+                    strcpy ( buffer, "AZUC=Disable#" );
+                    if ( SendMsg( buffer) )
+                    {
+                        if ( strncmp( buffer, "AZUC=Disabled", 13 ) == 0 )
+                        {
+                            svp->s = IPS_IDLE;
+                            result = true;
+                        }
+                        else
+                        {
+                            svp->s = IPS_ALERT;
+                            result = false;
+                        }
+                    }
+                    else
+                    {
+                        svp->s = IPS_ALERT;
+                        result = false;
+                    }
+                }
+                else if (index == 1u )
+                {
+                    /* turn on calibration */
+                    strcpy ( buffer, "AZUC=Enable#" );
+                    if ( SendMsg( buffer) )
+                    {
+                        if ( strncmp( buffer, "AZUC=Enabled", 12 ) == 0 )
+                        {
+                            svp->s = IPS_OK;
+                            result = true;
+                        }
+                        else
+                        {
+                            svp->s = IPS_ALERT;
+                            result = false;
+                        }
+                    }
+                    else
+                    {
+                        svp->s = IPS_ALERT;
+                        result = false;
+                    }
+                }
+                else
+                {
+                    /* shouldn't be here */
+                    svp->s = IPS_ALERT ;
+                    result = false;
+                }
+                IDSetSwitch( svp, nullptr );
+            }
+            else if (strcmp(svp->name, "XBCAL_ON") == 0)
+            {
+                uint8_t index = IUFindOnSwitchIndex(svp);
+                IUUpdateSwitch(svp, states, names, n);
+                    
+                if( index == 0u )
+                {                
+                    /* turn off calibration */
+                    strcpy ( buffer, "XBDC=Disable#" );
+                    if ( SendMsg( buffer) )
+                    {
+                        if ( strncmp( buffer, "XBDC=Disabled", 13 ) == 0 )
+                        {
+                            svp->s = IPS_IDLE;
+                            result = true;
+                        }
+                        else
+                        {
+                            svp->s = IPS_ALERT;
+                            result = false;
+                        }
+                    }
+                    else
+                    {
+                        svp->s = IPS_ALERT;
+                        result = false;
+                    }
+                }
+                else if (index == 1u )
+                {
+                    /* turn on calibration */
+                    strcpy ( buffer, "XBDC=Enable#" );
+                    if ( SendMsg( buffer) )
+                    {
+                        if ( strncmp( buffer, "XBDC=Enabled", 12 ) == 0 )
+                        {
+                            svp->s = IPS_OK;
+                            result = true;
+                        }
+                        else
+                        {
+                            svp->s = IPS_ALERT;
+                            result = false;
+                        }
+                    }
+                    else
+                    {
+                        svp->s = IPS_ALERT;
+                        result = false;
+                    }
+                }
+                else
+                {
+                    /* shouldn't be here */
+                    svp->s = IPS_ALERT ;
+                    result = false;
+                }
+                IDSetSwitch( svp, nullptr );
+            }
+            
+            else if (strcmp(svp->name, "YBCAL_ON") == 0)
+            {
+                uint8_t index = IUFindOnSwitchIndex(svp);
+                IUUpdateSwitch(svp, states, names, n);
+                    
+                if( index == 0u )
+                {                
+                    /* turn off calibration */
+                    strcpy ( buffer, "YBDC=Disable#" );
+                    if ( SendMsg( buffer) )
+                    {
+                        if ( strncmp( buffer, "YBDC=Disabled", 13 ) == 0 )
+                        {
+                            svp->s = IPS_IDLE;
+                            result = true;
+                        }
+                        else
+                        {
+                            svp->s = IPS_ALERT;
+                            result = false;
+                        }
+                    }
+                    else
+                    {
+                        svp->s = IPS_ALERT;
+                        result = false;
+                    }
+                }
+                else if (index == 1u )
+                {
+                    /* turn on calibration */
+                    strcpy ( buffer, "YBDC=Enable#" );
+                    if ( SendMsg( buffer) )
+                    {
+                        if ( strncmp( buffer, "YBDC=Enabled", 12 ) == 0 )
+                        {
+                            svp->s = IPS_OK;
+                            result = true;
+                        }
+                        else
+                        {
+                            svp->s = IPS_ALERT;
+                            result = false;
+                        }
+                    }
+                    else
+                    {
+                        svp->s = IPS_ALERT;
+                        result = false;
+                    }
+                }
+                else
+                {
+                    /* shouldn't be here */
+                    svp->s = IPS_ALERT ;
+                    result = false;
+                }
+                IDSetSwitch( svp, nullptr );
+            }
+            else if (strcmp(svp->name, "ZBCAL_ON") == 0)
+            {
+                uint8_t index = IUFindOnSwitchIndex(svp);
+                IUUpdateSwitch(svp, states, names, n);
+                    
+                if( index == 0u )
+                {                
+                    /* turn off calibration */
+                    strcpy ( buffer, "ZBDC=Disable#" );
+                    if ( SendMsg( buffer) )
+                    {
+                        if ( strncmp( buffer, "ZBDC=Disabled", 13 ) == 0 )
+                        {
+                            svp->s = IPS_IDLE;
+                            result = true;
+                        }
+                        else
+                        {
+                            svp->s = IPS_ALERT;
+                            result = false;
+                        }
+                    }
+                    else
+                    {
+                        svp->s = IPS_ALERT;
+                        result = false;
+                    }
+                }
+                else if (index == 1u )
+                {
+                    /* turn on calibration */
+                    strcpy ( buffer, "ZBDC=Enable#" );
+                    if ( SendMsg( buffer) )
+                    {
+                        if ( strncmp( buffer, "ZBDC=Enabled", 12 ) == 0 )
+                        {
+                            svp->s = IPS_OK;
+                            result = true;
+                        }
+                        else
+                        {
+                            svp->s = IPS_ALERT;
+                            result = false;
+                        }
+                    }
+                    else
+                    {
+                        svp->s = IPS_ALERT;
+                        result = false;
+                    }
+                }
+                else
+                {
+                    /* shouldn't be here */
+                    svp->s = IPS_ALERT ;
+                    result = false;
+                }
+                IDSetSwitch( svp, nullptr );
+            }
+            
+            else if (strcmp(svp->name, "DDDCAL_ON") == 0)
+            {
+                uint8_t index = IUFindOnSwitchIndex(svp);
+                IUUpdateSwitch(svp, states, names, n);
+                    
+                if( index == 0u )
+                {                
+                    /* turn off calibration */
+                    strcpy ( buffer, "DDDC=Disable#" );
+                    if ( SendMsg( buffer) )
+                    {
+                        if ( strncmp( buffer, "DDDC=Disabled", 13 ) == 0 )
+                        {
+                            svp->s = IPS_IDLE;
+                            result = true;
+                        }
+                        else
+                        {
+                            svp->s = IPS_ALERT;
+                            result = false;
+                        }
+                    }
+                    else
+                    {
+                        svp->s = IPS_ALERT;
+                        result = false;
+                    }
+                }
+                else if (index == 1u )
+                {
+                    /* turn on calibration */
+                    strcpy ( buffer, "DDDC=Enable#" );
+                    if ( SendMsg( buffer) )
+                    {
+                        if ( strncmp( buffer, "DDDC=Enabled", 12 ) == 0 )
+                        {
+                            svp->s = IPS_OK;
+                            result = true;
+                        }
+                        else
+                        {
+                            svp->s = IPS_ALERT;
+                            result = false;
+                        }
+                    }
+                    else
+                    {
+                        svp->s = IPS_ALERT;
+                        result = false;
+                    }
+                }
+                else
+                {
+                    /* shouldn't be here */
+                    svp->s = IPS_ALERT ;
+                    result = false;
+                }
+                IDSetSwitch( svp, nullptr );
+            }
+            
             else if (strcmp(svp->name, "RESET") == 0)
             {
                 uint8_t index = IUFindOnSwitchIndex(svp);
@@ -651,6 +1243,7 @@ void StarPi::TimerHit()
             case 3:
             {
                 /* MAG_CAL */
+  #if 0
                 float MiMx;
                 float MaMx;
                 float MiMy;
@@ -670,11 +1263,13 @@ void StarPi::TimerHit()
                     MagCal->s = IPS_OK;
                     IDSetNumber( MagCal, NULL );
                 }
+    #endif
                 break;
             }
             
             case 4:
             {
+  #if 0
                 /* ACCEL_CAL */
                 float MiAx;
                 float MaAx;
@@ -695,6 +1290,7 @@ void StarPi::TimerHit()
                     AccelCal->s = IPS_OK;
                     IDSetNumber( AccelCal, NULL );
                 }
+    #endif
                 break;
             }
             

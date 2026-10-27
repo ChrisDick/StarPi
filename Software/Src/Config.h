@@ -2,8 +2,8 @@
 /*
    The type of accelerometer is: 
 */
-//#define LSM303DLHC_ACCEL
-#define MPU9250_ACCEL
+#define LSM303DLHC_ACCEL
+
 /*
     Orientation of the accelerometer with respect to the telescope
     When the telescope is level (0 degrees elevation):
@@ -20,8 +20,8 @@
 */
 //#define TELESCOPE_RIGHT_ACCEL_X_PLUS
 //#define TELESCOPE_RIGHT_ACCEL_X_MINUS
-#define TELESCOPE_RIGHT_ACCEL_Y_PLUS
-//#define TELESCOPE_RIGHT_ACCEL_Y_MINUS
+//#define TELESCOPE_RIGHT_ACCEL_Y_PLUS
+#define TELESCOPE_RIGHT_ACCEL_Y_MINUS
 //#define TELESCOPE_RIGHT_ACCEL_Z_PLUS
 //#define TELESCOPE_RIGHT_ACCEL_Z_MINUS
 
@@ -32,8 +32,8 @@
 //#define UP_ACCEL_X_MINUS
 //#define UP_ACCEL_Y_PLUS
 //#define UP_ACCEL_Y_MINUS
-#define UP_ACCEL_Z_PLUS
-//#define UP_ACCEL_Z_MINUS
+//#define UP_ACCEL_Z_PLUS
+#define UP_ACCEL_Z_MINUS
 
 #define CONFIG_AXMAX ((float)16192.000000  )
 #define CONFIG_AXMIN ((float)-16704.000000 )
@@ -54,8 +54,8 @@
 //#define HMC5843_MAGNETOMETER
 //#define HMC5883L_MAGNETOMETER
 //#define MPU9150_MAGNETOMETER
-//#define LSM303DLHC_MAGNETOMETER
-#define MPU9250_MAGNETOMETER
+#define LSM303DLHC_MAGNETOMETER
+//#define MPU9250_MAGNETOMETER
 /*
     Orientation of the magnetometer with respect to the telescope
     When the telescope is level (0 degrees elevation):
@@ -72,8 +72,8 @@
 */
 //#define TELESCOPE_RIGHT_MAGNETOMETER_X_PLUS
 //#define TELESCOPE_RIGHT_MAGNETOMETER_X_MINUS
-//#define TELESCOPE_RIGHT_MAGNETOMETER_Y_PLUS
-#define TELESCOPE_RIGHT_MAGNETOMETER_Y_MINUS
+#define TELESCOPE_RIGHT_MAGNETOMETER_Y_PLUS
+//#define TELESCOPE_RIGHT_MAGNETOMETER_Y_MINUS
 //#define TELESCOPE_RIGHT_MAGNETOMETER_Z_PLUS
 //#define TELESCOPE_RIGHT_MAGNETOMETER_Z_MINUS
 
@@ -84,8 +84,8 @@
 //#define UP_MAGNETOMETER_X_MINUS
 //#define UP_MAGNETOMETER_Y_PLUS
 //#define UP_MAGNETOMETER_Y_MINUS
-//#define UP_MAGNETOMETER_Z_PLUS
-#define UP_MAGNETOMETER_Z_MINUS
+#define UP_MAGNETOMETER_Z_PLUS
+//#define UP_MAGNETOMETER_Z_MINUS
 
 /*
     Calibration Values:        

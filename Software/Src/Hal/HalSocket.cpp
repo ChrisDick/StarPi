@@ -29,13 +29,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #include <sys/socket.h> 
 #include <netinet/in.h> 
 #include <sys/time.h> //FD_SET, FD_ISSET, FD_ZERO macros 
-    
+
+#ifdef TIMING
+#include "GPIO.h"
+#endif
+
 #include "HalSocket.h"
-    
+
 HalSocket          HalSocket::Socket;
 int                HalSocket::master_socket;                           /**< master_socket */
 int                HalSocket::client_socket[HAL_SOCKET_MAX_CLIENTS];   /**< client_socket */
-struct sockaddr_in HalSocket::address;                                 /**< address */
+struct sockaddr_in HalSocket::address;                                 /**< address       */
 void               (*HalSocket::callback)(char*);
 /* HalSocket
  *  Constructor
@@ -95,12 +99,20 @@ void HalSocket::Init( uint16_t Port, void (*callback_function)(char*))
         
     //accept the incoming connection 
     puts("Waiting for connections ...");  
+#ifdef TIMING
+    GPIO::gpio.SetupOutput( HAL_SOCKET_PIN );
+    GPIO::gpio.SetPullMode( HAL_SOCKET_PIN , PULL_UP );
+#endif
 }
 
 /**
  */
 void HalSocket::Run( void )
 {  
+    #ifdef TIMING
+    GPIO::gpio.SetPinState( HAL_SOCKET_PIN , true );
+    #endif
+
     static char buffer[HAL_SOCKET_BUFFER_SIZE];
     int max_sd;  
     int16_t new_socket;
@@ -227,5 +239,9 @@ void HalSocket::Run( void )
             }
         }
     }
+    #ifdef TIMING
+    GPIO::gpio.SetPinState( HAL_SOCKET_PIN , false );
+    #endif
+
 }
 

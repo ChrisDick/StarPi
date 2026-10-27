@@ -23,6 +23,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include <stdint.h>
 
+#define NO_OF_COMMANDS 70
+
 typedef struct
 {
     const char Header[5];        /**< Command string                            */
@@ -46,7 +48,7 @@ class TelescopeSocket
      */
         static TelescopeSocket TeleSocket;
 
-        static TELEDATA_T TelescopeData[60]; /**< data buffer */
+        static TELEDATA_T TelescopeData[NO_OF_COMMANDS]; /**< data buffer */
     /** Handler for an multiple message
      * @param Buffer pointer to data buffer
      * @return uint8_t length of string
@@ -342,6 +344,56 @@ class TelescopeSocket
      * @return uint8_t length of string
      */
         static uint8_t AccelOffsetHandler( char* Buffer );
+    /** Handler for Accelerometer X Down calibration
+     * @param Buffer pointer to data buffer
+     * @return uint8_t length of string
+     */
+        static uint8_t AccelXDownHandler( char* Buffer );
+    /** Handler for Accelerometer X Up calibration
+     * @param Buffer pointer to data buffer
+     * @return uint8_t length of string
+     */
+        static uint8_t AccelXUpHandler( char* Buffer );
+    /** Handler for Accelerometer Y Down calibration
+     * @param Buffer pointer to data buffer
+     * @return uint8_t length of string
+     */
+        static uint8_t AccelYDownHandler( char* Buffer );
+    /** Handler for Accelerometer Y Up calibration
+     * @param Buffer pointer to data buffer
+     * @return uint8_t length of string
+     */
+        static uint8_t AccelYUpHandler( char* Buffer );
+    /** Handler for Accelerometer Z Down calibration
+     * @param Buffer pointer to data buffer
+     * @return uint8_t length of string
+     */
+        static uint8_t AccelZDownHandler( char* Buffer );
+    /** Handler for Accelerometer Z Up calibration
+     * @param Buffer pointer to data buffer
+     * @return uint8_t length of string
+     */
+        static uint8_t AccelZUpHandler( char* Buffer );
+    /** Handler for Magnetometer Xb down calibration
+     * @param Buffer pointer to data buffer
+     * @return uint8_t length of string
+     */
+        static uint8_t MagXbHandler( char* Buffer );
+    /** Handler for Magnetometer Yb down calibration
+     * @param Buffer pointer to data buffer
+     * @return uint8_t length of string
+     */
+        static uint8_t MagYbHandler( char* Buffer );
+    /** Handler for Magnetometer Zb down calibration 
+     * @param Buffer pointer to data buffer
+     * @return uint8_t length of string
+     */
+        static uint8_t MagZbHandler( char* Buffer );
+    /** Handler for Magnetometer 3D calibration
+     * @param Buffer pointer to data buffer
+     * @return uint8_t length of string
+     */
+        static uint8_t MagDDDHandler( char* Buffer );
     /** Handler for an unknown message
      * @param Buffer pointer to data buffer
      * @return uint8_t length of string
