@@ -69,7 +69,12 @@ bool TelescopeOrientation::Init( void )
     GPIO::gpio.SetupOutput( TELESCOPE_ORIENTATION_PIN );
     GPIO::gpio.SetPullMode( TELESCOPE_ORIENTATION_PIN , PULL_UP );
 #endif
-
+    ResetMxMin( );
+    ResetMyMin( );
+    ResetMzMin( );
+    ResetMxMax( );
+    ResetMyMax( );
+    ResetMzMax( );
     return true;
 }
 

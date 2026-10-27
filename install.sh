@@ -4,8 +4,6 @@
 # please do this first:
 # From a console do the following.
 # if using serial gps, disable shell on serial before connecting the GPS to it.
-# for lite install git
-#    sudo apt-get -y install git-core
 # 
 #   sudo raspi-config
 #-enable ssh and i2c
@@ -14,6 +12,9 @@
 #-reduce the graphics memory
 #-configure wifi
 #-reboot
+# for lite install git
+#    sudo apt-get -y install git-core
+# then clone the repository:
 #    git clone https://github.com/ChrisDick/StarPi
 # edit any options in the config to match your choice of sensors.
 #    nano StarPi\Software\Src\Config.h

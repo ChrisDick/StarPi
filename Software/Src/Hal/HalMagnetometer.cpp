@@ -33,8 +33,8 @@ LSM303DLHC_Mag Magnetometer;
 MPU9250 Magnetometer;
 #endif
 
-static float b[] = {1,  -1.4, 1};
-static float a[] = {1, -1.3, 0.5};
+static float b[] = {1.4,  -1.4, 1};
+static float a[] = {1.8, -1.3, 0.5};
 
 
 static float iirfilter(float x1, float* v1m1, float* v2m1) {
@@ -81,9 +81,9 @@ void HalMagnetometer::Run( void )
 
     GetRawData( &X, &Y, &Z );
     
-    FilterX[4] = iirfilter(((float)X)/32767.0F, &Xv1m1, &Xv2m1);
-    FilterY[4] = iirfilter(((float)Y)/32767.0F, &Yv1m1, &Yv2m1);
-    FilterZ[4] = iirfilter(((float)Z)/32767.0F, &Zv1m1, &Zv2m1);
+    FilterX = iirfilter(((float)X), &Xv1m1, &Xv2m1);
+    FilterY = iirfilter(((float)Y), &Yv1m1, &Yv2m1);
+    FilterZ = iirfilter(((float)Z), &Zv1m1, &Zv2m1);
  
 }
 
@@ -91,9 +91,9 @@ void HalMagnetometer::Run( void )
  */
 void HalMagnetometer::GetAll( float* Mx, float* My, float* Mz )
 {
-    *Mx = FilterX[4];
-    *My = FilterY[4];
-    *Mz = FilterZ[4];
+    *Mx = FilterX;
+    *My = FilterY;
+    *Mz = FilterZ;
 }
 
 /* Get the raw value of the Accelerometer
@@ -109,18 +109,7 @@ void HalMagnetometer::GetRawData( int16_t* X, int16_t* Y, int16_t* Z )
     int16_t XRaw = 0;
     int16_t YRaw = 0;
     int16_t ZRaw = 0;
-    #ifndef MPU9250_MAGNETOMETER
     Magnetometer.getHeading( &XRaw, &YRaw, &ZRaw);
-    #else
-    int16_t AXRaw = 0;
-    int16_t AYRaw = 0;
-    int16_t AZRaw = 0;
-    int16_t GXRaw = 0;
-    int16_t GYRaw = 0;
-    int16_t GZRaw = 0;
-    
-    Magnetometer.getMotion9( &AXRaw, &AYRaw, &AZRaw, &GXRaw, &GYRaw, &GZRaw, &XRaw, &YRaw, &ZRaw );
-#endif
 #ifdef OBJECTIVE_END_MAGNETOMETER_X_PLUS    
     *X = XRaw;
 #elif defined OBJECTIVE_END_MAGNETOMETER_X_MINUS

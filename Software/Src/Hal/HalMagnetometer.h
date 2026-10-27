@@ -73,9 +73,9 @@ class HalMagnetometer: public Runnable {
          */
             int16_t GetZRawHeading( void );
             
-            double FilterX[5];    /**< storage for X axis filter data                      */
-            double FilterY[5];    /**< storage for Y axis filter data                      */
-            double FilterZ[5];    /**< storage for Z axis filter data                      */
+            float FilterX;    /**< storage for X axis filter data                      */
+            float FilterY;    /**< storage for Y axis filter data                      */
+            float FilterZ;    /**< storage for Z axis filter data                      */
             uint8_t FilterCount;  /**< counter to keep track of where to store latest data */
             double Scaling;       /**< scaling for the raw data                            */
 };

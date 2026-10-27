@@ -10,10 +10,10 @@ More details can be found at https://hackaday.io/project/10181-starpi
     sudo raspi-config 
 
   Enable ssh,i2c and Serial with the shell disabled.
-  Enter your WiFi details  
   disable the serial shell and enable the hardware serial.  
   set the domain name and boot to cli.  
   reduce the graphics memory.  
+  Enter your WiFi details  
   reboot.  
  
  for raspbian lite versions install git:
