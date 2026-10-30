@@ -5,40 +5,44 @@ More details can be found at https://hackaday.io/project/10181-starpi
 
 # Installation
 
+ Create an sd card with Pi Imager with the lite os customising your WiFi details and login  
+
  From a console do the following: 
 
+```bash
     sudo raspi-config 
+```
 
   Enable ssh,i2c and Serial with the shell disabled.
   disable the serial shell and enable the hardware serial.  
-  set the domain name and boot to cli.  
-  reduce the graphics memory.  
-  Enter your WiFi details  
   reboot.  
- 
- for raspbian lite versions install git:
 
+```bash
     sudo apt-get -y install git
-    
+```    
  Clone the Source:
-
+```bash
     git clone https://github.com/ChrisDick/StarPi
+```
 
   edit any options in to match your choice of sensors and install.
 
+```bash
     nano StarPi/Software/Src/Config.h
     cd ~/StarPi
     chmod u+x install.sh
     ./install.sh
-
+```
 Then go and make a nice cup of tea. it'll take a little while.
 
 # Use
   Intended on being run remotely over ssh:  
   WMM.COF must be in directory StarPi is started from, in this case ~/StarPi/Software
 
+```bash
     cd ~/StarPi/Software
-    ./Out/StarPi 10001
+    sudo ./Out/StarPi 10001
+```
 
   The only current option is the port number for connection with Stellarium. The Stellarium default of 10001 is used in this example.
   
@@ -46,10 +50,12 @@ Then go and make a nice cup of tea. it'll take a little while.
   
   To use indi to connect to StarPi, once StarPi is started, start the indiserver.
   
+```bash
     indiserver -v indi_starpi
-  
+  ```
   Since StarPi uses a gpsd to get GPS data, it is possible to run indi_gpsd along side StarPi
   
+```bash
     indiserver -v indi_starpi indi_gpsd
-  
+  ```
   

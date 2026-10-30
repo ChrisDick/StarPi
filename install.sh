@@ -34,7 +34,41 @@ sudo apt-get update
 sudo apt-get -y dist-upgrade
 
 #Assume we have a raspian based install
-sudo apt-get -y install libnova-dev libcfitsio-dev libusb-1.0-0-dev libjpeg-dev libgsl-dev libcurl4-gnutls-dev cmake gpsd libgps-dev build-essential zlib1g-dev libtiff-dev libfftw3-dev libftdi-dev libraw-dev libdc1394-22-dev libgphoto2-dev libboost-dev libboost-regex-dev librtlsdr-dev liblimesuite-dev libftdi1-dev cdbs dkms fxload libusb-dev libgsl0-dev libkrb5-dev 
+sudo apt-get -y install \
+  build-essential \
+  cdbs \
+  cmake \
+  dkms \
+  fxload \
+  gpsd \
+  libboost-dev \
+  libboost-regex-dev \
+  libcfitsio-dev \
+  libcurl4-gnutls-dev \
+  libdc1394-dev \
+  liberfa-dev \
+  libev-dev \
+  libevdev-dev \
+  libfftw3-dev \
+  libftdi-dev \
+  libftdi1-dev \
+  libgphoto2-dev \
+  libgps-dev \
+  libgsl-dev \
+  libgsl0-dev \
+  libjpeg-dev \
+  libkrb5-dev \
+  liblimesuite-dev \
+  libnova-dev \
+  libraw-dev \
+  librtlsdr-dev \
+  libtheora-dev \
+  libtiff-dev \
+  libusb-1.0-0-dev \
+  libusb-dev \
+  libxisf-dev \
+  ninja-build \
+  zlib1g-dev \
 
 #StarPi:
 cd ./Software

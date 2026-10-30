@@ -2822,12 +2822,12 @@ void MPU9250::setZFineGain(int8_t gain) {
 
 int16_t MPU9250::getXAccelOffset() {
     I2Cdev::readBytes(devAddr, MPU9250_RA_XA_OFFS_H, 2, buffer);
-    return ((((int16_t)buffer[0]) << 8) | buffer[1]);
+    return ((((int16_t)buffer[0]) << 8) | buffer[1]) >> 1;
 }
 void MPU9250::setXAccelOffset(int16_t offset) {
-    int16_t bit0 = getXAccelOffset() & 1;
-    int16_t value = offset & 0xFFFE | bit0;
-    
+    uint8_t reserved_bit { 0U };
+    I2Cdev::readBytes(devAddr, MPU9250_RA_XA_OFFS_H, 1, &reserved_bit);
+    uint16_t value = (offset << 1) | ( reserved_bit & 1 );
     I2Cdev::writeWord(devAddr, MPU9250_RA_XA_OFFS_H, value);
 }
 
@@ -2835,12 +2835,12 @@ void MPU9250::setXAccelOffset(int16_t offset) {
 
 int16_t MPU9250::getYAccelOffset() {
     I2Cdev::readBytes(devAddr, MPU9250_RA_YA_OFFS_H, 2, buffer);
-    return ((((int16_t)buffer[0]) << 8) | buffer[1]);
+    return ((((int16_t)buffer[0]) << 8) | buffer[1]) >> 1;
 }
 void MPU9250::setYAccelOffset(int16_t offset) {
-    int16_t bit0 = getYAccelOffset() & 1;
-    int16_t value = offset & 0xFFFE | bit0;
-
+    uint8_t reserved_bit { 0U };
+    I2Cdev::readBytes(devAddr, MPU9250_RA_YA_OFFS_H, 1, &reserved_bit);
+    uint16_t value = (offset << 1) | ( reserved_bit & 1 );
     I2Cdev::writeWord(devAddr, MPU9250_RA_YA_OFFS_H, value);
 }
 
@@ -2848,12 +2848,12 @@ void MPU9250::setYAccelOffset(int16_t offset) {
 
 int16_t MPU9250::getZAccelOffset() {
     I2Cdev::readBytes(devAddr, MPU9250_RA_ZA_OFFS_H, 2, buffer);
-    return ((((int16_t)buffer[0]) << 8) | buffer[1]);
+    return ((((int16_t)buffer[0]) << 8) | buffer[1]) >> 1;
 }
 void MPU9250::setZAccelOffset(int16_t offset) {
-    int16_t bit0 = getZAccelOffset() & 1;
-    int16_t value = offset & 0xFFFE | bit0;
-
+    uint8_t reserved_bit { 0U };
+    I2Cdev::readBytes(devAddr, MPU9250_RA_ZA_OFFS_H, 1, &reserved_bit);
+    uint16_t value = (offset << 1) | ( reserved_bit & 1 );
     I2Cdev::writeWord(devAddr, MPU9250_RA_ZA_OFFS_H, value);
 }
 
@@ -3014,8 +3014,8 @@ bool MPU9250::writeMemoryBlock(const uint8_t *data, uint16_t dataSize, uint8_t b
     setMemoryBank(bank);
     setMemoryStartAddress(address);
     uint8_t chunkSize;
-    uint8_t *verifyBuffer;
-    uint8_t *progBuffer;
+    uint8_t* verifyBuffer { NULL };
+    uint8_t* progBuffer { NULL };
     uint16_t i;
     uint8_t j;
     if (verify) verifyBuffer = (uint8_t *)malloc(MPU9250_DMP_MEMORY_CHUNK_SIZE);
@@ -3090,7 +3090,9 @@ bool MPU9250::writeProgMemoryBlock(const uint8_t *data, uint16_t dataSize, uint8
     return writeMemoryBlock(data, dataSize, bank, address, verify, true);
 }
 bool MPU9250::writeDMPConfigurationSet(const uint8_t *data, uint16_t dataSize, bool useProgMem) {
-    uint8_t *progBuffer, success, special;
+    uint8_t* progBuffer { NULL };
+    uint8_t success { false };
+    uint8_t special { false };
     uint16_t i, j;
     if (useProgMem) {
         progBuffer = (uint8_t *)malloc(8); // assume 8-byte blocks, realloc later if necessary

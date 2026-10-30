@@ -894,7 +894,7 @@ CALLS : none
 {
     FILE *fileout;
     char filename[] = "GridProgramDirective.txt";
-    char buffer[20];
+    char buffer[32];
     int dummy;
 
     printf("Please Enter Minimum Latitude (in decimal degrees):\n");
@@ -2338,7 +2338,6 @@ int MAG_readMagneticModel_SHDF(char *filename, MAGtype_MagneticModel *(*magnetic
 
     char paramvalues[NOOFPARAMS][MAXLINELENGTH];
     char *line = (char *) malloc(MAXLINELENGTH);
-    char *ptrreset;
     char paramvalue[MAXLINELENGTH];
     int paramvaluelength = 0;
     int paramkeylength = 0;
@@ -2356,7 +2355,6 @@ int MAG_readMagneticModel_SHDF(char *filename, MAGtype_MagneticModel *(*magnetic
     int index;
     
     FILE *stream;
-    ptrreset = line;
     stream = fopen(filename, READONLYMODE);
     if(stream == NULL)
     {
@@ -2450,9 +2448,6 @@ int MAG_readMagneticModel_SHDF(char *filename, MAGtype_MagneticModel *(*magnetic
 
     for(i = 0; i < array_size; i++) (*magneticmodels)[i]->CoefficientFileEndDate = cutoff;
     free(line); // added this
-    free(ptrreset);
-    line = NULL;
-    ptrreset = NULL;
     return header_index + 1;
 }/*MAG_readMagneticModel_SHDF*/
 
@@ -2768,7 +2763,7 @@ CALLS : none
 {
     int DMS[3], i;
     double temp = DegreesOfArc;
-    char tempstring[32] = "";
+    char tempstring[43] = "";
     char tempstring2[32] = "";
     strcpy(DMSstring, "");
     if(UnitDepth > 3)
