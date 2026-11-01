@@ -70,11 +70,13 @@ sudo apt-get -y install \
   ninja-build \
   zlib1g-dev \
   libindi-dev \
+  indi-bin \
 
 #StarPi:
 cd ./Software
 wget http://www.airspayce.com/mikem/bcm2835/bcm2835-1.71.tar.gz
 tar zxvf bcm2835-1.71.tar.gz
+rm bcm2835-1.71.tar.gz
 cd bcm2835-1.71
 ./configure
 make
@@ -86,14 +88,24 @@ make
 #indi:
 mkdir -p indi
 cd indi
-git clone https://github.com/indilib/indi.git
-git clone https://github.com/indilib/indi-3rdparty
+#match 3rd party version with package version.
+VERSION=$(apt policy libindi-dev | awk '/Installed:/ {print $2}' | sed 's/^[0-9]://;s/-.*//')
+MAJOR=$(echo "$VERSION" | cut -d. -f1)
+MINOR=$(echo "$VERSION" | cut -d. -f2)
+PATCH=$(echo "$VERSION" | cut -d. -f3)
+
+wget https://github.com/indilib/indi-3rdparty/archive/refs/tags/v$MAJOR.$MINOR.$PATCH.tar.gz
+tar -xzvf v$MAJOR.$MINOR.$PATCH.tar.gz   
+rm v$MAJOR.$MINOR.$PATCH.tar.gz
+mv indi-3rdparty-$MAJOR.$MINOR.$PATCH indi-3rdparty
+
 mkdir -p indidrivers
 cd indidrivers
 mkdir -p build/indi-starpi
 cd build/indi-starpi
 cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Debug ./../../../../indi-starpi
 make
+
 sudo cp indi-starpi /usr/bin/indi_starpi
 cd ..
 mkdir indi-gpsd
