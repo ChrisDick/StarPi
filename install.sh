@@ -69,6 +69,7 @@ sudo apt-get -y install \
   libxisf-dev \
   ninja-build \
   zlib1g-dev \
+  libindi-dev \
 
 #StarPi:
 cd ./Software
@@ -87,12 +88,6 @@ mkdir -p indi
 cd indi
 git clone https://github.com/indilib/indi.git
 git clone https://github.com/indilib/indi-3rdparty
-mkdir -p build/indi-core
-cd build/indi-core
-cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Debug ./../../indi/
-make
-sudo make install
-cd ../..
 mkdir -p indidrivers
 cd indidrivers
 mkdir -p build/indi-starpi
