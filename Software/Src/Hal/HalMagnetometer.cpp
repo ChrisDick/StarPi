@@ -81,9 +81,9 @@ void HalMagnetometer::Run( void )
 
     GetRawData( &X, &Y, &Z );
     
-    FilterX = iirfilter(((float)X), &Xv1m1, &Xv2m1);
-    FilterY = iirfilter(((float)Y), &Yv1m1, &Yv2m1);
-    FilterZ = iirfilter(((float)Z), &Zv1m1, &Zv2m1);
+    FilterX = iirfilter(((float)X*0.1465F), &Xv1m1, &Xv2m1);
+    FilterY = iirfilter(((float)Y*0.1465F), &Yv1m1, &Yv2m1);
+    FilterZ = iirfilter(((float)Z*0.1465F), &Zv1m1, &Zv2m1);
  
 }
 

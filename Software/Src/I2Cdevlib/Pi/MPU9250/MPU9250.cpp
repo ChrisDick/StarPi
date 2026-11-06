@@ -69,7 +69,7 @@ void MPU9250::initialize() {
     
     I2Cdev::writeByte(devAddr, MPU9250_RA_INT_PIN_CFG, 0x02); //set i2c bypass enable pin to true to access magnetometer
 	delay(10);
-	I2Cdev::writeByte(MPU9150_RA_MAG_ADDRESS, 0x0A, 0x06); //enable the magnetometer
+	I2Cdev::writeByte(MPU9150_RA_MAG_ADDRESS, 0x0A, 0x16); //enable the magnetometer
 	delay(10);
 
 }

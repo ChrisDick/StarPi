@@ -92,7 +92,7 @@ cd indi
 VERSION=$(apt policy libindi-dev | awk '/Installed:/ {print $2}' | sed 's/^[0-9]://;s/-.*//')
 MAJOR=$(echo "$VERSION" | cut -d. -f1)
 MINOR=$(echo "$VERSION" | cut -d. -f2)
-PATCH=$(echo "$VERSION" | cut -d. -f3)
+PATCH=$(echo "$VERSION" | cut -d. -f3 | cut -d+ -f1)
 
 wget https://github.com/indilib/indi-3rdparty/archive/refs/tags/v$MAJOR.$MINOR.$PATCH.tar.gz
 tar -xzvf v$MAJOR.$MINOR.$PATCH.tar.gz   

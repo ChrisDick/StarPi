@@ -234,10 +234,23 @@ void TelescopeOrientation::GetOrientation( float* Pitch, float* Roll, float* Hea
  */
 void TelescopeOrientation::EnableCalibration ( bool Enable )
 {
-    Calibrating = Enable;
+    Calibrating = !Enable;
     /* If we are stopping calibration save the values */
     if ( !Enable )
     {
+        ResetMxMin( );
+        ResetMyMin( );
+        ResetMzMin( );
+        ResetMxMax( );
+        ResetMyMax( );
+        ResetMzMax( );
+    }
+    else
+    {
+        printf(" MxMax=%f\tMxMin=%f\tMyMax=%f\tMyMin=%f\tMzMax=%f\tMzMin=%f\tAxMax=%f\tAxMin=%f\tAyMax=%f\tAyMin=%f\tAzMax=%f\tAzMin=%f\t",
+                MxMax, MxMin, MyMax, MyMin, MzMax, MzMin,
+                AxMax, AxMin, AyMax, AyMin, AzMax, AzMin
+                );
         SaveConfig();
     }
 }    
